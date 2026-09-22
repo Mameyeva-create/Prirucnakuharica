@@ -1,122 +1,88 @@
 import { useState } from 'react'
-import heroImg from './assets/hero.png'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
 import './App.css'
+import RecipeCard from './components/RecipeCard'
+import recepti from './data/recepti'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [odabraniRecept, setOdabraniRecept] = useState(null)
+  const [pretraga, setPretraga] = useState('')
 
+  const filtriraniRecepti = recepti.filter(recept) => recept.naziv.toLowerCase().includes(pretraga.toLowerCase())
+)
   return (
     <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
+      <nav className="navbar navbar-dark bg-dark">
+        <div className="container">
+          <a className='navbar-brand d-flex align-items-center' href="#">
+            <img src="/slike/chef-hat.png" alt="Chef hat" className='chef-icon' />
+            <span>Priručna kuharica</span>
+          </a>
+          <div className="d-flex gap-2">
+            <a className="nav-link text-white" href="#">Početna</a>
+            <a className='nav-link text-white' href="#">Recepti</a>
+            <a className='nav-link text-white' href="#">❤️ Omiljeni</a>
+          </div>
         </div>
-        <div>
-          <h1>Доброго дня!Dobar dan)</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+      </nav>
 
-      <div className="ticks"></div>
+      <main className="container py-5">
+        <h1 className='text-center mb-2'>Moji recepti</h1>
+        <p className='text-center text-muted mb-5'>Brzi i jednostavni recepti za svaki dan.</p>
+<div className='mb-5'>
+  <input type="text"
+  className='form-control'
+  placeholder='🔍 Pretraži recept...'
+  value={pretraga}
+  onChange={(e) => setPretraga(e.target.value)} />
+</div>
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
+        <div className="row g-4">
+          {filtriraniRecepti.map((recept) => (
+            <div className='col-md-4' key={recept.id}>
+              <RecipeCard recept={recept} onView={() => setOdabraniRecept(recept)}
+              />
+            </div>
+          ))}
         </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
+      </main >
+      {odabraniRecept && (
+        <div className='modal d-block' tabIndex="-1">
+          <div className='modal-dialog modal-lg modal-dialog-centered'>
+            <div className='modal-content'>
+              <div className='modal-header'>
+                <h2 className='modal-title'>{odabraniRecept.naziv}</h2>
+                <button type='button' className='btn-close' onClick={() => setOdabraniRecept(null)}
+                ></button>
+              </div>
+              <div className='modal-body'>
+                <img src={odabraniRecept.slika}
+                  alt={odabraniRecept.naziv}
+                  className='img-fluid rounded mb-4 recipe-detail-image' />
+                <p>{odabraniRecept.opis}</p>
+                <p><strong>Kategorija:</strong>{' '}
+                  {odabraniRecept.kategorija} </p>
+                <p>
+                  <strong>Vrijeme:</strong>{' '}
+                  {odabraniRecept.vrijeme} min
+                </p>
+                <h4>Sastojci:</h4>
+                <ul>
+                  {odabraniRecept.sastojci.map((sastojak, index) => (
+                    <li key={index}>{sastojak}</li>
+                  ))}
+                </ul>
+              </div>
+              <div className='modal-footer'>
+                <button
+                  type='button'
+                  className='btn btn-secondary' onClick={() => setOdabraniRecept(null)}>Zatvori</button>
+              </div>
+            </div>
+          </div>
         </div>
-      </section>
+      )}
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
     </>
   )
 }
-
 export default App
