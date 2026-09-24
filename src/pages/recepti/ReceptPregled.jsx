@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
-import ReceptiService from "../../services/recepti/ReceptiService"
+import ReceptService from "../../services/recepti/ReceptService"
+import { Table } from "react-bootstrap"
 
 
 export default function ReceptPregled(){
@@ -11,7 +12,7 @@ useEffect(()=>{
 },[])
 
 async function ucitajRecepti(){
-    await ReceptiService.get().then((odgovor)=>{
+    await ReceptService.get().then((odgovor)=>{
         
         setRecepti(odgovor.data)
     })
@@ -19,9 +20,27 @@ async function ucitajRecepti(){
 
     return (
         <>
-            Ovdje dođe pregled recepata
-            <hr />
-            {JSON.stringify(recepti,null,3)}
+           
+            <Table hover striped>
+                <thead>
+                    <th>Naziv</th>
+                    <th>Kategorija</th>
+                    <th>Vrijeme</th>
+                    <th>Opis</th>
+                </thead>
+                <tbody>
+                    {recepti && recepti.map((recept)=>(
+                        <tr key={recept.id}>
+                            <td>{recept.naziv}</td>
+                            <td>{recept.kategorija}</td>
+                            <td>{recept.vrijeme}</td>
+                            <td>{recept.opis}</td>
+                        </tr>
+                    ))}
+                </tbody>
+            </Table>
+            
+            
         </>
     )
 }
