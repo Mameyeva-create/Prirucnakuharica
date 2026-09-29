@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react"
-import ReceptService from "../../services/recepti/ReceptService"
 import { Table } from "react-bootstrap"
+import DodajService from "../../services/+dodaj/DodajService"
 import { Link } from "react-router-dom"
 import { RouteNames } from "../../constants"
 
 
-export default function ReceptPregled(){
+export default function DodajPregled(){
 
 const [recepti, setRecepti] = useState([])
 useEffect(()=>{
@@ -14,7 +14,7 @@ useEffect(()=>{
 },[])
 
 async function ucitajRecepti(){
-    await ReceptService.get().then((odgovor)=>{
+    await DodajService.get().then((odgovor)=>{
         // console.table(odgovor.data)
         setRecepti(odgovor.data)
     })
@@ -22,11 +22,12 @@ async function ucitajRecepti(){
 
     return (
         <>
-           <Link to={RouteNames.RECEPTI_NOVI}
-           className="btn btn-success w-100 my-3">
-            Ovdje Pretraži recept
-           </Link>
-            <Table hover striped>
+
+        <Link to={RouteNames.DODAJ_NOVI}
+        className="btn btn-success w-100 my-3">
+           Dodavanje svog recepta
+</Link>
+            <Table hover  striped>
                 <thead>
                     <th>Naziv</th>
                     <th>Kategorija</th>

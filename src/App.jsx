@@ -5,6 +5,7 @@ import { Route, Routes } from 'react-router-dom'
 import Home from './pages/Home'
 import './App.css'
 import ReceptPregled from './pages/recepti/ReceptPregled'
+import OmiljenPregled from './pages/omiljeni/OmiljenPregled'
 
 
 function App() {
@@ -18,6 +19,8 @@ function App() {
         <Routes>
           <Route path={RouteNames.HOME} element={<Home />} />
           <Route path={RouteNames.RECEPTI} element={<ReceptPregled />} />
+          <Route path={RouteNames.OMILJENI} element={<OmiljenPregled />} />
+          <Route path={RouteNames.DODAJ} element={<DodajPregled />} />
         </Routes>
       </Container>
       <hr />
