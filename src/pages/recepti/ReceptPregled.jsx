@@ -13,7 +13,7 @@ useEffect(()=>{
 
 async function ucitajRecepti(){
     await ReceptService.get().then((odgovor)=>{
-        
+        // console.table(odgovor.data)
         setRecepti(odgovor.data)
     })
 }
@@ -40,7 +40,7 @@ async function ucitajRecepti(){
                 </tbody>
             </Table>
             
-            
+            {/* {JSON.stringify(recept,null,2)} */}
         </>
     )
 }
