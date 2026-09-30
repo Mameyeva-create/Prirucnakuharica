@@ -1,3 +1,4 @@
+import RecipeCard from './components'
 function RecipeCard({ recept, onView }) {
     return (
         <div className="card h-100 shadow-sm">

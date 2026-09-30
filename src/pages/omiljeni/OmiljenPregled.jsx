@@ -21,7 +21,7 @@ async function ucitajRecepti(){
     return (
         <>
            
-            <Table hover striped>
+            {/* <Table hover striped>
                 <thead>
                     <th>Naziv</th>
                     <th>Kategorija</th>
@@ -38,7 +38,7 @@ async function ucitajRecepti(){
                         </tr>
                     ))}
                 </tbody>
-            </Table>
+            </Table> */}
             
             {/* {JSON.stringify(recept,null,2)} */}
         </>

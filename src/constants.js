@@ -7,5 +7,5 @@ export const RouteNames = {
     OMILJENI: '/omiljeni',
     OMILJEN_NOVI: '/omiljeni/novi',
     DODAJ: '/dodaj',
-    DODAJ_NOVI: '/+dodaj/novi'
+    // DODAJ_NOVI: '/+dodaj/novi'
 }

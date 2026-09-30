@@ -43,7 +43,7 @@ async function ucitajRecepti(){
                         </tr>
                     ))}
                 </tbody>
-            </Table>
+            </Table>   
             
             {/* {JSON.stringify(recept,null,2)} */}
         </>

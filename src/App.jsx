@@ -6,7 +6,7 @@ import Home from './pages/Home'
 import './App.css'
 import ReceptPregled from './pages/recepti/ReceptPregled'
 import OmiljenPregled from './pages/omiljeni/OmiljenPregled'
-
+import DodajPregled from './pages/+dodaj/DodajPregled'
 
 function App() {
 
