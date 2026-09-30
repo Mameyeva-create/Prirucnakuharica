@@ -36,7 +36,7 @@ export default function Izbornik() {
 
                         <NavDropdown title="＋ Dodaj" id="dodaj-dropdown">
                             <NavDropdown.Item
-                                onClick={() => navigate(RouteNames.DODAJ)}
+                                onClick={() => navigate(RouteNames.RECEPTI_NOVI)}
                             > Dodaj Svoj </NavDropdown.Item>
                         </NavDropdown>
 

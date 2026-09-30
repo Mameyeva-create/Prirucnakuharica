@@ -5,8 +5,7 @@ import { Route, Routes } from 'react-router-dom'
 import Home from './pages/Home'
 import './App.css'
 import ReceptPregled from './pages/recepti/ReceptPregled'
-import OmiljenPregled from './pages/omiljeni/OmiljenPregled'
-import DodajPregled from './pages/+dodaj/DodajPregled'
+import ReceptNovi from './pages/recepti/ReceptNovi'
 
 function App() {
 
@@ -19,8 +18,8 @@ function App() {
         <Routes>
           <Route path={RouteNames.HOME} element={<Home />} />
           <Route path={RouteNames.RECEPTI} element={<ReceptPregled />} />
-          <Route path={RouteNames.OMILJENI} element={<OmiljenPregled />} />
-          <Route path={RouteNames.DODAJ} element={<DodajPregled />} />
+          
+          <Route path={RouteNames.RECEPTI_NOVI} element={<ReceptNovi />} />
         </Routes>
       </Container>
       <hr />

@@ -2,7 +2,8 @@ import { use } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import ReceptService from "../../services/recepti/ReceptService";
 import { RouteNames } from "../../constants";
-import { Col, Form, FormGroup, FormLabel } from "react-bootstrap";
+import { Col, Form, FormGroup, FormLabel, Row} from "react-bootstrap";
+
 
 export default function ReceptNovi() {
 
@@ -26,11 +27,9 @@ export default function ReceptNovi() {
 
     return (
     <>
-            <h3>
-                🔍 PRETRAŽI RECEPT
-            </h3>
+        
 
-            {/* <Form onSubmit={odradiSubmit}>
+             <Form onSubmit={odradiSubmit}>
 
                 <Form.Group controlId="naziv">
                     <Form.Label>Naziv recepta</Form.Label>
@@ -65,7 +64,7 @@ export default function ReceptNovi() {
 
                     </Row>
 
-                </Form> */}
+                </Form> 
 
             </>
             )

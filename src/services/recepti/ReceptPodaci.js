@@ -6,7 +6,7 @@
     vrijeme: 20,
     slika: '/slike/carbonara.jpg',
     opis: 'Jednostavna i iskusna tjestenina s jajima,sirom i pancetom.',
-   
+   omiljen: true
 },
 {
     id: 2,
@@ -15,7 +15,7 @@
     vrijeme: 15,
     slika: '/slike/palacinke.jpg',
     opis: 'Brze i jednostavne palačinke koje možete poslužiti sa slatkim nadjevom.',
-
+omiljen: false
 },
 {
     id: 3,
@@ -24,6 +24,6 @@
     vrijeme: 35,
     slika: '/slike/piletina.jpg',
     opis: 'Ukusan i jednostavan obrok s pileetinom i svježim povrćem.',
-   
+   omiljen: true
 }
 ]
