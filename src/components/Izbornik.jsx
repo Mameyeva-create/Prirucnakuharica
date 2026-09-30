@@ -31,7 +31,7 @@ export default function Izbornik() {
                         <NavDropdown title="❤️ Omiljeni" id="omiljeni-dropdown">
                             <NavDropdown.Item
                                 onClick={() => navigate(RouteNames.OMILJENI)}
-                            > ❤️ </NavDropdown.Item>
+                            > ❤️ Omiljeni </NavDropdown.Item>
                         </NavDropdown>
 
                         <NavDropdown title="＋ Dodaj" id="dodaj-dropdown">

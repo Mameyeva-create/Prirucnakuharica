@@ -2,7 +2,7 @@ import { use } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import ReceptService from "../../services/recepti/ReceptService";
 import { RouteNames } from "../../constants";
-import { Col, Form, FormGroup, FormLabel, Row} from "react-bootstrap";
+import { Button, Col, Form, Row } from "react-bootstrap";
 
 
 export default function ReceptNovi() {
@@ -16,20 +16,21 @@ export default function ReceptNovi() {
     }
     function odradiSubmit(e) {
         e.preventDefault()
+
         const podaci = new FormData(e.target)
+
         dodaj({
             naziv: podaci.get('naziv'),
             kategorija: podaci.get('kategorija'),
             vrijeme: parseInt(podaci.get('vrijeme')),
-            opis: podaci.get('opis')
+            opis: podaci.get('opis'),
+            omiljen: podaci.get('omiljen') ==='on'
         })
     }
 
     return (
-    <>
-        
-
-             <Form onSubmit={odradiSubmit}>
+        <>
+            <Form onSubmit={odradiSubmit}>
 
                 <Form.Group controlId="naziv">
                     <Form.Label>Naziv recepta</Form.Label>
@@ -55,17 +56,28 @@ export default function ReceptNovi() {
                         name="opis" rows={4} required />
                 </Form.Group>
 
-                    <Row className="mt-4">
-                        <Col>
-                            <Link to={RouteNames.RECEPTI} className="btn btn-danger">
-                                Odustani
-                            </Link>
-                        </Col>
+                <Form.Group controlId="omiljen" className="mt-3">
+                    <Form.Check label="Dodaj u omiljene ❤️"
+                    type="checkbox"
+                    name="omiljen" 
+                    />
+                </Form.Group>
 
-                    </Row>
+                <Row className="mt-4">
+                    <Col>
+                        <Link to={RouteNames.RECEPTI} className="btn btn-danger">
+                            Odustani
+                        </Link>
+                    </Col>
+                    <Col>
+                        <Button type="submit" variant="success">
+                            Dodaj svoj recept
+                        </Button>
+                    </Col>
+                </Row>
 
-                </Form> 
+            </Form>
 
-            </>
-            )
+        </>
+    )
 }

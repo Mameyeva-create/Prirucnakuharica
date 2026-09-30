@@ -6,6 +6,7 @@ import Home from './pages/Home'
 import './App.css'
 import ReceptPregled from './pages/recepti/ReceptPregled'
 import ReceptNovi from './pages/recepti/ReceptNovi'
+import Omiljeni from './pages/recepti/Omiljeni'
 
 function App() {
 
@@ -20,6 +21,8 @@ function App() {
           <Route path={RouteNames.RECEPTI} element={<ReceptPregled />} />
           
           <Route path={RouteNames.RECEPTI_NOVI} element={<ReceptNovi />} />
+
+          <Route path={RouteNames.OMILJENI} element={<Omiljeni />} />
         </Routes>
       </Container>
       <hr />

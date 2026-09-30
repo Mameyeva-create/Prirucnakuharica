@@ -5,11 +5,11 @@ import { Link } from "react-router-dom"
 import { RouteNames } from "../../constants"
 
 
-export default function ReceptPregled(){
+export default function ReceptPregled() {
 
 const [recepti, setRecepti] = useState([])
 useEffect(()=>{
-    console.log('Dosla na pregled recepta')
+    // console.log('Dosla na pregled recepta')
     ucitajRecepti()
 },[])
 
@@ -32,14 +32,18 @@ async function ucitajRecepti(){
                     <th>Kategorija</th>
                     <th>Vrijeme</th>
                     <th>Opis</th>
+                    <th>Omiljen</th>
                 </thead>
                 <tbody>
                     {recepti && recepti.map((recept)=>(
                         <tr key={recept.id}>
-                            <td>{recept.naziv}</td>
+                            <td className="lead">{recept.naziv}</td>
                             <td>{recept.kategorija}</td>
-                            <td>{recept.vrijeme}</td>
+                            <td className="text-end">{recept.vrijeme} min</td>
                             <td>{recept.opis}</td>
+                            <td>
+                                {recept.omiljen ? '❤️' : ''}
+                            </td>
                         </tr>
                     ))}
                 </tbody>
