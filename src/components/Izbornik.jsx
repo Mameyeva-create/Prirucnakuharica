@@ -9,10 +9,17 @@ export default function Izbornik() {
 
     const navigate = useNavigate()
 
-    return (
-        <Navbar expand="lg" className="bg-body-tertiary">
-            <Container>
-                <Navbar.Brand href="#home">
+    return ( 
+        <Navbar expand="lg" className="navbar-kuharica" variant='dark'>
+            <Container fluid>
+                <Navbar.Brand  onClick={() => navigate(RouteNames.HOME)} 
+                style={{cursor: 'pointer'}}>
+                    {/* <img
+                        src='./assets/slike/chef-hat.png'
+                        alt='Chef hat'
+                        width='42'
+                        className='me-2'
+                    /> */}
                     {IME_APLIKACIJE}
                 </Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
@@ -44,5 +51,7 @@ export default function Izbornik() {
                 </Navbar.Collapse>
             </Container>
         </Navbar>
+
+        
     )
 }

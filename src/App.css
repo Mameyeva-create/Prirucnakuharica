@@ -1,6 +1,150 @@
-.app{
-  min-height: 500px;
+/* =========================
+   ОБЩИЕ СТИЛИ
+   ========================= */
+
+* {
+    box-sizing: border-box;
 }
-.desno{
-  text-align: right;
+
+html,
+body,
+#root {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    min-height: 100%;
+}
+
+body {
+    margin: 0;
+}
+
+.app {
+    width: 100%;
+    min-height: 500px;
+}
+
+.desno {
+    text-align: right;
+}
+
+
+/* =========================
+   ШАПКА
+   ========================= */
+
+.navbar-kuharica {
+    width: 100%;
+    margin: 0;
+    padding: 15px 20px;
+    background-color: #35483b;
+}
+
+.navbar-kuharica .navbar-brand,
+.navbar-kuharica .nav-link,
+.navbar-kuharica .navbar-toggler {
+    color: #fff8ed;
+}
+
+.navbar-kuharica .navbar-brand {
+    font-size: 24px;
+    font-weight: 600;
+}
+
+.navbar-kuharica .nav-link:hover,
+.navbar-kuharica .navbar-brand:hover {
+    color: #e9b88b;
+}
+
+
+/* =========================
+   ГЛАВНАЯ СТРАНИЦА
+   ========================= */
+
+.hero-banner {
+     width: 100vw;
+    min-height: calc(100vh - 70px);
+
+    margin-left: calc(50% - 50vw);
+
+    background-image: url("./assets/slike/kuhinja.png");
+   background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* =========================
+   ТЕКСТ НА ГЛАВНОЙ
+   ========================= */
+
+.pocetna {
+     width: 100%;
+    min-height: calc(100vh - 70px);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    text-align: center;
+    background: transparent;
+    padding: 40px 20px;
+}
+
+.pocetna h1 {
+    margin: 0;
+    font-size: clamp(32px, 5vw, 56px);
+    color: #25342d;
+}
+
+
+/* =========================
+   FOOTER
+   ========================= */
+
+footer {
+    width: 100%;
+    margin: 0;
+    padding: 15px 20px;
+
+    text-align: center;
+
+    background-color: #fff8ed;
+    color: #25342d;
+}
+
+footer hr {
+    margin: 0 0 15px 0;
+}
+
+
+/* =========================
+   МОБИЛЬНАЯ ВЕРСИЯ
+   ========================= */
+
+@media (max-width: 768px) {
+
+    .navbar-kuharica {
+        padding: 10px 15px;
+    }
+
+    .navbar-kuharica .navbar-brand {
+        font-size: 20px;
+    }
+
+    .hero-banner {
+        min-height: 400px;
+    }
+
+    .pocetna {
+        min-height: 400px;
+        padding: 30px 15px;
+    }
+
+    .pocetna h1 {
+        font-size: 32px;
+    }
 }

@@ -4,6 +4,6 @@ export const RouteNames = {
     HOME: '/',
     RECEPTI: '/recepti',
     RECEPTI_NOVI: '/recepti/novi',
-   OMILJENI: '/omiljeni'
-  
+    OMILJENI: '/omiljeni'
+
 }
