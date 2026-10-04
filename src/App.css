@@ -1,3 +1,10 @@
+@font-face {
+    font-family: 'Pacifico';
+    src: url('./assets/fonts/Pacifico-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
 /* =========================
    ОБЩИЕ СТИЛИ
    ========================= */
@@ -63,8 +70,10 @@ body {
 }
 
 .navbar-kuharica .navbar-brand {
-    font-size: 24px;
-    font-weight: 600;
+    font-family: 'Pacifico', cursive;
+    font-size: 28px;
+    font-weight: normal;
+    color: #fff8ed;
 }
 
 .navbar-kuharica .nav-link:hover,

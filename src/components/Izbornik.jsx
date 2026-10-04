@@ -5,6 +5,7 @@ import NavDropdown from 'react-bootstrap/NavDropdown';
 import { IME_APLIKACIJE, RouteNames } from '../constants';
 import { useNavigate } from 'react-router-dom';
 import chefHat from '../assets/slike/chef-hat.png'
+import { BiBookAdd } from 'react-icons/bi';
 
 export default function Izbornik() {
 
@@ -64,7 +65,12 @@ export default function Izbornik() {
                             > ❤️ Omiljeni </NavDropdown.Item>
                         </NavDropdown>
 
-                        <NavDropdown title="＋ Dodaj" id="dodaj-dropdown">
+                        <NavDropdown title={
+                        <>
+                        <BiBookAdd color="white" size={20} />
+                        {' '}Dodaj
+                        </> }
+                        id="dodaj-dropdown">
                             <NavDropdown.Item
                                 onClick={() => navigate(RouteNames.RECEPTI_NOVI)}
                             > Dodaj Svoj </NavDropdown.Item>
