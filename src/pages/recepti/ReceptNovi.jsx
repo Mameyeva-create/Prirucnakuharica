@@ -24,7 +24,8 @@ export default function ReceptNovi() {
             kategorija: podaci.get('kategorija'),
             vrijeme: parseInt(podaci.get('vrijeme')),
             opis: podaci.get('opis'),
-            omiljen: podaci.get('omiljen') ==='on'
+            omiljen: podaci.get('omiljen') === 'on',
+            vegansko: podaci.get('vegansko') === 'on'
         })
     }
 
@@ -58,8 +59,15 @@ export default function ReceptNovi() {
 
                 <Form.Group controlId="omiljen" className="mt-3">
                     <Form.Check label="Dodaj u omiljene ❤️"
-                    type="checkbox"
-                    name="omiljen" 
+                        type="checkbox"
+                        name="omiljen"
+                    />
+                </Form.Group>
+
+                <Form.Group controlId="vegansko" className="mt-3">
+                    <Form.Check label="Dodaj u vegansko 🌱"
+                        type="checkbox"
+                        name="vegansko"
                     />
                 </Form.Group>
 

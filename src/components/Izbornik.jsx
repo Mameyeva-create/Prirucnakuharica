@@ -4,22 +4,24 @@ import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import { IME_APLIKACIJE, RouteNames } from '../constants';
 import { useNavigate } from 'react-router-dom';
+import chefHat from '../assets/slike/chef-hat.png'
 
 export default function Izbornik() {
 
     const navigate = useNavigate()
 
-    return ( 
+    return (
         <Navbar expand="lg" className="navbar-kuharica" variant='dark'>
             <Container fluid>
-                <Navbar.Brand  onClick={() => navigate(RouteNames.HOME)} 
-                style={{cursor: 'pointer'}}>
-                    {/* <img
-                        src='./assets/slike/chef-hat.png'
+                <Navbar.Brand onClick={() => navigate(RouteNames.HOME)}
+                    style={{ cursor: 'pointer' }}>
+                    <img
+                        src={chefHat}
                         alt='Chef hat'
                         width='42'
-                        className='me-2'
-                    /> */}
+                        height='42'
+                        className='me-2 chef-hat'
+                    />
                     {IME_APLIKACIJE}
                 </Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
@@ -33,6 +35,27 @@ export default function Izbornik() {
                             <NavDropdown.Item
                                 onClick={() => navigate(RouteNames.RECEPTI)}
                             >SVE</NavDropdown.Item>
+
+                            <NavDropdown.Item
+                                onClick={() => navigate(RouteNames.RECEPTI + '?kategorija=Doručak')}
+                            >🥗 Doručak</NavDropdown.Item>
+
+                            <NavDropdown.Item
+                                onClick={() => navigate(RouteNames.RECEPTI + '?kategorija=Ručak')}
+                            >🍲 Ručak</NavDropdown.Item>
+
+                            <NavDropdown.Item
+                                onClick={() => navigate(RouteNames.RECEPTI + '?kategorija=Večera')}
+                            >🍱 Večera</NavDropdown.Item>
+
+                            <NavDropdown.Item
+                                onClick={() => navigate(RouteNames.RECEPTI + '?kategorija=Desert')}
+                            >🧁 Desert</NavDropdown.Item>
+
+                            <NavDropdown.Item
+                                onClick={() => navigate(RouteNames.RECEPTI + '?vegansko=true')}
+                            >🌱 Vegansko</NavDropdown.Item>
+
                         </NavDropdown>
 
                         <NavDropdown title="❤️ Omiljeni" id="omiljeni-dropdown">
@@ -52,6 +75,6 @@ export default function Izbornik() {
             </Container>
         </Navbar>
 
-        
+
     )
 }

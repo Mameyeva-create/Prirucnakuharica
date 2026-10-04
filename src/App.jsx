@@ -19,6 +19,7 @@ function App() {
       <Izbornik />
      
         <Container className='app'>
+          <main>
           <Routes>
             <Route path={RouteNames.HOME} element={<Pocetna />} />
 
@@ -29,6 +30,7 @@ function App() {
             <Route path={RouteNames.OMILJENI} element={<Omiljeni />} />
             {/* <Route path={RouteNames.POCETNA} element={<Pocetna />} /> */}
           </Routes>
+          </main>
         </Container>
      
       <footer>

@@ -6,7 +6,8 @@ export const recepti = [
         vrijeme: 20,
         slika: '/slike/carbonara.jpg',
         opis: 'Jednostavna i iskusna tjestenina s jajima,sirom i pancetom.',
-        omiljen: true
+        omiljen: true,
+        vegansko: false
     },
     {
         id: 2,
@@ -15,7 +16,8 @@ export const recepti = [
         vrijeme: 15,
         slika: '/slike/palacinke.jpg',
         opis: 'Brze i jednostavne palačinke koje možete poslužiti sa slatkim nadjevom.',
-        omiljen: false
+        omiljen: false,
+        vegansko: true
     },
     {
         id: 3,
@@ -24,7 +26,8 @@ export const recepti = [
         vrijeme: 35,
         slika: '/slike/piletina.jpg',
         opis: 'Ukusan i jednostavan obrok s pileetinom i svježim povrćem.',
-        omiljen: true
+        omiljen: true,
+        vegansko: true
     },
     {
         id: 4,
@@ -33,7 +36,9 @@ export const recepti = [
         vrijeme: 30,
         slika: '/slike/pizza.jpg',
         opis: 'Klasična talijanska pizza s rajčicom, mozzarellom i svježim bosiljkom.',
-        omiljen: false
+        omiljen: false,
+        vegansko: true
+
     },
     {
         id: 5,
@@ -42,7 +47,8 @@ export const recepti = [
         vrijeme: 20,
         slika: '/slike/cezar-salata.jpg',
         opis: 'Svježa salata s piletinom, hrskavim krutonima, parmezanom i Cezar umakom.',
-        omiljen: true
+        omiljen: true,
+        vegansko: false
     },
     {
         id: 6,
@@ -51,7 +57,8 @@ export const recepti = [
         vrijeme: 45,
         slika: '/slike/cokoladni-kolac.jpg',
         opis: 'Sočan i mekan čokoladni kolač bogatog okusa, idealan za sve ljubitelje čokolade.',
-        omiljen: false
+        omiljen: false,
+        vegansko: true
     },
     {
         id: 7,
@@ -60,7 +67,9 @@ export const recepti = [
         vrijeme: 25,
         slika: '/slike/povrtna-juha.jpg',
         opis: 'Lagana i zdrava juha od svježeg povrća, savršena za svaki dan.',
-        omiljen: false
+        omiljen: false,
+        vegansko: true
+
     }
 
 ]

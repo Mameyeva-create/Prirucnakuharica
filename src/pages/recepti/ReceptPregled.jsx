@@ -1,31 +1,48 @@
 import { useEffect, useState } from "react"
 import ReceptService from "../../services/recepti/ReceptService"
 import { Table } from "react-bootstrap"
-import { Link } from "react-router-dom"
+import { Link, useSearchParams } from "react-router-dom"
 import { RouteNames } from "../../constants"
 
 
 export default function ReceptPregled() {
 
-const [recepti, setRecepti] = useState([])
-useEffect(()=>{
-    // console.log('Dosla na pregled recepta')
-    ucitajRecepti()
-},[])
+    const [recepti, setRecepti] = useState([])
 
-async function ucitajRecepti(){
-    await ReceptService.get().then((odgovor)=>{
-        // console.table(odgovor.data)
-        setRecepti(odgovor.data)
+    const [searchParams] = useSearchParams()
+
+    const kategorija = searchParams.get('kategorija')
+    const samoVegansko = searchParams.get('vegansko') === 'true'
+
+    useEffect(() => {
+        // console.log('Dosla na pregled recepta')
+        ucitajRecepti()
+    }, [])
+
+
+    async function ucitajRecepti() {
+        await ReceptService.get().then((odgovor) => {
+            // console.table(odgovor.data)
+            setRecepti(odgovor.data)
+        })
+    }
+
+    const prikazaniRecepti = recepti.filter((recept) => {
+        if (samoVegansko) {
+            return recept.vegansko === true
+        }
+        if (kategorija) {
+            return recept.kategorija === kategorija
+        }
+        return true
     })
-}
 
     return (
         <>
-           <Link to={RouteNames.RECEPTI_NOVI}
-           className="btn btn-success w-100 my-3">
-            Ovdje Pretraži recept
-           </Link>
+            <Link to={RouteNames.RECEPTI_NOVI}
+                className="btn btn-success w-100 my-3">
+                Ovdje Pretraži recept
+            </Link>
             <Table hover striped>
                 <thead>
                     <th>Naziv</th>
@@ -33,9 +50,11 @@ async function ucitajRecepti(){
                     <th>Vrijeme</th>
                     <th>Opis</th>
                     <th>Omiljen</th>
+                    <th>Vegansko</th>
                 </thead>
                 <tbody>
-                    {recepti && recepti.map((recept)=>(
+                    {/* {prikazaniRecepti && prikazaniRecepti.map((recept) => ( */}
+                        {prikazaniRecepti.map((recept) => (
                         <tr key={recept.id}>
                             <td className="lead">{recept.naziv}</td>
                             <td>{recept.kategorija}</td>
@@ -44,11 +63,18 @@ async function ucitajRecepti(){
                             <td>
                                 {recept.omiljen ? '❤️' : ''}
                             </td>
+                            <td> {recept.vegansko ? '🌱' : ''} </td>
                         </tr>
                     ))}
+
+                    {prikazaniRecepti.length === 0 && (
+                        <tr>
+                            <td colSpan={6} className="text-center">Nema recepata u ovaj kategoriji</td>
+                        </tr>
+                    )}
                 </tbody>
-            </Table>   
-            
+            </Table>
+
             {/* {JSON.stringify(recept,null,2)} */}
         </>
     )
