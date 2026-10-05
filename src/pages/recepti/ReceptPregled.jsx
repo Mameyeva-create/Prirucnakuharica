@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react"
 import ReceptService from "../../services/recepti/ReceptService"
-import { Table } from "react-bootstrap"
-import { Link, useSearchParams } from "react-router-dom"
+import { Button, Table } from "react-bootstrap"
+import { Link, useNavigate, useSearchParams } from "react-router-dom"
 import { RouteNames } from "../../constants"
 
 
 export default function ReceptPregled() {
 
     const [recepti, setRecepti] = useState([])
+    const navigate = useNavigate()
 
     const [searchParams] = useSearchParams()
 
@@ -51,6 +52,7 @@ export default function ReceptPregled() {
                     <th>Opis</th>
                     <th>Omiljen</th>
                     <th>Vegansko</th>
+                    <th>Akcija</th>
                 </thead>
                 <tbody>
                     {/* {prikazaniRecepti && prikazaniRecepti.map((recept) => ( */}
@@ -64,6 +66,11 @@ export default function ReceptPregled() {
                                 {recept.omiljen ? '❤️' : ''}
                             </td>
                             <td> {recept.vegansko ? '🌱' : ''} </td>
+                            <td>
+                                <Button onClick={()=>{navigate(`/recepti/${recept.id}`)}}>
+                                    Promjeni
+                                </Button>
+                            </td>
                         </tr>
                     ))}
 

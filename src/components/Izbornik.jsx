@@ -19,8 +19,8 @@ export default function Izbornik() {
                     <img
                         src={chefHat}
                         alt='Chef hat'
-                        width='42'
-                        height='42'
+                        width='40'
+                        height='40'
                         className='me-2 chef-hat'
                     />
                     {IME_APLIKACIJE}

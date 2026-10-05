@@ -8,6 +8,7 @@ import ReceptPregled from './pages/recepti/ReceptPregled'
 import ReceptNovi from './pages/recepti/ReceptNovi'
 import Omiljeni from './pages/recepti/Omiljeni'
 import Pocetna from './pages/recepti/Pocetna'
+import ReceptPromjena from './pages/recepti/ReceptPromjena'
 
 function App() {
 
@@ -17,9 +18,9 @@ function App() {
     // <Container>
     <>
       <Izbornik />
-     
-        <Container className='app'>
-          <main>
+
+      <Container className='app'>
+        <main>
           <Routes>
             <Route path={RouteNames.HOME} element={<Pocetna />} />
 
@@ -28,15 +29,18 @@ function App() {
             <Route path={RouteNames.RECEPTI_NOVI} element={<ReceptNovi />} />
 
             <Route path={RouteNames.OMILJENI} element={<Omiljeni />} />
+
+            <Route path={RouteNames.RECEPTI_PROMJENA} element={<ReceptPromjena />} />
+
             {/* <Route path={RouteNames.POCETNA} element={<Pocetna />} /> */}
           </Routes>
-          </main>
-        </Container>
-     
+        </main>
+      </Container>
+
       <footer>
-      <hr />
-      &copy; {IME_APLIKACIJE}
-      {/* </Container> */}
+        <hr />
+        &copy; {IME_APLIKACIJE}
+        {/* </Container> */}
       </footer>
     </>
   )

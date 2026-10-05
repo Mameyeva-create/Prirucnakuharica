@@ -5,6 +5,7 @@ export const RouteNames = {
     RECEPTI: '/recepti',
     RECEPTI_NOVI: '/recepti/novi',
     OMILJENI: '/omiljeni',
-    VEGANSKO: '/vegansko'
+    VEGANSKO: '/vegansko',
+    RECEPTI_PROMJENA: '/recepti/:id'
 
 }

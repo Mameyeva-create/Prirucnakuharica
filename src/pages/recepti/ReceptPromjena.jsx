@@ -1,25 +1,43 @@
-import { use } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { use, useState } from "react";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import ReceptService from "../../services/recepti/ReceptService";
 import { RouteNames } from "../../constants";
 import { Button, Col, Form, Row } from "react-bootstrap";
+import { useEffect } from "react";
 
 
-export default function ReceptNovi() {
+export default function ReceptPromjena() {
 
     const navigate = useNavigate()
+    const params = useParams()
+    const [recept, setRecept] = useState({})
+    const [aktivan, setAktivan] = useState(false)
 
-    async function dodaj(recept) {
-        await ReceptService.dodaj(recept).then(() => {
+    useEffect(() => {
+        ucitajRecept()
+    }, [])
+
+    async function ucitajRecept() {
+        await ReceptService.getById(params.id).then((odgovor) => {
+            const i = odgovor.data
+            setRecept(i)
+            setAktivan(i.aktivan)
+
+        })
+    }
+
+    async function promijeni(recept) {
+        await ReceptService.promijeni(params.id, recept).then(() => {
             navigate(RouteNames.RECEPTI)
         })
     }
+
     function odradiSubmit(e) {
         e.preventDefault()
 
         const podaci = new FormData(e.target)
 
-        dodaj({
+        promijeni({
             naziv: podaci.get('naziv'),
             kategorija: podaci.get('kategorija'),
             vrijeme: parseInt(podaci.get('vrijeme')),
@@ -31,33 +49,37 @@ export default function ReceptNovi() {
 
     return (
         <>
-        <h3>
-            Unos novog recepata
-        </h3>
+            <h3>
+                Promijeni recept
+            </h3>
             <Form onSubmit={odradiSubmit}>
 
                 <Form.Group controlId="naziv">
                     <Form.Label>Naziv recepta</Form.Label>
                     <Form.Control type="text"
-                        name="naziv" required />
+                        name="naziv" required 
+                        defaultValue={recept.naziv}/>
                 </Form.Group>
 
                 <Form.Group controlId="kategorija">
                     <Form.Label>Kategorija</Form.Label>
                     <Form.Control type="text"
-                        name="kategorija" required />
+                        name="kategorija" required
+                        defaultValue={recept.kategorija} />
                 </Form.Group>
 
                 <Form.Group controlId="vrijeme">
                     <Form.Label>Vrijeme</Form.Label>
                     <Form.Control type="number"
-                        name="vrijeme" step={1} required />
+                        name="vrijeme" step={1} required 
+                        defaultValue={recept.vrijeme}/>
                 </Form.Group>
 
                 <Form.Group controlId="opis">
                     <Form.Label>Opis recepta</Form.Label>
                     <Form.Control as="textarea"
-                        name="opis" rows={4} required />
+                        name="opis" rows={4} required 
+                        defaultValue={recept.opis}/>
                 </Form.Group>
 
                 <Form.Group controlId="omiljen" className="mt-3">
@@ -66,6 +88,7 @@ export default function ReceptNovi() {
                         name="omiljen"
                     />
                 </Form.Group>
+
 
                 <Form.Group controlId="vegansko" className="mt-3">
                     <Form.Check label="Dodaj u vegansko 🌱"
@@ -82,7 +105,7 @@ export default function ReceptNovi() {
                     </Col>
                     <Col>
                         <Button type="submit" variant="success">
-                            Dodaj novi recept
+                            Promijeni recept
                         </Button>
                     </Col>
                 </Row>

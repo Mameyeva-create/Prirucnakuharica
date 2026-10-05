@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import ReceptService from "../../services/recepti/ReceptService";
-import { Table } from "react-bootstrap";
+import { Button, Table } from "react-bootstrap";
 
 
 
@@ -32,6 +32,7 @@ export default function Omiljeni() {
                         <th>Opis</th>
                         <th>Omiljen</th>
                         <th>Vegansko</th>
+                        <th>Akcija</th>
                     </tr>
                 </thead>
 
@@ -44,8 +45,15 @@ export default function Omiljeni() {
                             <td>{recept.opis}</td>
                             <td>❤️</td>
                             <td>{recept.vegansko ? '🌱' : ''}</td>
+                            <td>
+                                <Button onClick={() => {
+                                    Navigate(`/recepti/${recept.id}`)
+                                }}>
+                                    Promjeni
+                                </Button>
+                            </td>
                         </tr>
-                        
+
                     ))}
                 </tbody>
             </Table>
