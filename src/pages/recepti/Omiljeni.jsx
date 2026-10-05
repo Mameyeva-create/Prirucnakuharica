@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
 import ReceptService from "../../services/recepti/ReceptService";
 import { Button, Table } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 
 
 
 export default function Omiljeni() {
 
     const [recepti, setRecepti] = useState([])
+    const navigate = useNavigate
 
     useEffect(() => {
         ucitajOmiljene()
@@ -46,8 +48,9 @@ export default function Omiljeni() {
                             <td>❤️</td>
                             <td>{recept.vegansko ? '🌱' : ''}</td>
                             <td>
-                                <Button onClick={() => {
-                                    Navigate(`/recepti/${recept.id}`)
+                                <Button className="btn-promijeni"
+                                onClick={() => {
+                                    navigate(`/recepti/${recept.id}`)
                                 }}>
                                     Promjeni
                                 </Button>

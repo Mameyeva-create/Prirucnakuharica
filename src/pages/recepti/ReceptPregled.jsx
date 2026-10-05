@@ -44,8 +44,10 @@ export default function ReceptPregled() {
                 className="btn btn-success w-100 my-3">
                 Ovdje Pretraži recept
             </Link>
-            <Table hover striped>
+
+            <Table hover striped className="table-recepti">
                 <thead>
+                    <tr>
                     <th>Naziv</th>
                     <th>Kategorija</th>
                     <th>Vrijeme</th>
@@ -53,10 +55,11 @@ export default function ReceptPregled() {
                     <th>Omiljen</th>
                     <th>Vegansko</th>
                     <th>Akcija</th>
+                    </tr>
                 </thead>
                 <tbody>
                     {/* {prikazaniRecepti && prikazaniRecepti.map((recept) => ( */}
-                        {prikazaniRecepti.map((recept) => (
+                    {prikazaniRecepti.map((recept) => (
                         <tr key={recept.id}>
                             <td className="lead">{recept.naziv}</td>
                             <td>{recept.kategorija}</td>
@@ -67,7 +70,8 @@ export default function ReceptPregled() {
                             </td>
                             <td> {recept.vegansko ? '🌱' : ''} </td>
                             <td>
-                                <Button onClick={()=>{navigate(`/recepti/${recept.id}`)}}>
+                                <Button className="btn-promijeni" 
+                                onClick={() => { navigate(`/recepti/${recept.id}`) }}>
                                     Promjeni
                                 </Button>
                             </td>
@@ -76,7 +80,7 @@ export default function ReceptPregled() {
 
                     {prikazaniRecepti.length === 0 && (
                         <tr>
-                            <td colSpan={6} className="text-center">Nema recepata u ovaj kategoriji</td>
+                            <td colSpan={7} className="text-center">Nema recepata u ovaj kategoriji</td>
                         </tr>
                     )}
                 </tbody>

@@ -17,7 +17,7 @@ async function dodaj(recept){
     recepti.push(recept)
 }
 
-async function promijeni(id,recept){
+async function promijeni(id, recept){
     const index = nadiIndex(id)
     recepti[index] = {...recepti[index],...recept}
 }

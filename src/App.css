@@ -21,11 +21,13 @@ body,
     width: 100%;
     min-height: 100%;
 }
+
 #root {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
 }
+
 main {
     flex: 1;
 }
@@ -34,15 +36,16 @@ main {
 body {
     margin: 0;
 }
-
+/* =====================================
+   ОСНОВНОЙ КОНТЕНТ
+   ===================================== */
 .app {
     width: 100%;
-    /* min-height: 500px; */
     padding-left: 24px;
     padding-right: 24px;
     padding-top: 30px;
 }
-
+/* На главной странице убираем верхний отступ */
 .app:has(.hero-banner) {
     padding-top: 0;
 }
@@ -51,11 +54,9 @@ body {
     text-align: right;
 }
 
-
 /* =========================
    ШАПКА
    ========================= */
-
 .navbar-kuharica {
     width: 100%;
     margin: 0;
@@ -84,20 +85,17 @@ body {
 .chef-hat {
     filter: brightness(0) invert(1);
 }
-
-
 /* =========================
    ГЛАВНАЯ СТРАНИЦА
    ========================= */
-
 .hero-banner {
-     width: 100vw;
+    width: 100vw;
     min-height: calc(100vh - 150px);
 
     margin-left: calc(50% - 50vw);
 
     background-image: url("./assets/slike/kuhinja.png");
-   background-size: cover;
+    background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
 
@@ -105,13 +103,11 @@ body {
     justify-content: center;
     align-items: center;
 }
-
 /* =========================
    ТЕКСТ НА ГЛАВНОЙ
    ========================= */
-
 .pocetna {
-     width: 100%;
+    width: 100%;
     min-height: 0;
 
     display: flex;
@@ -126,19 +122,27 @@ body {
 .pocetna h1 {
     margin: 0;
     font-size: clamp(32px, 5vw, 56px);
+    line-height: 1.2;
     color: #25342d;
 }
-
-
+/* =====================================
+   ТАБЛИЦЫ
+   ===================================== */
+ .table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+ }  
+table {
+    width: 100%;
+}
 /* =========================
    FOOTER
    ========================= */
-
 footer {
     width: 100%;
     text-align: center;
     padding: 12px 20px;
-    /* margin-top: auto; */
     margin: 0;
     background-color: #fff8ed;
     color: #25342d;
@@ -148,34 +152,164 @@ footer hr {
     margin: 0 0 10px 0;
 }
 
-
 /* =========================
-   МОБИЛЬНАЯ ВЕРСИЯ
+АДАПТАЦИЯ ПОД РАЗНЫЕ ЭКРАНЫ
    ========================= */
+/* Планшет */
+@media (max-width: 992px) {
+    .navbar-kuharica {
+        padding: 12px 15px;
+    }
 
+    .navbar-kuharica .navbar-brand {
+        font-size: 22px;
+    }
+
+    .hero-banner {
+        min-height: calc(100vh - 140px);
+    }
+
+    .pocetna h1 {
+        font-size: 44px;
+    }
+
+    .app {
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+}
+
+/* Телефон */
 @media (max-width: 768px) {
 
     .navbar-kuharica {
-        padding: 10px 15px;
+        padding: 10px 12px;
     }
 
     .navbar-kuharica .navbar-brand {
         font-size: 20px;
     }
 
-    .hero-banner {
-        /* min-height: 400px; */
-        min-height: calc(100vh - 130 px);
+    .chef-hat {
+        width: 34px;
+        height: 34px;
     }
 
+    .navbar-kuharica .navbar-nav {
+        margin-top: 10px;
+    }
+
+    .navbar-kuharica .nav-link,
+    .navbar-kuharica .dropdown-item {
+        font-size: 16px;
+    }
+
+    /* Основное содержимое */
+    .app {
+        padding-left: 15px;
+        padding-right: 15px;
+        padding-top: 20px;
+    }
+ /* На главной отступ сверху остаётся 0 */
+ .app:has(.hero-banner) {
+    padding-top: 0;
+ }
+    .hero-banner {
+        width: 100vw;
+        min-height: calc(100vh - 125px);
+        margin-left: calc(50% - 50vw);
+        background-position: center;
+        background-size: cover;
+    }
 
     .pocetna {
-        /* min-height: 400px; */
-        min-height: 0;
-        padding: 30px 15px;
+        padding: 25px 15px;
     }
 
     .pocetna h1 {
         font-size: 32px;
+        line-height: 1.2;
     }
+
+    .table-responsive {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    table {
+        min-width: 700px;
+    }
+
+    /* Кнопки */
+    .btn {
+        font-size: 15px;
+    }
+
+    footer {
+        padding: 10px 15px;
+        font-size: 14px;
+    }
+    .table-recepti th:nth-child(4),
+    .table-recepti td:nth-child(4) {
+        white-space: normal;
+        min-width: 250px;
+    }
+    .table-recepti th:nth-child(6),
+    .table-recepti td:nth-child(6) {
+        text-align: center;
+        width: 100px;
+    }
+    .table-recepti th:nth-child(7),
+    .table-recepti td:nth-child(7) {
+        text-align: center;
+        width: 120px;
+    }
+}
+
+@media (max-width: 480px) {
+    .navbar-kuharica .navbar-brand {
+        font-size: 18px;
+    }
+    .chef-hat {
+        width: 30px;
+        height: 30px;
+    }
+    .app {
+        padding-left: 10px;
+        padding-right: 10px;
+        padding-top: 15px;
+    }
+    .app:has(.hero-banner) {
+        padding-top: 0;
+    }
+    .pocetna h1 {
+        font-size: 27px;
+    }
+    .pocetna {
+        padding: 20px 10px;
+    }
+    .pocetna h1 {
+        font-size: 27px;
+    }
+    .hero-banner {
+        min-height:  calc(100vh - 115px);
+    }
+    footer {
+        font-size: 13px;
+    }
+
+}
+/* =========================
+ GUMB PROMIJENI
+ ========================= */
+.btn-promijeni {
+    background-color: green;
+    color: #fff8ed;
+    border: none;
+    padding: 6px 14px;
+    border-radius: 6px;
+}
+.btn-promijeni:hover {
+    background-color: #e9b88b;
+    color: #25342d;
 }
