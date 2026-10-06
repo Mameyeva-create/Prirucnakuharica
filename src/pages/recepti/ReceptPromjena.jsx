@@ -11,7 +11,8 @@ export default function ReceptPromjena() {
     const navigate = useNavigate()
     const params = useParams()
     const [recept, setRecept] = useState({})
-    const [aktivan, setAktivan] = useState(false)
+    const [omiljen, setOmiljen] = useState(false)
+    const [vegansko, setVegansko] = useState(false)
 
     useEffect(() => {
         ucitajRecept()
@@ -21,7 +22,8 @@ export default function ReceptPromjena() {
         await ReceptService.getById(params.id).then((odgovor) => {
             const i = odgovor.data
             setRecept(i)
-            setAktivan(i.aktivan)
+            setOmiljen(i.omiljen)
+            setVegansko(i.vegansko)
 
         })
     }
@@ -42,8 +44,8 @@ export default function ReceptPromjena() {
             kategorija: podaci.get('kategorija'),
             vrijeme: parseInt(podaci.get('vrijeme')),
             opis: podaci.get('opis'),
-            omiljen: podaci.get('omiljen') === 'on',
-            vegansko: podaci.get('vegansko') === 'on'
+            omiljen: omiljen,
+            vegansko: vegansko
         })
     }
 
@@ -84,16 +86,18 @@ export default function ReceptPromjena() {
 
                 <Form.Group controlId="omiljen" className="mt-3">
                     <Form.Check label="Dodaj u omiljene ❤️"
-                        type="checkbox"
                         name="omiljen"
+                        checked={omiljen}
+                        onChange={(e)=>setOmiljen(e.target.checked)}
                     />
                 </Form.Group>
 
 
                 <Form.Group controlId="vegansko" className="mt-3">
                     <Form.Check label="Dodaj u vegansko 🌱"
-                        type="checkbox"
                         name="vegansko"
+                        checked={vegansko}
+                        onChange={(e)=>setVegansko(e.target.checked)}
                     />
                 </Form.Group>
 
