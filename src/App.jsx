@@ -15,8 +15,9 @@ function App() {
 
 
   return (
-    // <Container>
-    <>
+    <div className='d-flex flex-column min-vh-100'>
+    {/* // <Container> */}
+  
       <Izbornik />
 
       <Container className='app'>
@@ -42,7 +43,8 @@ function App() {
         &copy; {IME_APLIKACIJE}
         {/* </Container> */}
       </footer>
-    </>
+      </div>
+   
   )
 }
 export default App

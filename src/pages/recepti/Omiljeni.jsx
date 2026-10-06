@@ -2,13 +2,13 @@ import { useEffect, useState } from "react";
 import ReceptService from "../../services/recepti/ReceptService";
 import { Button, Table } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-
+import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 
 
 export default function Omiljeni() {
 
     const [recepti, setRecepti] = useState([])
-    const navigate = useNavigate
+    const navigate = useNavigate()
 
     useEffect(() => {
         ucitajOmiljene()
@@ -60,6 +60,12 @@ export default function Omiljeni() {
                     ))}
                 </tbody>
             </Table>
+<div style={{maxWidth: '300px', margin: '30px auto 0'}}>
+<DotLottieReact
+src='/heart.lottie'
+loop
+autoplay />
+</div>
         </>
     )
 }
