@@ -26,10 +26,16 @@ function nadiIndex(id){
     return recepti.findIndex(i => i.id === parseInt(id))
 }
 
+async function obrisi(id){
+    const index = nadiIndex(id)
+    recepti.splice(index,1)
+}
+
 
 export default{
     get,
     dodaj,
     getById,
-    promijeni
+    promijeni,
+    obrisi
 }

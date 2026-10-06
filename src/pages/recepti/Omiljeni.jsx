@@ -34,7 +34,7 @@ export default function Omiljeni() {
                         <th>Opis</th>
                         <th>Omiljen</th>
                         <th>Vegansko</th>
-                        <th>Akcija</th>
+                        {/* <th>Akcija</th> */}
                     </tr>
                 </thead>
 
@@ -47,14 +47,14 @@ export default function Omiljeni() {
                             <td>{recept.opis}</td>
                             <td>❤️</td>
                             <td>{recept.vegansko ? '🌱' : ''}</td>
-                            <td>
+                            {/* <td>
                                 <Button className="btn-promijeni"
                                 onClick={() => {
                                     navigate(`/recepti/${recept.id}`)
                                 }}>
                                     Promjeni
                                 </Button>
-                            </td>
+                            </td> */}
                         </tr>
 
                     ))}

@@ -28,6 +28,14 @@ export default function ReceptPregled() {
         })
     }
 
+async function obrisi(id){
+    if(!confirm('Sigurno obrisati')){
+        return
+    }
+    await ReceptService.obrisi(id)
+    ucitajRecepti()
+}
+
     const prikazaniRecepti = recepti.filter((recept) => {
         if (samoVegansko) {
             return recept.vegansko === true
@@ -69,18 +77,23 @@ export default function ReceptPregled() {
                                 {recept.omiljen ? '❤️' : ''}
                             </td>
                             <td> {recept.vegansko ? '🌱' : ''} </td>
-                            <td>
+                            <td style={{ minWidth: '220px', whiteSpace: 'nowrap'}}>
                                 <Button className="btn-promijeni" 
+                                style={{ marginRight: '10px' }}
                                 onClick={() => { navigate(`/recepti/${recept.id}`) }}>
                                     Promjeni
                                 </Button>
+                                {/* &nbsp;&nbsp; */}
+<Button variant="danger" onClick={()=>obrisi(recept.id)}>
+Obriši
+</Button>
                             </td>
                         </tr>
                     ))}
 
                     {prikazaniRecepti.length === 0 && (
                         <tr>
-                            <td colSpan={7} className="text-center">Nema recepata u ovaj kategoriji</td>
+                            <td colSpan={8} className="text-center">Nema recepata u ovaj kategoriji</td>
                         </tr>
                     )}
                 </tbody>
