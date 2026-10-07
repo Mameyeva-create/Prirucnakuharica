@@ -44,6 +44,7 @@ body {
     padding-left: 24px;
     padding-right: 24px;
     padding-top: 30px;
+    min-height: 900px;
 }
 /* На главной странице убираем верхний отступ */
 .app:has(.hero-banner) {
