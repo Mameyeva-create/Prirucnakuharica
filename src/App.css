@@ -91,7 +91,7 @@ body {
    ========================= */
 .hero-banner {
     width: 100vw;
-    min-height: calc(100vh - 150px);
+    min-height: calc(100vh - 130px);
 
     margin-left: calc(50% - 50vw);
 

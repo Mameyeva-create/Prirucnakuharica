@@ -60,7 +60,7 @@ export default function Omiljeni() {
                     ))}
                 </tbody>
             </Table>
-<div style={{maxWidth: '700px', margin: '50px auto 0'}}>
+<div style={{maxWidth: '700px', margin: '300px auto 0', textAlign: 'center'}}>
 <DotLottieReact
 src='/heart.lottie'
 loop
