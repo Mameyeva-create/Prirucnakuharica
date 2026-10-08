@@ -1,41 +1,41 @@
-import { recepti } from "./ReceptPodaci"
+// import { data } from "react-router-dom"
+import { DATA_SOURCE } from "../../constants"
+import ReceptServiceLocalStorage from "./ReceptServiceLocalStorage"
+import ReceptServiceMemorija from "./ReceptServiceMemorija"
 
-async function get(){
-    return {data: [...recepti]}
+
+
+let Servis = null
+
+switch (DATA_SOURCE) {
+    case 'memorija':
+        Servis = ReceptServiseMemorija
+        break
+        case 'LocalStorage':
+            Servis = ReceptServiceLocalStorage
+            break
+            default:
+                Servis = null
 }
 
-async function getById(id){
-    return {data: recepti.find(i => i.id === parseInt(id))}
+const PrazanServis = {
+    get: async () => ({ data: [] }),
+    dodaj: async (recept) => { console.log('Servis nije implementiran') },
+    getById: async (id) => ({ data: {} }),
+    promijeni: async (id, recept) => { console.error('Servis nije implementiran') },
+    obrisi: async (id) => { console.error('Servis nije implementiran') },
 }
 
-async function dodaj(recept){
-    if(recepti.length===0){
-        recept.id = 1
-    } else {
-        recept.id = recepti[recepti.length-1].id + 1
-    }
-    recepti.push(recept)
-}
+const AktivniServis = Servis || PrazanServis
 
-async function promijeni(id, recept){
-    const index = nadiIndex(id)
-    recepti[index] = {...recepti[index],...recept}
-}
 
-function nadiIndex(id){
-    return recepti.findIndex(i => i.id === parseInt(id))
-}
 
-async function obrisi(id){
-    const index = nadiIndex(id)
-    recepti.splice(index,1)
-}
 
 
 export default{
-    get,
-    dodaj,
-    getById,
-    promijeni,
-    obrisi
+    get: () => AktivniServis.get(),
+    dodaj: (recept) => AktivniServis.dodaj(recept),
+    getById: (id) => AktivniServis.getById(id),
+    promijeni: (id, recept) => AktivniServis.promijeni(id,recept),
+    obrisi: (id) => AktivniServis.obrisi(id)
 }
