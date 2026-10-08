@@ -1,4 +1,4 @@
-import { use } from "react";
+
 import { Link, useNavigate } from "react-router-dom";
 import ReceptService from "../../services/recepti/ReceptService";
 import { RouteNames } from "../../constants";
@@ -19,6 +19,30 @@ export default function ReceptNovi() {
 
         const podaci = new FormData(e.target)
 
+        const naziv = podaci.get('naziv').trim()
+        const kategorija = podaci.get('kategorija')
+        const vrijeme = parseInt(podaci.get('vrijeme'))
+        const opis = podaci.get('opis').trim()
+
+        if (naziv.length < 2) {
+            alert('Naziv recepta mora imati najmanje 2 znaka')
+            return
+        }
+
+        if (!['Doručak', 'Ručak', 'Večera', 'Desert'].includes(kategorija)) {
+            alert('Odaberi ispravnu kategoriu')
+            return
+        }
+
+        if (isNaN(vrijeme) || vrijeme < 1 || vrijeme > 300) {
+            alert('Vrijeme nora biti između 1 i 300 minuta')
+            return
+        }
+
+        if (opis.length < 5) {
+            alert('Opis recepata mora imati najmanje 5 znakova')
+            return
+        }
         dodaj({
             naziv: podaci.get('naziv'),
             kategorija: podaci.get('kategorija'),
@@ -31,9 +55,9 @@ export default function ReceptNovi() {
 
     return (
         <>
-        <h3>
-            Unos novog recepata
-        </h3>
+            <h3>
+                Unos novog recepata
+            </h3>
             <Form onSubmit={odradiSubmit}>
 
                 <Form.Group controlId="naziv">
@@ -44,14 +68,22 @@ export default function ReceptNovi() {
 
                 <Form.Group controlId="kategorija">
                     <Form.Label>Kategorija</Form.Label>
-                    <Form.Control type="text"
-                        name="kategorija" required />
+                    <Form.Select name="kategorija" required>
+                        <option value="">-- Odaberi kategoriju --</option>
+                        <option value="Doručak">Doručak</option>
+                        <option value="Doručak">Ručak</option>
+                        <option value="Doručak">Večera</option>
+                        <option value="Doručak">Desert</option>
+                    </Form.Select>
+                    {/* <Form.Control type="text"
+                        name="kategorija" required /> */}
                 </Form.Group>
 
                 <Form.Group controlId="vrijeme">
-                    <Form.Label>Vrijeme</Form.Label>
+                    <Form.Label>Vrijeme (minute)</Form.Label>
                     <Form.Control type="number"
-                        name="vrijeme" step={1} required />
+                        name="vrijeme" step={1} min={1} max={300}
+                        required />
                 </Form.Group>
 
                 <Form.Group controlId="opis">

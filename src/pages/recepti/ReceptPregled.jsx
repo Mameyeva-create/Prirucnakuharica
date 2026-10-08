@@ -28,13 +28,13 @@ export default function ReceptPregled() {
         })
     }
 
-async function obrisi(id){
-    if(!confirm('Sigurno obrisati')){
-        return
+    async function obrisi(id) {
+        if (!confirm('Sigurno obrisati')) {
+            return
+        }
+        await ReceptService.obrisi(id)
+        ucitajRecepti()
     }
-    await ReceptService.obrisi(id)
-    ucitajRecepti()
-}
 
     const prikazaniRecepti = recepti.filter((recept) => {
         if (samoVegansko) {
@@ -48,57 +48,59 @@ async function obrisi(id){
 
     return (
         <>
-            <Link to={RouteNames.RECEPTI_NOVI}
-                className="btn btn-success w-100 my-3">
-                Ovdje Pretraži recept
-            </Link>
+            <div style={{ overflowX: 'auto' }}>
+                <div style={{ minWidth: '900px' }}>
+                    <Link to={RouteNames.RECEPTI_NOVI}
+                        className="btn btn-success w-100 my-3">
+                        Ovdje Pretraži recept
+                    </Link>
 
-            <Table hover striped className="table-recepti">
-                <thead>
-                    <tr>
-                    <th>Naziv</th>
-                    <th>Kategorija</th>
-                    <th>Vrijeme</th>
-                    <th>Opis</th>
-                    <th>Omiljen</th>
-                    <th>Vegansko</th>
-                    <th>Akcija</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {/* {prikazaniRecepti && prikazaniRecepti.map((recept) => ( */}
-                    {prikazaniRecepti.map((recept) => (
-                        <tr key={recept.id}>
-                            <td className="lead">{recept.naziv}</td>
-                            <td>{recept.kategorija}</td>
-                            <td className="text-end">{recept.vrijeme} min</td>
-                            <td>{recept.opis}</td>
-                            <td>
-                                {recept.omiljen ? '❤️' : ''}
-                            </td>
-                            <td> {recept.vegansko ? '🌱' : ''} </td>
-                            <td style={{ minWidth: '220px', whiteSpace: 'nowrap'}}>
-                                <Button className="btn-promijeni" 
-                                style={{ marginRight: '10px' }}
-                                onClick={() => { navigate(`/recepti/${recept.id}`) }}>
-                                    Promjeni
-                                </Button>
-                                {/* &nbsp;&nbsp; */}
-<Button variant="danger" onClick={()=>obrisi(recept.id)}>
-Obriši
-</Button>
-                            </td>
-                        </tr>
-                    ))}
+                    <Table hover striped className="table-recepti">
+                        <thead>
+                            <tr>
+                                <th>Naziv</th>
+                                <th>Kategorija</th>
+                                <th>Vrijeme</th>
+                                <th>Opis</th>
+                                <th>Omiljen</th>
+                                <th>Vegansko</th>
+                                <th>Akcija</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {prikazaniRecepti.map((recept) => (
+                                <tr key={recept.id}>
+                                    <td className="lead">{recept.naziv}</td>
+                                    <td>{recept.kategorija}</td>
+                                    <td className="text-end">{recept.vrijeme} min</td>
+                                    <td>{recept.opis}</td>
+                                    <td>
+                                        {recept.omiljen ? '❤️' : ''}
+                                    </td>
+                                    <td> {recept.vegansko ? '🌱' : ''} </td>
+                                    <td style={{ minWidth: '220px', whiteSpace: 'nowrap' }}>
+                                        <Button className="btn-promijeni"
+                                            style={{ marginRight: '10px' }}
+                                            onClick={() => { navigate(`/recepti/${recept.id}`) }}>
+                                            Promjeni
+                                        </Button>
+                                        {/* &nbsp;&nbsp; */}
+                                        <Button variant="danger" onClick={() => obrisi(recept.id)}>
+                                            Obriši
+                                        </Button>
+                                    </td>
+                                </tr>
+                            ))}
 
-                    {prikazaniRecepti.length === 0 && (
-                        <tr>
-                            <td colSpan={8} className="text-center">Nema recepata u ovaj kategoriji</td>
-                        </tr>
-                    )}
-                </tbody>
-            </Table>
-
+                            {prikazaniRecepti.length === 0 && (
+                                <tr>
+                                    <td colSpan={7} className="text-center">Nema recepata u ovoj kategoriji</td>
+                                </tr>
+                            )}
+                        </tbody>
+                    </Table>
+                </div>
+            </div>
             {/* {JSON.stringify(recept,null,2)} */}
         </>
     )

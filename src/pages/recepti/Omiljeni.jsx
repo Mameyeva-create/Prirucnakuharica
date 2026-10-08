@@ -25,47 +25,41 @@ export default function Omiljeni() {
 
     return (
         <>
-            <Table hover striped>
-                <thead>
-                    <tr>
-                        <th>Naziv</th>
-                        <th>Kategorija</th>
-                        <th>Vrijeme</th>
-                        <th>Opis</th>
-                        <th>Omiljen</th>
-                        <th>Vegansko</th>
-                        {/* <th>Akcija</th> */}
-                    </tr>
-                </thead>
-
-                <tbody>
-                    {recepti.map((recept) => (
-                        <tr key={recept.id}>
-                            <td className="lead">{recept.naziv}</td>
-                            <td>{recept.kategorija}</td>
-                            <td className="text-end">{recept.vrijeme} min</td>
-                            <td>{recept.opis}</td>
-                            <td>❤️</td>
-                            <td>{recept.vegansko ? '🌱' : ''}</td>
-                            {/* <td>
-                                <Button className="btn-promijeni"
-                                onClick={() => {
-                                    navigate(`/recepti/${recept.id}`)
-                                }}>
-                                    Promjeni
-                                </Button>
-                            </td> */}
+            <div className="table-responsive">
+                <Table hover striped>
+                    <thead>
+                        <tr>
+                            <th>Naziv</th>
+                            <th>Kategorija</th>
+                            <th>Vrijeme</th>
+                            <th>Opis</th>
+                            <th>Omiljen</th>
+                            <th>Vegansko</th>
+                            {/* <th>Akcija</th> */}
                         </tr>
+                    </thead>
 
-                    ))}
-                </tbody>
-            </Table>
-<div style={{maxWidth: '700px', margin: '300px auto 0', textAlign: 'center'}}>
-<DotLottieReact
-src='/heart.lottie'
-loop
-autoplay />
-</div>
+                    <tbody>
+                        {recepti.map((recept) => (
+                            <tr key={recept.id}>
+                                <td className="lead">{recept.naziv}</td>
+                                <td>{recept.kategorija}</td>
+                                <td className="text-end">{recept.vrijeme} min</td>
+                                <td>{recept.opis}</td>
+                                <td>❤️</td>
+                                <td>{recept.vegansko ? '🌱' : ''}</td>
+                            </tr>
+
+                        ))}
+                    </tbody>
+                </Table>
+            </div>
+            <div style={{ maxWidth: '700px', margin: '300px auto 0', textAlign: 'center' }}>
+                <DotLottieReact
+                    src='/heart.lottie'
+                    loop
+                    autoplay />
+            </div>
         </>
     )
 }

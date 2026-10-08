@@ -9,5 +9,5 @@ export const RouteNames = {
     RECEPTI_PROMJENA: '/recepti/:id'
 
 }
-
-export const DATA_SOURCE = 'LocalStorage'
+// memorija, LocalStorage
+export const DATA_SOURCE = 'memorija'
