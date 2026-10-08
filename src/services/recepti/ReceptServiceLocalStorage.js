@@ -1,5 +1,3 @@
-import { data } from "react-router-dom"
-
 const STORAGE_KEY = 'recepti'
 
 function dohvatiSveIzStorage() {

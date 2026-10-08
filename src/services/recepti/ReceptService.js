@@ -9,13 +9,13 @@ let Servis = null
 
 switch (DATA_SOURCE) {
     case 'memorija':
-        Servis = ReceptServiseMemorija
+        Servis = ReceptServiceMemorija
         break
-        case 'LocalStorage':
-            Servis = ReceptServiceLocalStorage
-            break
-            default:
-                Servis = null
+    case 'LocalStorage':
+        Servis = ReceptServiceLocalStorage
+        break
+    default:
+        Servis = null
 }
 
 const PrazanServis = {
@@ -32,10 +32,10 @@ const AktivniServis = Servis || PrazanServis
 
 
 
-export default{
+export default {
     get: () => AktivniServis.get(),
     dodaj: (recept) => AktivniServis.dodaj(recept),
     getById: (id) => AktivniServis.getById(id),
-    promijeni: (id, recept) => AktivniServis.promijeni(id,recept),
+    promijeni: (id, recept) => AktivniServis.promijeni(id, recept),
     obrisi: (id) => AktivniServis.obrisi(id)
 }
