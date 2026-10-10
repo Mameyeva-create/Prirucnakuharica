@@ -109,12 +109,9 @@ body {
    ========================= */
 .pocetna {
     width: 100%;
-    min-height: 0;
+  
 
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
+   
     text-align: center;
     background: transparent;
     padding: 40px 20px;
@@ -265,6 +262,24 @@ footer hr {
         text-align: center;
         width: 120px;
     }
+    .hladnjak-sekcija {
+        padding: 20px 15px 30px;
+    }
+    .hladnjak-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    .hladnjak-grid img {
+        /* height: 240px; */
+        height: auto;
+        max-height: 300px;
+    }
+    .pretraga-forma {
+        flex-direction: column;
+    }
+    .pretraga-forma .btn {
+        width: 100%;
+    }
 }
 
 @media (max-width: 480px) {
@@ -313,4 +328,72 @@ footer hr {
 .btn-promijeni:hover {
     background-color: #e9b88b;
     color: #25342d;
+}
+
+/* =========================
+   FOTOGRAFIJE ISPOD POZADINE
+   ========================= */
+.hladnjak-sekcija {
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+    padding: 30px 0 40px;
+    background-color: #fff8ed;
+}
+.hladnjak-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px;
+    /* width: 100%; */
+    align-items: start;
+}
+/* Oba stupca imaju jednaku visinu */
+.hladnjak-grid > div {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
+/* Первая фотография */
+.hladnjak-grid > div:first-child img {
+    display: block;
+    width: 100%;
+    height: 240px;
+    object-fit: cover;
+    border-radius: none;
+}
+/* Вторая фотография */
+.hladnjak-grid > div:last-child img {
+    display: block;
+    width: 100%;
+    height: 345px;
+    object-fit: cover;
+    border-radius: none;
+}
+/* Gumb ispod prve fotografije */
+.hladnjak-grid .btn {
+    width: 100%;
+    height: 50px;
+    margin-top: 15px;
+    background-color: #35483b;
+    color: #fff8ed;
+    border: none;
+    padding: 12px;
+    font-size: 18px;
+    flex-shrink: 0;
+}
+.hladnjak-grid .btn:hover {
+    background-color: #e9b88b;
+    color: #25342d;
+}
+.pretraga-forma {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 10px;
+}
+.pretraga-forma .form-control {
+    height: 40px;
+}
+.hladnjak-grid .pretraga-forma .btn {
+    height: 45px;
+    margin-top: 0;
 }

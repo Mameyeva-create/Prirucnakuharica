@@ -6,7 +6,6 @@ import { Button, Col, Form, Row } from "react-bootstrap";
 
 
 export default function ReceptNovi() {
-
     const navigate = useNavigate()
 
     async function dodaj(recept) {
@@ -16,6 +15,7 @@ export default function ReceptNovi() {
     }
     function odradiSubmit(e) {
         e.preventDefault()
+        console.log('Klik na Dodaj novi recept');
 
         const podaci = new FormData(e.target)
 
@@ -23,6 +23,7 @@ export default function ReceptNovi() {
         const kategorija = podaci.get('kategorija')
         const vrijeme = parseInt(podaci.get('vrijeme'))
         const opis = podaci.get('opis').trim()
+        const sastojci = podaci.get('sastojci').trim()
 
         if (naziv.length < 2) {
             alert('Naziv recepta mora imati najmanje 2 znaka')
@@ -30,7 +31,7 @@ export default function ReceptNovi() {
         }
 
         if (!['Doručak', 'Ručak', 'Večera', 'Desert'].includes(kategorija)) {
-            alert('Odaberi ispravnu kategoriu')
+            alert('Odaberi ispravnu kategoriju')
             return
         }
 
@@ -43,11 +44,17 @@ export default function ReceptNovi() {
             alert('Opis recepata mora imati najmanje 5 znakova')
             return
         }
+
+        if (sastojci.length < 2) {
+            alert('Unesi sastojke recepta')
+            return
+        }
         dodaj({
-            naziv: podaci.get('naziv'),
-            kategorija: podaci.get('kategorija'),
-            vrijeme: parseInt(podaci.get('vrijeme')),
-            opis: podaci.get('opis'),
+            naziv,
+            kategorija,
+            vrijeme,
+            opis,
+            sastojci,
             omiljen: podaci.get('omiljen') === 'on',
             vegansko: podaci.get('vegansko') === 'on'
         })
@@ -71,9 +78,9 @@ export default function ReceptNovi() {
                     <Form.Select name="kategorija" required>
                         <option value="">-- Odaberi kategoriju --</option>
                         <option value="Doručak">Doručak</option>
-                        <option value="Doručak">Ručak</option>
-                        <option value="Doručak">Večera</option>
-                        <option value="Doručak">Desert</option>
+                        <option value="Ručak">Ručak</option>
+                        <option value="Večera">Večera</option>
+                        <option value="Desert">Desert</option>
                     </Form.Select>
                     {/* <Form.Control type="text"
                         name="kategorija" required /> */}
@@ -91,6 +98,18 @@ export default function ReceptNovi() {
                     <Form.Control as="textarea"
                         name="opis" rows={4} required />
                 </Form.Group>
+
+                 <Form.Group controlId="sastojci" className="mb-3">
+                    <Form.Label>Sastojci</Form.Label>
+                    <Form.Control as="textarea"
+                        name="sastojci" rows={3} 
+                        placeholder="Npr. piletina, krumpir, mrkva"
+                        required />
+                        <Form.Text muted>
+                            Odvoji sastojke zarezima
+                        </Form.Text>
+                </Form.Group>
+
 
                 <Form.Group controlId="omiljen" className="mt-3">
                     <Form.Check label="Dodaj u omiljene ❤️"

@@ -6,6 +6,7 @@ export const recepti = [
         vrijeme: 20,
         slika: '/slike/carbonara.jpg',
         opis: 'Jednostavna i iskusna tjestenina s jajima,sirom i pancetom.',
+        sastojci: 'tjestenina, jaja, sir, panceta',
         omiljen: true,
         vegansko: false
     },
@@ -16,6 +17,7 @@ export const recepti = [
         vrijeme: 15,
         slika: '/slike/palacinke.jpg',
         opis: 'Brze i jednostavne palačinke koje možete poslužiti sa slatkim nadjevom.',
+        sastojci: 'brašno, mlijeko, jaja, šećer',
         omiljen: false,
         vegansko: true
     },
@@ -26,6 +28,7 @@ export const recepti = [
         vrijeme: 35,
         slika: '/slike/piletina.jpg',
         opis: 'Ukusan i jednostavan obrok s pileetinom i svježim povrćem.',
+        sastojci: 'piletina, mrkva, krumpir, povrće',
         omiljen: true,
         vegansko: true
     },
@@ -36,17 +39,19 @@ export const recepti = [
         vrijeme: 30,
         slika: '/slike/pizza.jpg',
         opis: 'Klasična talijanska pizza s rajčicom, mozzarellom i svježim bosiljkom.',
+        sastojci: 'tijesto, rajčica, mozzarella, bosiljak',
         omiljen: false,
         vegansko: true
 
     },
     {
         id: 5,
-        naziv: 'Cezar salata',
+        naziv: 'Cezar salata',    
         kategorija: 'Ručak',
         vrijeme: 20,
         slika: '/slike/cezar-salata.jpg',
         opis: 'Svježa salata s piletinom, hrskavim krutonima, parmezanom i Cezar umakom.',
+        sastojci: 'piletina, salata, krutoni, parmezan, umak',
         omiljen: true,
         vegansko: false
     },
@@ -57,6 +62,7 @@ export const recepti = [
         vrijeme: 45,
         slika: '/slike/cokoladni-kolac.jpg',
         opis: 'Sočan i mekan čokoladni kolač bogatog okusa, idealan za sve ljubitelje čokolade.',
+        sastojci: 'čokolada, brašno, šećer, jaja',
         omiljen: false,
         vegansko: true
     },
@@ -67,6 +73,7 @@ export const recepti = [
         vrijeme: 25,
         slika: '/slike/povrtna-juha.jpg',
         opis: 'Lagana i zdrava juha od svježeg povrća, savršena za svaki dan.',
+        sastojci: 'mrkva, krumpir, luk, povrće',
         omiljen: false,
         vegansko: true
 

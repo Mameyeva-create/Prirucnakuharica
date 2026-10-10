@@ -14,6 +14,9 @@ export default function ReceptPregled() {
 
     const kategorija = searchParams.get('kategorija')
     const samoVegansko = searchParams.get('vegansko') === 'true'
+    const trazi = (searchParams.get('trazi') || '')
+    .trim()
+    .toLocaleLowerCase('hr')
 
     useEffect(() => {
         // console.log('Dosla na pregled recepta')
@@ -37,19 +40,33 @@ export default function ReceptPregled() {
     }
 
     const prikazaniRecepti = recepti.filter((recept) => {
-        if (samoVegansko) {
-            return recept.vegansko === true
+        if (samoVegansko && recept.vegansko !== true) {
+            return false
         }
-        if (kategorija) {
-            return recept.kategorija === kategorija
+        if (kategorija && recept.kategorija !== kategorija) {
+            return false
         }
+
+        const tekstRecepta = [
+            recept.naziv,
+            recept.opis,
+            recept.sastojci
+        ]
+        .filter(Boolean)
+        .join(' ')
+        .toLocaleLowerCase('hr')
+
+        if (trazi && !tekstRecepta.includes(trazi)) {
+            return false
+        }
+
         return true
     })
 
     return (
         <>
             <div style={{ overflowX: 'auto' }}>
-                <div style={{ minWidth: '900px' }}>
+                <div style={{ minWidth: '1100px' }}>
                     <Link to={RouteNames.RECEPTI_NOVI}
                         className="btn btn-success w-100 my-3">
                         Ovdje Pretraži recept
@@ -62,6 +79,7 @@ export default function ReceptPregled() {
                                 <th>Kategorija</th>
                                 <th>Vrijeme</th>
                                 <th>Opis</th>
+                                <th>Sastojci</th>
                                 <th>Omiljen</th>
                                 <th>Vegansko</th>
                                 <th>Akcija</th>
@@ -74,6 +92,7 @@ export default function ReceptPregled() {
                                     <td>{recept.kategorija}</td>
                                     <td className="text-end">{recept.vrijeme} min</td>
                                     <td>{recept.opis}</td>
+                                     <td>{recept.sastojci || '-'}</td>
                                     <td>
                                         {recept.omiljen ? '❤️' : ''}
                                     </td>
@@ -94,7 +113,10 @@ export default function ReceptPregled() {
 
                             {prikazaniRecepti.length === 0 && (
                                 <tr>
-                                    <td colSpan={7} className="text-center">Nema recepata u ovoj kategoriji</td>
+                                    <td colSpan={8} className="text-center">{trazi
+                                        ? `Nema recepata za: ${trazi}`
+                                        : 'Nema recepata u ovoj kategoriji'
+                                        }</td>
                                 </tr>
                             )}
                         </tbody>
