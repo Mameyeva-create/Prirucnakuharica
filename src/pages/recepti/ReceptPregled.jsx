@@ -15,8 +15,8 @@ export default function ReceptPregled() {
     const kategorija = searchParams.get('kategorija')
     const samoVegansko = searchParams.get('vegansko') === 'true'
     const trazi = (searchParams.get('trazi') || '')
-    .trim()
-    .toLocaleLowerCase('hr')
+        .trim()
+        .toLocaleLowerCase('hr')
 
     useEffect(() => {
         // console.log('Dosla na pregled recepta')
@@ -52,9 +52,9 @@ export default function ReceptPregled() {
             recept.opis,
             recept.sastojci
         ]
-        .filter(Boolean)
-        .join(' ')
-        .toLocaleLowerCase('hr')
+            .filter(Boolean)
+            .join(' ')
+            .toLocaleLowerCase('hr')
 
         if (trazi && !tekstRecepta.includes(trazi)) {
             return false
@@ -92,12 +92,21 @@ export default function ReceptPregled() {
                                     <td>{recept.kategorija}</td>
                                     <td className="text-end">{recept.vrijeme} min</td>
                                     <td>{recept.opis}</td>
-                                     <td>{recept.sastojci || '-'}</td>
+                                    
+                                    <td>{Array.isArray(recept.sastojci)
+                                        ? recept.sastojci.join(', ')
+                                        : recept.sastojci || '-'}
+                                    </td>
                                     <td>
                                         {recept.omiljen ? '❤️' : ''}
                                     </td>
                                     <td> {recept.vegansko ? '🌱' : ''} </td>
                                     <td style={{ minWidth: '220px', whiteSpace: 'nowrap' }}>
+
+                                        <Button variant="success" className="me-2" onClick={() => navigate(`/recepti/${recept.id}/detalji`)}>
+                                            Vidi recept
+                                        </Button>
+
                                         <Button className="btn-promijeni"
                                             style={{ marginRight: '10px' }}
                                             onClick={() => { navigate(`/recepti/${recept.id}`) }}>
@@ -116,7 +125,7 @@ export default function ReceptPregled() {
                                     <td colSpan={8} className="text-center">{trazi
                                         ? `Nema recepata za: ${trazi}`
                                         : 'Nema recepata u ovoj kategoriji'
-                                        }</td>
+                                    }</td>
                                 </tr>
                             )}
                         </tbody>

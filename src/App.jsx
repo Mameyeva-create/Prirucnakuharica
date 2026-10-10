@@ -9,6 +9,7 @@ import ReceptNovi from './pages/recepti/ReceptNovi'
 import Omiljeni from './pages/recepti/Omiljeni'
 import Pocetna from './pages/recepti/Pocetna'
 import ReceptPromjena from './pages/recepti/ReceptPromjena'
+import ReceptDetalji from './pages/recepti/ReceptDetalji'
 
 function App() {
 
@@ -33,7 +34,10 @@ function App() {
 
             <Route path={RouteNames.RECEPTI_PROMJENA} element={<ReceptPromjena />} />
 
+            <Route path="/recepti/:id/detalji" element={<ReceptDetalji />} />
+
             {/* <Route path={RouteNames.POCETNA} element={<Pocetna />} /> */}
+
           </Routes>
         </main>
       </Container>
