@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import ReceptService from "../../services/recepti/ReceptService";
-import { Button, Table } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
+import { Table } from "react-bootstrap";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
+import { Link, useNavigate } from "react-router-dom";
 
 
 export default function Omiljeni() {
@@ -16,17 +16,16 @@ export default function Omiljeni() {
 
     async function ucitajOmiljene() {
 
-        await ReceptService.get().then((odgovor) => {
+        const odgovor = await ReceptService.get()
 
-            const omiljeni = odgovor.data.filter(recept => recept.omiljen === true)
-            setRecepti(omiljeni)
-        })
+        const omiljeni = odgovor.data.filter(recept => recept.omiljen === true)
+        setRecepti(omiljeni)
     }
 
     return (
         <>
             <div className="table-responsive">
-                <Table hover striped>
+                <Table hover striped className="table-recepti">
                     <thead>
                         <tr>
                             <th>Naziv</th>
@@ -35,26 +34,45 @@ export default function Omiljeni() {
                             <th>Opis</th>
                             <th>Omiljen</th>
                             <th>Vegansko</th>
-                            {/* <th>Akcija</th> */}
                         </tr>
                     </thead>
 
                     <tbody>
                         {recepti.map((recept) => (
-                            <tr key={recept.id}>
-                                <td className="lead">{recept.naziv}</td>
+                            <tr key={recept.id}
+                            onClick={() => navigate(`/recepti/${recept.id}/detalji`)}
+                            style={{ cursor: 'pointer' }}
+                            >
+                                <td className="lead">
+                                    <Link to={`/recepti/${recept.id}/detalji`}
+                                        style={{
+                                            color: '#35483b',
+                                            fontWeight: 'bold',
+                                            textDecoration: 'none'
+                                        }}
+                                    >
+                                        {recept.naziv}
+                                    </Link>
+                                </td>
                                 <td>{recept.kategorija}</td>
                                 <td className="text-end">{recept.vrijeme} min</td>
                                 <td>{recept.opis}</td>
                                 <td>❤️</td>
                                 <td>{recept.vegansko ? '🌱' : ''}</td>
                             </tr>
-
                         ))}
+
+                        {recepti.length === 0 && (
+                            <tr>
+                                <td colSpan={6} className="text-center">
+                                    Još nema omiljenih recepata
+                                </td>
+                            </tr>
+                        )}
                     </tbody>
                 </Table>
             </div>
-            <div style={{ maxWidth: '700px', margin: '300px auto 0', textAlign: 'center' }}>
+            <div style={{ maxWidth: '700px', margin: '100px auto 0', textAlign: 'center' }}>
                 <DotLottieReact
                     src='/heart.lottie'
                     loop

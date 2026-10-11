@@ -6,10 +6,8 @@ import { RouteNames } from "../../constants"
 
 
 export default function ReceptPregled() {
-
     const [recepti, setRecepti] = useState([])
     const navigate = useNavigate()
-
     const [searchParams] = useSearchParams()
 
     const kategorija = searchParams.get('kategorija')
@@ -25,14 +23,13 @@ export default function ReceptPregled() {
 
 
     async function ucitajRecepti() {
-        await ReceptService.get().then((odgovor) => {
-            // console.table(odgovor.data)
-            setRecepti(odgovor.data)
-        })
+        const odgovor = await ReceptService.get()
+        // console.table(odgovor.data)
+        setRecepti(odgovor.data)
     }
 
     async function obrisi(id) {
-        if (!confirm('Sigurno obrisati')) {
+        if (!confirm('Sigurno obrisati?')) {
             return
         }
         await ReceptService.obrisi(id)
@@ -46,11 +43,14 @@ export default function ReceptPregled() {
         if (kategorija && recept.kategorija !== kategorija) {
             return false
         }
+        const sastojciTekst = Array.isArray(recept.sastojci)
+            ? recept.sastojci.join(" ")
+            : recept.sastojci || ""
 
         const tekstRecepta = [
             recept.naziv,
             recept.opis,
-            recept.sastojci
+            sastojciTekst
         ]
             .filter(Boolean)
             .join(' ')
@@ -66,7 +66,7 @@ export default function ReceptPregled() {
     return (
         <>
             <div style={{ overflowX: 'auto' }}>
-                <div style={{ minWidth: '1100px' }}>
+                <div style={{ minWidth: '850px' }}>
                     <Link to={RouteNames.RECEPTI_NOVI}
                         className="btn btn-success w-100 my-3">
                         Ovdje Pretraži recept
@@ -79,41 +79,46 @@ export default function ReceptPregled() {
                                 <th>Kategorija</th>
                                 <th>Vrijeme</th>
                                 <th>Opis</th>
-                                <th>Sastojci</th>
                                 <th>Omiljen</th>
                                 <th>Vegansko</th>
                                 <th>Akcija</th>
                             </tr>
                         </thead>
+
                         <tbody>
                             {prikazaniRecepti.map((recept) => (
-                                <tr key={recept.id}>
-                                    <td className="lead">{recept.naziv}</td>
+                                <tr key={recept.id}
+                                onClick={() => navigate(`/recepti/${recept.id}/detalji`)}
+                                style={{ cursor: 'pointer' }}
+                                >
+                                    <td className="lead">
+                                        <Link to={`/recepti/${recept.id}/detalji`}
+                                            style={{
+                                                color: '#35483b',
+                                                fontWeight: 'bold',
+                                                textDecoration: 'none'
+                                            }}
+                                        >
+                                            {recept.naziv}
+                                        </Link>
+                                    </td>
+
                                     <td>{recept.kategorija}</td>
                                     <td className="text-end">{recept.vrijeme} min</td>
                                     <td>{recept.opis}</td>
-                                    
-                                    <td>{Array.isArray(recept.sastojci)
-                                        ? recept.sastojci.join(', ')
-                                        : recept.sastojci || '-'}
-                                    </td>
-                                    <td>
-                                        {recept.omiljen ? '❤️' : ''}
-                                    </td>
+                                    <td>{recept.omiljen ? '❤️' : ''}</td>
                                     <td> {recept.vegansko ? '🌱' : ''} </td>
-                                    <td style={{ minWidth: '220px', whiteSpace: 'nowrap' }}>
 
-                                        <Button variant="success" className="me-2" onClick={() => navigate(`/recepti/${recept.id}/detalji`)}>
-                                            Vidi recept
-                                        </Button>
+                                    <td style={{ minWidth: '190px', whiteSpace: 'nowrap' }}>
 
-                                        <Button className="btn-promijeni"
-                                            style={{ marginRight: '10px' }}
-                                            onClick={() => { navigate(`/recepti/${recept.id}`) }}>
+                                        <Button className="btn-promijeni me-2"
+                                            onClick={(e) => {e.stopPropagation()
+                                            navigate(`/recepti/${recept.id}`)}}>
                                             Promjeni
                                         </Button>
                                         {/* &nbsp;&nbsp; */}
-                                        <Button variant="danger" onClick={() => obrisi(recept.id)}>
+                                        <Button variant="danger" onClick={(e) => {
+                                            e.stopPropagation(); obrisi(recept.id)}}>
                                             Obriši
                                         </Button>
                                     </td>
@@ -122,10 +127,10 @@ export default function ReceptPregled() {
 
                             {prikazaniRecepti.length === 0 && (
                                 <tr>
-                                    <td colSpan={8} className="text-center">{trazi
+                                    <td colSpan={7} className="text-center">{trazi
                                         ? `Nema recepata za: ${trazi}`
-                                        : 'Nema recepata u ovoj kategoriji'
-                                    }</td>
+                                        : 'Nema recepata u ovoj kategoriji'}
+                                    </td>
                                 </tr>
                             )}
                         </tbody>
