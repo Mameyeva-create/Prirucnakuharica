@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
 import ReceptService from "../../services/recepti/ReceptService"
 import { Button, Form } from "react-bootstrap"
-
+import { slikeRecepata } from "../../services/recepti/slikeRecepata"
 
 
 export default function ReceptDetalji() {
@@ -12,15 +12,33 @@ export default function ReceptDetalji() {
     const [recept, setRecept] = useState(null)
     const [porcije, setPorcije] = useState(2)
 
+     async function promjeniOmiljen() {
+        const azuriraniRecept = {
+            ...recept, omiljen: !recept.omiljen
+        }
+        try {
+            await ReceptService.promijeni(recept.id, azuriraniRecept)
+            setRecept(azuriraniRecept)
+        } catch (error) {
+            console.error('Greška pri promjeni omiljenog recepta', error)
+        }
+    }
+
     useEffect(() => {
         async function ucitajRecept() {
-            const odgovor = await ReceptService.getById(id)
-            setRecept(odgovor.data)
+            try {
+                const odgovor = await ReceptService.getById(id)
+                setRecept(odgovor.data)
+            } catch (error) {
+                console.error('Greška pri učitavanju recepta', error)
+                setRecept(null)
+            }
         }
 
         ucitajRecept()
     }, [id])
 
+   
     function prilagodiKolicinu(sastojak) {
         const rezultat = sastojak.match(/^(\d+(?:[.,]\d+)?)\s*(.*)$/)
 
@@ -54,7 +72,8 @@ export default function ReceptDetalji() {
                 <div className="col-12 col-md-6">
                     <img
                         className="img-fluid rounded-4 shadow"
-                        src={recept.slika} alt={recept.naziv}
+                        src={slikeRecepata[recept.naziv] || recept.slikaPutanja || recept.slika}
+                        // src={recept.slikaPutanja || recept.slika} alt={recept.naziv}
                         style={{
                             width: '100%',
                             height: '350px',
@@ -64,10 +83,29 @@ export default function ReceptDetalji() {
                 </div>
 
                 <div className="col-12 col-md-6">
-                    <h2>{recept.naziv}</h2>
+                    <div className="d-flex align-items-center gap-3">
+                        <h2 className="mb-0">{recept.naziv}</h2>
 
-                    <p><strong>Kategorija:</strong> {recept.kategorija}</p>
-
+                        <Button variant="link"
+                            onClick={promjeniOmiljen}
+                            className="p-0 border-0"
+                            style={{
+                                fontSize: '32px',
+                                color: recept.omiljen ? "#dc3545" : "#adb5bd",
+                                textDecoration: 'none',
+                                lineHeight: 1
+                            }}
+                            title={recept.omiljen
+                                ? 'Ukloni iz omiljenih'
+                                : 'Dodaj u omiljene'}
+                            aria-label={recept.omiljen
+                                ? 'Ukloni iz omiljenih'
+                                : 'Dodaj u omiljene'}
+                        >
+                            {recept.omiljen ? "♥" : "♡"}
+                        </Button>
+                    </div>
+                    <p><strong>Kategorija:</strong>{recept.kategorija}</p>
                     <p><strong>Vrijeme pripreme:</strong>{" "}
                         {recept.vrijeme} min</p>
                 </div>

@@ -14,6 +14,7 @@ export const recepti = [
         kategorija: 'Ručak',
         vrijeme: 20,
         slika: carbonara,
+        slikaPutanja: '/src/assets/slike/carbonara.jpg',
         opis: 'Jednostavna i iskusna tjestenina s jajima,sirom i pancetom.',
         sastojci: [
             '200 g tjestenine',
@@ -32,6 +33,7 @@ export const recepti = [
         kategorija: 'Doručak',
         vrijeme: 15,
         slika: palacinke,
+        slikaPutanja: '/src/assets/slike/palacinke.jpg',
         opis: 'Brze i jednostavne palačinke koje možete poslužiti sa slatkim nadjevom.',
         sastojci: [
             '200 g glatkog brašna',
@@ -51,6 +53,7 @@ export const recepti = [
         kategorija: 'Ručak',
         vrijeme: 35,
         slika: piletina,
+        slikaPutanja: '/src/assets/slike/piletina.jpg',
         opis: 'Ukusan i jednostavan obrok s pileetinom i svježim povrćem.',
         sastojci: [
             '400 g pilećih prsa',
@@ -71,6 +74,7 @@ export const recepti = [
         kategorija: 'Večera',
         vrijeme: 30,
         slika: pizza,
+        slikaPutanja: '/src/assets/slike/pizza.jpg',
         opis: 'Klasična talijanska pizza s rajčicom, mozzarellom i svježim bosiljkom.',
         sastojci: [
             '300 g tijesta za pizzu',
@@ -90,6 +94,7 @@ export const recepti = [
         kategorija: 'Ručak',
         vrijeme: 20,
         slika: cezarSalata,
+        slikaPutanja: '/src/assets/slike/cezar-salata.jpg',
         opis: 'Svježa salata s piletinom, hrskavim krutonima, parmezanom i Cezar umakom.',
         sastojci: [
             '300 g pilećih prsa',
@@ -108,6 +113,7 @@ export const recepti = [
         kategorija: 'Desert',
         vrijeme: 45,
         slika: cokoladniKolac,
+        slikaPutanja: '/src/assets/slike/cokoladni-kolac.jpg',
         opis: 'Sočan i mekan čokoladni kolač bogatog okusa, idealan za sve ljubitelje čokolade.',
         sastojci: [
             '200 g čokolade za kuhanje',
@@ -127,6 +133,7 @@ export const recepti = [
         kategorija: 'Ručak',
         vrijeme: 25,
         slika: povrtnaJuha,
+        slikaPutanja: '/src/assets/slike/povrtna-juha.jpg',
         opis: 'Lagana i zdrava juha od svježeg povrća, savršena za svaki dan.',
         sastojci: [
             '2 mrkve',

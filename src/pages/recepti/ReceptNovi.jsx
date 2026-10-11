@@ -8,20 +8,20 @@ import { Button, Col, Form, Row } from "react-bootstrap";
 export default function ReceptNovi() {
     const navigate = useNavigate()
 
-    async function dodaj(recept) {
-        await ReceptService.dodaj(recept).then(() => {
-            navigate(RouteNames.RECEPTI)
-        })
-    }
-    function odradiSubmit(e) {
+    // async function dodaj(recept) {
+    //     await ReceptService.dodaj(recept).then(() => {
+    //         navigate(RouteNames.RECEPTI)
+    //     })
+    // }
+    async function odradiSubmit(e) {
         e.preventDefault()
-        console.log('Klik na Dodaj novi recept');
+        // console.log('Klik na Dodaj novi recept');
 
         const podaci = new FormData(e.target)
 
         const naziv = podaci.get('naziv').trim()
         const kategorija = podaci.get('kategorija')
-        const vrijeme = parseInt(podaci.get('vrijeme'))
+        const vrijeme = parseInt(podaci.get('vrijeme'), 10)
         const opis = podaci.get('opis').trim()
         const sastojci = podaci.get('sastojci').trim()
 
@@ -49,7 +49,7 @@ export default function ReceptNovi() {
             alert('Unesi sastojke recepta')
             return
         }
-        dodaj({
+        const recept = {
             naziv,
             kategorija,
             vrijeme,
@@ -57,7 +57,14 @@ export default function ReceptNovi() {
             sastojci,
             omiljen: podaci.get('omiljen') === 'on',
             vegansko: podaci.get('vegansko') === 'on'
-        })
+        }
+        try {
+             await ReceptService.dodaj(recept)
+            navigate(RouteNames.RECEPTI)
+        } catch (greska) {
+            console.error('Greška pri dodavanju recepta:', greska)
+            alert('Recept nije dodan. Provjeri konzolu')
+        }
     }
 
     return (

@@ -5,38 +5,56 @@ function dohvatiSveIzStorage() {
     return podaci ? JSON.parse(podaci) : []
 }
 
-function spremiUStorage(podaci){
+function spremiUStorage(podaci) {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(podaci))
 }
 
-async function get () {
+async function get() {
     const recepti = dohvatiSveIzStorage()
     return { data: [...recepti] }
 }
 
 async function getById(id) {
     const recepti = dohvatiSveIzStorage()
-    const recept = recepti.find(i => i.id === parseInt(id))
-    return {data: recept}
+
+    const slikePoId = {
+        1: "/src/assets/slike/carbonara.jpg",
+        2: "/src/assets/slike/palacinke.jpg",
+        3: "/src/assets/slike/piletina.jpg",
+        4: "/src/assets/slike/pizza.jpg",
+        5: "/src/assets/slike/cezar-salata.jpg",
+        6: "/src/assets/slike/cokoladni-kolac.jpg",
+        7: "/src/assets/slike/povrtna-juha.jpg"
+    }
+
+    const recept = recepti.find(i => i.id === parseInt(id, 10))
+
+    if (!recept.slikaPutanja && slikePoId[recept.id]) {
+        recept.slikaPutanja = slikePoId[recept.id]
+    }
+
+    return { data: recept }
 }
 
 async function dodaj(recept) {
     const recepti = dohvatiSveIzStorage()
-    if (recepti.length === 0) {
-        recept.id = 1
-    } else {
-        const maxId = Math.max(...recepti.map(i => i.id))
-        recept.id = maxId + 1
-    } 
-    recepti.push(recept)
+
+    const noviRecept = {
+        ...recept, slikaPutanja: recept.slikaPutanja || "",
+        id: recepti.length === 0
+            ? 1
+            : Math.max(...recepti.map(i => i.id)) + 1
+    }
+
+    recepti.push(noviRecept)
     spremiUStorage(recepti)
-        
+
 }
 
 async function promijeni(id, recept) {
     const recepti = dohvatiSveIzStorage()
     const index = recepti.findIndex(i => i.id === parseInt(id))
-    recepti[index] = {...recepti[index], ...recept}
+    recepti[index] = { ...recepti[index], ...recept }
     spremiUStorage(recepti)
 }
 
