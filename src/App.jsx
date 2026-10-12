@@ -10,6 +10,9 @@ import Omiljeni from './pages/recepti/Omiljeni'
 import Pocetna from './pages/recepti/Pocetna'
 import ReceptPromjena from './pages/recepti/ReceptPromjena'
 import ReceptDetalji from './pages/recepti/ReceptDetalji'
+import KategorijaPregled from './pages/kategorije/KategorijaPregled'
+import KategorijaNovi from './pages/kategorije/KategorijaNovi'
+import KategorijaPromjena from './pages/kategorije/KategorijaPromjena'
 
 function App() {
 
@@ -37,6 +40,12 @@ function App() {
             <Route path="/recepti/:id/detalji" element={<ReceptDetalji />} />
 
             {/* <Route path={RouteNames.POCETNA} element={<Pocetna />} /> */}
+
+            <Route path={RouteNames.KATEGORIJE} element={<KategorijaPregled />} />
+
+            <Route path={RouteNames.KATEGORIJE_NOVI} element={<KategorijaNovi />} />
+
+            <Route path={RouteNames.KATEGORIJE_PROMJENA} element={<KategorijaPromjena />} />
 
           </Routes>
         </main>

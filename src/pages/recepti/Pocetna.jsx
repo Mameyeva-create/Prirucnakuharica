@@ -1,10 +1,11 @@
 
 import { Button, Form } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import hladnjak1 from '../../assets/slike/hladnjak1.png';
 import hladnjak2 from '../../assets/slike/hladnjak2.png'
 import { useState } from 'react';
+import { RouteNames } from '../../constants';
 
 
 
@@ -58,6 +59,7 @@ export default function Pocetna() {
           </div>
         </div>
       </section>
+      {/* <Link to={RouteNames.KATEGORIJE}>Kategorije</Link> */}
     </>
   );
 

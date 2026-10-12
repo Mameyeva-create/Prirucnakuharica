@@ -6,8 +6,12 @@ export const RouteNames = {
     RECEPTI_NOVI: '/recepti/novi',
     OMILJENI: '/omiljeni',
     VEGANSKO: '/vegansko',
-    RECEPTI_PROMJENA: '/recepti/:id'
+    RECEPTI_PROMJENA: '/recepti/:id',
+
+    KATEGORIJE: '/kategorije',
+    KATEGORIJE_NOVI: '/kategorije/novi',
+    KATEGORIJE_PROMJENA: '/kategorije/:id',
 
 }
 // memorija, LocalStorage
-export const DATA_SOURCE = 'memorija'
+export const DATA_SOURCE = 'LocalStorage'
