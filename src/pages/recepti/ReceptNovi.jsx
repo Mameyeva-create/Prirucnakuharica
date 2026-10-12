@@ -8,11 +8,6 @@ import { Button, Col, Form, Row } from "react-bootstrap";
 export default function ReceptNovi() {
     const navigate = useNavigate()
 
-    // async function dodaj(recept) {
-    //     await ReceptService.dodaj(recept).then(() => {
-    //         navigate(RouteNames.RECEPTI)
-    //     })
-    // }
     async function odradiSubmit(e) {
         e.preventDefault()
         // console.log('Klik na Dodaj novi recept');
@@ -30,9 +25,12 @@ export default function ReceptNovi() {
             return
         }
 
-        if (!['Doručak', 'Ručak', 'Večera', 'Desert'].includes(kategorija)) {
-            alert('Odaberi ispravnu kategoriju')
+        if (!kategorija || kategorija.trim().length < 2) {
+            alert('Unesi kategoriju s najmanje 2 znaka')
             return
+        // if (!['Doručak', 'Ručak', 'Večera', 'Desert'].includes(kategorija)) {
+        //     alert('Odaberi ispravnu kategoriju')
+        //     return
         }
 
         if (isNaN(vrijeme) || vrijeme < 1 || vrijeme > 300) {
