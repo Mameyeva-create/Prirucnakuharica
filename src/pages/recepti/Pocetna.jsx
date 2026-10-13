@@ -6,7 +6,7 @@ import hladnjak1 from '../../assets/slike/hladnjak1.png';
 import hladnjak2 from '../../assets/slike/hladnjak2.png'
 import { useState } from 'react';
 import { RouteNames } from '../../constants';
-
+import chefHat from '../../assets/slike/chef-hat.png'
 
 
 export default function Pocetna() {
@@ -18,7 +18,7 @@ export default function Pocetna() {
 
     const unos = trazi.trim()
 
-    if (unos.length <2) {
+    if (unos.length < 2) {
       alert('Unesi najmanje 2 znaka za pretragu')
       return
     }
@@ -30,8 +30,32 @@ export default function Pocetna() {
   return (
     <>
       <div className='hero-banner'>
-        {/* <div className="pocetna">
-      </div> */}
+
+        <div className="hero-naslov">
+          <img src={chefHat} alt="Kuharska kapa"
+            className='hero-kapa' />
+
+          <h1 className='hero-ime'>
+            <span className='hero-red'>Priručna</span> {' '}
+            <span className='hero-green'>kuharica</span>
+          </h1>
+
+          <div className="hero-ukras">
+            <svg className="hero-line" viewBox="0 0 80 14">
+              <svg className="hero-line lijeva-linija" viewBox="0 0 80 14">
+                <path d="M1 3 C18 13, 28 12, 42 6 S64 0, 79 10" />
+              </svg>
+            </svg>
+            <span className="hero-heart">♥</span>
+
+            <svg className="hero-line desna-linija" viewBox="0 0 80 14">
+              <path d="M1 10 C15 0, 25 2, 38 7 S62 14, 79 3" />
+            </svg>
+          </div>
+          <p className='hero-slogan'>Brzi i jednostavni recepti</p>
+          <p className='hero-slogan'>za svaki dan.</p>
+
+        </div>
       </div>
       <section className='hladnjak-sekcija'>
         <div className='hladnjak-grid'>
@@ -59,7 +83,7 @@ export default function Pocetna() {
           </div>
         </div>
       </section>
-      {/* <Link to={RouteNames.KATEGORIJE}>Kategorije</Link> */}
+      <Link to={RouteNames.KATEGORIJE}>Kategorije</Link>
     </>
   );
 

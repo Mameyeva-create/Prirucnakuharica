@@ -14,4 +14,4 @@ export const RouteNames = {
 
 }
 // memorija, LocalStorage
-export const DATA_SOURCE = 'LocalStorage'
+export const DATA_SOURCE = 'memorija'
