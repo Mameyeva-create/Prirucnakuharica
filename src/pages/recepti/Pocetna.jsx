@@ -83,7 +83,7 @@ export default function Pocetna() {
           </div>
         </div>
       </section>
-      <Link to={RouteNames.KATEGORIJE}>Kategorije</Link>
+      {/* <Link to={RouteNames.KATEGORIJE}>Kategorije</Link> */}
     </>
   );
 

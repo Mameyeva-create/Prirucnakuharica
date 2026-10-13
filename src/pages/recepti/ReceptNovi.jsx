@@ -3,10 +3,26 @@ import { Link, useNavigate } from "react-router-dom";
 import ReceptService from "../../services/recepti/ReceptService";
 import { RouteNames } from "../../constants";
 import { Button, Col, Form, Row } from "react-bootstrap";
-
+import { useEffect, useState } from "react";
+import KategorijaService from "../../services/kategorije/KategorijaService"
 
 export default function ReceptNovi() {
     const navigate = useNavigate()
+
+    const [kategorije, setKategorije] = useState([])
+
+    useEffect(() => {
+        ucitajKategorije()
+    }, [])
+
+    async function ucitajKategorije() {
+        try {
+            const odgovor = await KategorijaService.get()
+            setKategorije(odgovor.data)
+        } catch (greska) {
+            console.error('Greška pri učitavanju kategorija:', greska)
+        }
+    }
 
     async function odradiSubmit(e) {
         e.preventDefault()
@@ -28,9 +44,9 @@ export default function ReceptNovi() {
         if (!kategorija || kategorija.trim().length < 2) {
             alert('Unesi kategoriju s najmanje 2 znaka')
             return
-        // if (!['Doručak', 'Ručak', 'Večera', 'Desert'].includes(kategorija)) {
-        //     alert('Odaberi ispravnu kategoriju')
-        //     return
+            // if (!['Doručak', 'Ručak', 'Večera', 'Desert'].includes(kategorija)) {
+            //     alert('Odaberi ispravnu kategoriju')
+            //     return
         }
 
         if (isNaN(vrijeme) || vrijeme < 1 || vrijeme > 300) {
@@ -57,7 +73,7 @@ export default function ReceptNovi() {
             vegansko: podaci.get('vegansko') === 'on'
         }
         try {
-             await ReceptService.dodaj(recept)
+            await ReceptService.dodaj(recept)
             navigate(RouteNames.RECEPTI)
         } catch (greska) {
             console.error('Greška pri dodavanju recepta:', greska)
@@ -82,10 +98,9 @@ export default function ReceptNovi() {
                     <Form.Label>Kategorija</Form.Label>
                     <Form.Select name="kategorija" required>
                         <option value="">-- Odaberi kategoriju --</option>
-                        <option value="Doručak">Doručak</option>
-                        <option value="Ručak">Ručak</option>
-                        <option value="Večera">Večera</option>
-                        <option value="Desert">Desert</option>
+                        {kategorije.map((kategorija) => (
+                            <option key={kategorija.id} value={kategorija.naziv}>{kategorija.naziv}</option>
+                        ))}
                     </Form.Select>
                     {/* <Form.Control type="text"
                         name="kategorija" required /> */}
@@ -104,15 +119,15 @@ export default function ReceptNovi() {
                         name="opis" rows={4} required />
                 </Form.Group>
 
-                 <Form.Group controlId="sastojci" className="mb-3">
+                <Form.Group controlId="sastojci" className="mb-3">
                     <Form.Label>Sastojci</Form.Label>
                     <Form.Control as="textarea"
-                        name="sastojci" rows={3} 
+                        name="sastojci" rows={3}
                         placeholder="Npr. piletina, krumpir, mrkva"
                         required />
-                        <Form.Text muted>
-                            Odvoji sastojke zarezima
-                        </Form.Text>
+                    <Form.Text muted>
+                        Odvoji sastojke zarezima
+                    </Form.Text>
                 </Form.Group>
 
 

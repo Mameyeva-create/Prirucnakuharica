@@ -52,7 +52,7 @@ export default function KategorijaPromjena() {
                     <Form.Label>Naziv kategorija</Form.Label>
                     <Form.Control type="text"
                         name="naziv" required 
-                        defaultValue={kategorija.naziv}/>
+                        defaultValue={kategorija?.naziv || ""}/>
                 </Form.Group>
 
                

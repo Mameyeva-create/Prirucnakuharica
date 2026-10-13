@@ -6,10 +6,26 @@ import { IME_APLIKACIJE, RouteNames } from '../constants';
 import { useNavigate } from 'react-router-dom';
 import chefHat from '../assets/slike/chef-hat.png'
 import { BiBookAdd } from 'react-icons/bi';
+import { useEffect, useState } from 'react';
+import KategorijaService from '../services/kategorije/KategorijaService';
 
 export default function Izbornik() {
 
     const navigate = useNavigate()
+    const [kategorije, setKategorie] = useState([])
+
+    useEffect(() => {
+        ucitajKategorije()
+    }, [])
+
+    async function ucitajKategorije() {
+        try {
+            const odgovor = await KategorijaService.get()
+            setKategorie(odgovor.data)
+        } catch (greska) {
+            console.error('Greška pri učitavanju kategorija:', greska)
+        }
+    }
 
     return (
         <Navbar expand="lg" className="navbar-kuharica" variant='dark'>
@@ -41,7 +57,40 @@ export default function Izbornik() {
                                 onClick={() => navigate(RouteNames.RECEPTI)}
                             >SVE</NavDropdown.Item>
 
+                            <NavDropdown.Divider />
+                            {kategorije.map((kategorija) => (
+                                <NavDropdown.Item key={kategorija.id}
+                                    onClick={() => navigate(RouteNames.RECEPTI + '?kategorija='
+                                        + encodeURIComponent(kategorija.naziv))
+                                    }
+                                >
+                                    {kategorija.naziv === 'Doručak' && '🥞'}
+                                    {kategorija.naziv === 'Ručak' && '🍲'}
+                                    {kategorija.naziv === 'Večera' && '🍽️'}
+                                    {kategorija.naziv === 'Desert' && '🧁'}
+                                    {!['Doručak', 'Ručak', 'Večera', 'Desert']
+                                        .includes(kategorija.naziv) && '🍴'}
+                                    {' '}{kategorija.naziv}
+                                </NavDropdown.Item>
+                            ))}
+
+                            <NavDropdown.Divider />
                             <NavDropdown.Item
+                                onClick={() => navigate(RouteNames.RECEPTI + '?vegansko=true')}>
+                                🌱 Vegansko
+                            </NavDropdown.Item>
+                            <NavDropdown.Divider />
+                            <NavDropdown.Item
+                                onClick={() => navigate(RouteNames.KATEGORIJE)}>
+                                📋 Sve kategorije
+                            </NavDropdown.Item>
+
+                            <NavDropdown.Item
+                                onClick={() => navigate(RouteNames.KATEGORIJE_NOVI)}>
+                                ✏️ Dodaj svoju kategoriju
+                            </NavDropdown.Item>
+
+                            {/* <NavDropdown.Item
                                 onClick={() => navigate(RouteNames.RECEPTI + '?kategorija=Doručak')}
                             >🥗 Doručak</NavDropdown.Item>
 
@@ -61,6 +110,18 @@ export default function Izbornik() {
                                 onClick={() => navigate(RouteNames.RECEPTI + '?vegansko=true')}
                             >🌱 Vegansko</NavDropdown.Item>
 
+                            <NavDropdown.Divider />
+                            <NavDropdown.Item
+                                onClick={() => navigate(RouteNames.KATEGORIJE)}
+                            >
+                                📋 Sve kategorije
+                            </NavDropdown.Item>
+                            <NavDropdown.Item
+                                onClick={() => navigate(RouteNames.KATEGORIJE_NOVI)}
+                            >
+                                ✏️ Dodaj svoju kategoriju
+                            </NavDropdown.Item> */}
+
                         </NavDropdown>
 
                         <NavDropdown title="❤️ Omiljeni" id="omiljeni-dropdown">
@@ -70,14 +131,14 @@ export default function Izbornik() {
                         </NavDropdown>
 
                         <NavDropdown title={
-                        <>
-                        <BiBookAdd color="white" size={20} />
-                        {' '}Dodaj
-                        </> }
-                        id="dodaj-dropdown">
+                            <>
+                                <BiBookAdd color="white" size={20} />
+                                {' '}Dodaj
+                            </>}
+                            id="dodaj-dropdown">
                             <NavDropdown.Item
                                 onClick={() => navigate(RouteNames.RECEPTI_NOVI)}
-                            > Dodaj Svoj </NavDropdown.Item>
+                            > Dodaj Svoj Recept </NavDropdown.Item>
                         </NavDropdown>
 
                     </Nav>

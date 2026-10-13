@@ -11,6 +11,10 @@ export const kategorije = [
     {
         id: 3,
         naziv: 'Večera'
+    },
+    {
+        id: 4,
+        naziv: 'Desert'
     }
 
 ]
