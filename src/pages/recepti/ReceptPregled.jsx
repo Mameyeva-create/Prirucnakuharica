@@ -5,6 +5,20 @@ import { Link, useNavigate, useSearchParams } from "react-router-dom"
 import { RouteNames } from "../../constants"
 
 
+function korijenRijeci(rijec) {
+    let rezultat = rijec
+        .toLocaleLowerCase('hr')
+        .replace(/đ/g, 'd')
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+    if (rezultat.length > 4 &&
+        /[aeiou]$/.test(rezultat)
+    ) {
+        return rezultat.slice(0, -1)
+    }
+    return rezultat
+}
+
 export default function ReceptPregled() {
     const [recepti, setRecepti] = useState([])
     const navigate = useNavigate()
@@ -54,10 +68,23 @@ export default function ReceptPregled() {
         ]
             .filter(Boolean)
             .join(' ')
-            .toLocaleLowerCase('hr')
 
-        if (trazi && !tekstRecepta.includes(trazi)) {
-            return false
+        if (trazi) {
+            const rijeciPretrage = trazi
+                .split(/\s+/)
+                .map(korijenRijeci)
+                .filter(Boolean)
+            const rijeciRecepta = tekstRecepta
+                .split(/[^\p{L}\p{N}]+/u)
+                .filter(Boolean)
+                .map(korijenRijeci)
+            const pronadjen = rijeciPretrage.every((rijec) =>
+                rijeciRecepta.some((rijeciRecepta) =>
+                    rijeciRecepta.startsWith(rijec) ||
+                    rijec.startsWith(rijeciRecepta)
+                )
+            )
+            if (!pronadjen) return false
         }
 
         return true
@@ -88,8 +115,8 @@ export default function ReceptPregled() {
                         <tbody>
                             {prikazaniRecepti.map((recept) => (
                                 <tr key={recept.id}
-                                onClick={() => navigate(`/recepti/${recept.id}/detalji`)}
-                                style={{ cursor: 'pointer' }}
+                                    onClick={() => navigate(`/recepti/${recept.id}/detalji`)}
+                                    style={{ cursor: 'pointer' }}
                                 >
                                     <td className="lead">
                                         <Link to={`/recepti/${recept.id}/detalji`}
@@ -112,13 +139,16 @@ export default function ReceptPregled() {
                                     <td style={{ minWidth: '190px', whiteSpace: 'nowrap' }}>
 
                                         <Button className="btn-promijeni me-2"
-                                            onClick={(e) => {e.stopPropagation()
-                                            navigate(`/recepti/${recept.id}`)}}>
+                                            onClick={(e) => {
+                                                e.stopPropagation()
+                                                navigate(`/recepti/${recept.id}`)
+                                            }}>
                                             Promjeni
                                         </Button>
                                         {/* &nbsp;&nbsp; */}
                                         <Button variant="danger" onClick={(e) => {
-                                            e.stopPropagation(); obrisi(recept.id)}}>
+                                            e.stopPropagation(); obrisi(recept.id)
+                                        }}>
                                             Obriši
                                         </Button>
                                     </td>

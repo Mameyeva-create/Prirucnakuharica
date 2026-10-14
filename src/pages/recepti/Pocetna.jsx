@@ -18,8 +18,8 @@ export default function Pocetna() {
 
     const unos = trazi.trim()
 
-    if (unos.length < 2) {
-      alert('Unesi najmanje 2 znaka za pretragu')
+    if (unos.trim().length < 3) {
+      alert('Unesi najmanje 3 znaka za pretragu')
       return
     }
 
@@ -83,7 +83,6 @@ export default function Pocetna() {
           </div>
         </div>
       </section>
-      {/* <Link to={RouteNames.KATEGORIJE}>Kategorije</Link> */}
     </>
   );
 
