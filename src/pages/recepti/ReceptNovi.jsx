@@ -88,71 +88,79 @@ export default function ReceptNovi() {
             </h3>
             <Form onSubmit={odradiSubmit}>
 
-                <Form.Group controlId="naziv">
-                    <Form.Label>Naziv recepta</Form.Label>
-                    <Form.Control type="text"
-                        name="naziv" required />
-                </Form.Group>
+                <Row className="g-4">
+                    <Col md={6} className="d-flex flex-column">
 
-                <Form.Group controlId="kategorija">
-                    <Form.Label>Kategorija</Form.Label>
-                    <Form.Select name="kategorija" required>
-                        <option value="">-- Odaberi kategoriju --</option>
-                        {kategorije.map((kategorija) => (
-                            <option key={kategorija.id} value={kategorija.naziv}>{kategorija.naziv}</option>
-                        ))}
-                    </Form.Select>
-                    {/* <Form.Control type="text"
-                        name="kategorija" required /> */}
-                </Form.Group>
+                        <Form.Group controlId="naziv" className="mb-3">
+                            <Form.Label>Naziv recepta</Form.Label>
+                            <Form.Control type="text"
+                                name="naziv" required />
+                        </Form.Group>
 
-                <Form.Group controlId="vrijeme">
-                    <Form.Label>Vrijeme (minute)</Form.Label>
-                    <Form.Control type="number"
-                        name="vrijeme" step={1} min={1} max={300}
-                        required />
-                </Form.Group>
+                        <Form.Group controlId="kategorija" className="mb-3">
+                            <Form.Label>Kategorija</Form.Label>
+                            <Form.Select name="kategorija" required>
+                                <option value="">-- Odaberi kategoriju --</option>
+                                {kategorije.map((kategorija) => (
+                                    <option key={kategorija.id} value={kategorija.naziv}>{kategorija.naziv}</option>
+                                ))}
+                            </Form.Select>
+                        </Form.Group>
 
-                <Form.Group controlId="opis">
-                    <Form.Label>Opis recepta</Form.Label>
-                    <Form.Control as="textarea"
-                        name="opis" rows={4} required />
-                </Form.Group>
-
-                <Form.Group controlId="sastojci" className="mb-3">
-                    <Form.Label>Sastojci</Form.Label>
-                    <Form.Control as="textarea"
-                        name="sastojci" rows={3}
-                        placeholder="Npr. piletina, krumpir, mrkva"
-                        required />
-                    <Form.Text muted>
-                        Odvoji sastojke zarezima
-                    </Form.Text>
-                </Form.Group>
+                        <Form.Group controlId="vrijeme" className="mb-3">
+                            <Form.Label>Vrijeme (minute)</Form.Label>
+                            <Form.Control type="number"
+                                name="vrijeme" step={1} min={1} max={300}
+                                required />
+                        </Form.Group>
 
 
-                <Form.Group controlId="omiljen" className="mt-3">
-                    <Form.Check label="Dodaj u omiljene ❤️"
-                        type="checkbox"
-                        name="omiljen"
-                    />
-                </Form.Group>
-
-                <Form.Group controlId="vegansko" className="mt-3">
-                    <Form.Check label="Dodaj u vegansko 🌱"
-                        type="checkbox"
-                        name="vegansko"
-                    />
-                </Form.Group>
-
-                <Row className="mt-4">
-                    <Col>
-                        <Link to={RouteNames.RECEPTI} className="btn btn-danger">
-                            Odustani
-                        </Link>
+                        <div className="h-100 d-flex flex-column">
+                            <div className="mt-auto pt-3">
+                                <Link to={RouteNames.RECEPTI} className="btn btn-danger">
+                                    Odustani
+                                </Link>
+                            </div>
+                        </div>
                     </Col>
-                    <Col>
-                        <Button type="submit" variant="success">
+
+
+
+                    <Col md={6}>
+                        <Form.Group controlId="opis" className="mb-3">
+                            <Form.Label>Opis recepta</Form.Label>
+                            <Form.Control as="textarea"
+                                name="opis" rows={4} required />
+                        </Form.Group>
+
+                        <Form.Group controlId="sastojci" className="mb-3">
+                            <Form.Label>Sastojci</Form.Label>
+                            <Form.Control as="textarea"
+                                name="sastojci" rows={4}
+                                placeholder="Npr. piletina, krumpir, mrkva"
+                                required />
+                            <Form.Text muted>
+                                Odvoji sastojke zarezima
+                            </Form.Text>
+                        </Form.Group>
+
+
+                        <Form.Group controlId="omiljen" className="mb-3">
+                            <Form.Check label="Dodaj u omiljene ❤️"
+                                type="checkbox"
+                                name="omiljen"
+                            />
+                        </Form.Group>
+
+                        <Form.Group controlId="vegansko" className="mb-3">
+                            <Form.Check label="Dodaj u vegansko 🌱"
+                                type="checkbox"
+                                name="vegansko"
+                            />
+                        </Form.Group>
+
+
+                        <Button type="submit" variant="success" className="mt-3">
                             Dodaj novi recept
                         </Button>
                     </Col>
