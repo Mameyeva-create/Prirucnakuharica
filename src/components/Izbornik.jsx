@@ -3,7 +3,7 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import { IME_APLIKACIJE, RouteNames } from '../constants';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import chefHat from '../assets/slike/chef-hat.png'
 import { BiBookAdd } from 'react-icons/bi';
 import { useEffect, useState } from 'react';
@@ -12,11 +12,13 @@ import KategorijaService from '../services/kategorije/KategorijaService';
 export default function Izbornik() {
 
     const navigate = useNavigate()
+    const location = useLocation()
+
     const [kategorije, setKategorie] = useState([])
 
     useEffect(() => {
         ucitajKategorije()
-    }, [])
+    }, [location.pathname])
 
     async function ucitajKategorije() {
         try {
@@ -43,7 +45,7 @@ export default function Izbornik() {
                 </Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
 
-                  {/* Справа: все пункты меню */}
+                {/* Справа: все пункты меню */}
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="jastify-content-end">
                         <Nav.Link
