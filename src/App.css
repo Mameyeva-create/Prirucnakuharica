@@ -80,6 +80,9 @@ body {
     font-size: 12px;
     font-weight: normal;
     color: #fff8ed;
+    display: flex;
+    align-items: center;
+    margin-right: auto;
 }
 
 .navbar-kuharica .nav-link:hover,
@@ -529,4 +532,16 @@ footer hr {
     font-weight: 400;
     margin-top: 8px;
     text-shadow: 1px 1px 3px #fff8ed;
+}
+
+/* разделения текста в шапке на слева и справа */
+.navbar-kuharica .container-fluid {
+    display: flex;
+    align-items: center;
+}
+.navbar-kuharica .navbar-collapse {
+    justify-content: flex-end;
+}
+.navbar-kuharica .navbar-nav {
+    margin-left: auto;
 }

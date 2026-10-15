@@ -42,8 +42,10 @@ export default function Izbornik() {
                     {IME_APLIKACIJE}
                 </Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
+
+                  {/* Справа: все пункты меню */}
                 <Navbar.Collapse id="basic-navbar-nav">
-                    <Nav className="me-auto">
+                    <Nav className="jastify-content-end">
                         <Nav.Link
                             onClick={() => { navigate(RouteNames.HOME) }}
                         >Početna</Nav.Link>
