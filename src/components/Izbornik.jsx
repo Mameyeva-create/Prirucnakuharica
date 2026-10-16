@@ -5,7 +5,7 @@ import NavDropdown from 'react-bootstrap/NavDropdown';
 import { IME_APLIKACIJE, RouteNames } from '../constants';
 import { useLocation, useNavigate } from 'react-router-dom';
 import chefHat from '../assets/slike/chef-hat.png'
-import { BiBookAdd } from 'react-icons/bi';
+import { BiBookAdd, BiHeart, BiHomeAlt, BiRestaurant } from 'react-icons/bi';
 import { useEffect, useState } from 'react';
 import KategorijaService from '../services/kategorije/KategorijaService';
 
@@ -47,16 +47,23 @@ export default function Izbornik() {
 
                 {/* Справа: все пункты меню */}
                 <Navbar.Collapse id="basic-navbar-nav">
-                    <Nav className="jastify-content-end">
+                    <Nav className="ms-lg-auto align-items-lg-center text-end">
                         <Nav.Link
-                            onClick={() => { navigate(RouteNames.HOME) }}
-                        >Početna</Nav.Link>
+                            onClick={() => { navigate(RouteNames.HOME) }} >
+                            <BiHomeAlt color='#e9b88b' size={20} className='me-2' />
+                            Početna</Nav.Link>
 
                         {/* <Nav.Link
                             onClick={() => { navigate(RouteNames.KATEGORIJE) }}
                         >Kategorije</Nav.Link> */}
 
-                        <NavDropdown title="🍽️ Recepti" id="recepti-dropdown">
+                        <NavDropdown title={
+                            <>
+                                <BiRestaurant color='#e9b88b' size={20} className='me-2' />
+                                Recepti
+                            </>
+                        }
+                            id="recepti-dropdown">
                             <NavDropdown.Item
                                 onClick={() => navigate(RouteNames.RECEPTI)}
                             >SVE</NavDropdown.Item>
@@ -68,7 +75,7 @@ export default function Izbornik() {
                                         + encodeURIComponent(kategorija.naziv))
                                     }
                                 >
-                                    {kategorija.naziv === 'Doručak' && '🥞'}
+                                    {kategorija.naziv === 'Doručak' && '🥪'}
                                     {kategorija.naziv === 'Ručak' && '🍲'}
                                     {kategorija.naziv === 'Večera' && '🍽️'}
                                     {kategorija.naziv === 'Desert' && '🧁'}
@@ -128,7 +135,13 @@ export default function Izbornik() {
 
                         </NavDropdown>
 
-                        <NavDropdown title="❤️ Omiljeni" id="omiljeni-dropdown">
+                        <NavDropdown title={
+                            <>
+                                <BiHeart color='#e9b88b' size={20} className='me-2' />
+                                Omiljeni
+                            </>
+                        }
+                            id="omiljeni-dropdown">
                             <NavDropdown.Item
                                 onClick={() => navigate(RouteNames.OMILJENI)}
                             > ❤️ Omiljeni </NavDropdown.Item>
@@ -136,7 +149,7 @@ export default function Izbornik() {
 
                         <NavDropdown title={
                             <>
-                                <BiBookAdd color="white" size={20} />
+                                <BiBookAdd color="#e9b88b" size={20} className='me-2' />
                                 {' '}Dodaj
                             </>}
                             id="dodaj-dropdown">
@@ -148,7 +161,7 @@ export default function Izbornik() {
                     </Nav>
                 </Navbar.Collapse>
             </Container>
-        </Navbar>
+        </Navbar >
 
 
     )

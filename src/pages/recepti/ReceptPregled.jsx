@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import ReceptService from "../../services/recepti/ReceptService"
-import { Button, Table } from "react-bootstrap"
+import { Button, Card, Table } from "react-bootstrap"
 import { Link, useNavigate, useSearchParams } from "react-router-dom"
 import { RouteNames } from "../../constants"
 
@@ -92,13 +92,13 @@ export default function ReceptPregled() {
 
     return (
         <>
-            <div style={{ overflowX: 'auto' }}>
-                <div style={{ minWidth: '850px' }}>
-                    <Link to={RouteNames.RECEPTI_NOVI}
-                        className="btn btn-success w-100 my-3">
-                        Ovdje Pretraži recept
-                    </Link>
+            <Link to={RouteNames.RECEPTI_NOVI}
+                className="btn btn-success w-100 my-3">
+                Ovdje Pretraži recept
+            </Link>
 
+            <div className="d-none d-md-block">
+                <div style={{ overflowX: 'auto' }}>
                     <Table hover striped className="table-recepti">
                         <thead>
                             <tr>
@@ -115,8 +115,8 @@ export default function ReceptPregled() {
                         <tbody>
                             {prikazaniRecepti.map((recept) => (
                                 <tr key={recept.id}
-                                    onClick={() => navigate(`/recepti/${recept.id}/detalji`)}
-                                    style={{ cursor: 'pointer' }}
+                                onClick={() => navigate(`/recepti/${recept.id}/detalji`)}
+                                style={{ cursor: 'pointer' }}
                                 >
                                     <td className="lead">
                                         <Link to={`/recepti/${recept.id}/detalji`}
@@ -131,7 +131,8 @@ export default function ReceptPregled() {
                                     </td>
 
                                     <td>{recept.kategorija}</td>
-                                    <td className="text-end">{recept.vrijeme} min</td>
+                                    {/* <td className="text-end">{recept.vrijeme} min</td> */}
+                                    <td>{recept.vrijeme} min</td>
                                     <td>{recept.opis}</td>
                                     <td>{recept.omiljen ? '❤️' : ''}</td>
                                     <td> {recept.vegansko ? '🌱' : ''} </td>
@@ -139,16 +140,16 @@ export default function ReceptPregled() {
                                     <td style={{ minWidth: '190px', whiteSpace: 'nowrap' }}>
 
                                         <Button className="btn-promijeni me-2"
-                                            onClick={(e) => {
-                                                e.stopPropagation()
+                                            onClick={() =>
+                                                // e.stopPropagation()
                                                 navigate(`/recepti/${recept.id}`)
-                                            }}>
+                                            }>
                                             Promjeni
                                         </Button>
                                         {/* &nbsp;&nbsp; */}
-                                        <Button variant="danger" onClick={(e) => {
-                                            e.stopPropagation(); obrisi(recept.id)
-                                        }}>
+                                        <Button variant="danger" onClick={() =>
+                                            obrisi(recept.id)
+                                        }>
                                             Obriši
                                         </Button>
                                     </td>
@@ -167,6 +168,66 @@ export default function ReceptPregled() {
                     </Table>
                 </div>
             </div>
+            {/* KARTICE — mobilna verzija */}
+            <div className="d-md-none">
+                {prikazaniRecepti.map((recept) => (
+                    <Card key={recept.id} className="mb-3 shadow-sm omiljeni-kartica"
+                        onClick={() => navigate(`/recepti/${recept.id}/detalji`)}
+                        role="link" tabIndex={0}
+                        onKeyDown={(e) => {
+                            if (e.key === 'Enter' || e.key === " ") {
+                                e.preventDefault()
+                                navigate(`/recepti/${recept.id}/detalji`)
+                            }
+                        }}
+                    >
+                        <Card.Body>
+                            <Card.Title>
+                                <Link to={`/recepti/${recept.id}/detalji`}
+                                    style={{
+                                        color: '#35483b',
+                                        textDecoration: 'none',
+                                        fontWeight: 'bold'
+                                    }}
+                                >{recept.naziv}</Link>
+                            </Card.Title>
+
+                            <Card.Subtitle className="mb-2 text-muted">
+                                {recept.kategorija} · {recept.vrijeme} min
+                            </Card.Subtitle>
+
+                            <Card.Text>
+                                {recept.opis || 'Nema opisa recepta'}
+                            </Card.Text>
+
+                            <div className="mb-3 d-flex flex-wrap gap-2">
+                                {recept.omiljen && <span>❤️ Omiljen</span>}
+                                {recept.vegansko && <span>🌱 Vegansko</span>}
+                            </div>
+
+                            <Button size="sm"
+                                className="btn-promijeni me-2 mb-2"
+                                onClick={(e) => { e.stopPropagation()
+                                    navigate(`/recepti/${recept.id}`)
+                                }}
+                            >Promijeni</Button>
+
+                            <Button size="sm" variant="danger" className="mb-2"
+                                onClick={(e) => { e.stopPropagation()
+                                    obrisi(recept.id)
+                                }}
+                            >Obriši</Button>
+                        </Card.Body>
+                    </Card>
+                ))}
+                {prikazaniRecepti.length === 0 && (
+                    <p className="text-center my-4">
+                        {trazi
+                            ? `Nema recepata za: ${trazi}`
+                            : 'Nema recepata u ovoj kategoriji'}</p>
+                )}
+            </div>
+
             {/* {JSON.stringify(recept,null,2)} */}
         </>
     )

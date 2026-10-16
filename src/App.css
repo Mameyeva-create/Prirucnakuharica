@@ -1,4 +1,3 @@
-
 @font-face {
     font-family: 'Amarillo';
     src: url('./assets/fonts/Amarillo.ttf') format('truetype');
@@ -23,6 +22,10 @@ body,
     min-height: 100%;
 }
 
+body {
+    margin: 0;
+}
+
 #root {
     min-height: 100vh;
     display: flex;
@@ -33,19 +36,12 @@ main {
     flex: 1;
 }
 
-
-body {
-    margin: 0;
-}
-
 /* =====================================
    ОСНОВНОЙ КОНТЕНТ
    ===================================== */
 .app {
     width: 100%;
-    padding-left: 24px;
-    padding-right: 24px;
-    padding-top: 30px;
+    padding: 30px 24px 0;
     min-height: 900px;
 }
 
@@ -69,10 +65,32 @@ body {
     box-sizing: border-box;
 }
 
-.navbar-kuharica .navbar-brand,
+/* .navbar-kuharica .navbar-brand,
 .navbar-kuharica .nav-link,
 .navbar-kuharica .navbar-toggler {
     color: #fff8ed;
+} */
+/* Svijetli tekst u izborniku */
+.navbar-kuharica .navbar-brand,
+.navbar-kuharica .navbar-nav .nav-link,
+.navbar-kuharica .navbar-nav .nav-link.show,
+.navbar-kuharica .dropdown-toggle,
+.navbar-kuharica .dropdown-item {
+    color: #fffaf2 !important;
+}
+
+/* Boja teksta pri prelasku mišem */
+.navbar-kuharica .navbar-nav .nav-link:hover,
+.navbar-kuharica .navbar-nav .nav-link:focus,
+.navbar-kuharica .dropdown-item:hover,
+.navbar-kuharica .dropdown-item:focus {
+    color: #e9b88b !important;
+}
+
+.navbar-kuharica .dropdown-menu {
+    background-color: #2d3d32;
+    border: none;
+    border-radius: 0;
 }
 
 .navbar-kuharica .navbar-brand {
@@ -83,6 +101,7 @@ body {
     display: flex;
     align-items: center;
     margin-right: auto;
+    cursor: pointer;
 }
 
 .navbar-kuharica .nav-link:hover,
@@ -91,7 +110,7 @@ body {
 }
 
 .chef-hat {
-    filter: brightness(0) invert(1);
+    filter: brightness(0) saturate(100%) invert(78%) sepia(24%) saturate(550%) hue-rotate(337deg) brightness(98%) contrast(90%);
     width: 34px;
     height: 42px;
     object-fit: contain;
@@ -204,7 +223,7 @@ footer hr {
     }
 
     .navbar-kuharica .navbar-brand {
-        font-size: 12px !important;
+        font-size: 14px;
     }
 
     .chef-hat {
@@ -214,6 +233,9 @@ footer hr {
 
     .navbar-kuharica .navbar-nav {
         margin-top: 10px;
+        align-items: flex-end;
+        width: 100%;
+        margin-left: 0;
     }
 
     .navbar-kuharica .nav-link,
@@ -337,10 +359,6 @@ footer hr {
 
     .pocetna {
         padding: 20px 10px;
-    }
-
-    .pocetna h1 {
-        font-size: 27px;
     }
 
     .hero-banner {
@@ -534,14 +552,73 @@ footer hr {
     text-shadow: 1px 1px 3px #fff8ed;
 }
 
-/* разделения текста в шапке на слева и справа */
-.navbar-kuharica .container-fluid {
-    display: flex;
-    align-items: center;
+/* Kartice omiljenih recepata */
+.omiljeni-kartica {
+    cursor: pointer;
+    border: 1px solid #dce5dc;
+    border-radius: 12px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
-.navbar-kuharica .navbar-collapse {
-    justify-content: flex-end;
+
+.omiljeni-kartica:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(53, 72, 59, 0.15) !important;
 }
-.navbar-kuharica .navbar-nav {
-    margin-left: auto;
+
+/* Izbornik na tabletu i mobitelu */
+@media (max-width: 991.98px) {
+    .navbar-kuharica .navbar-collapse {
+        text-align: left;
+        padding-top: 12px;
+    }
+
+    .navbar-kuharica .navbar-nav {
+        align-items: stretch;
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+    }
+
+    .navbar-kuharica .navbar-nav>.nav-item {
+        width: 100%;
+        border-bottom: 1px solid rgba(255, 248, 237, 0.25);
+    }
+
+    .navbar-kuharica .navbar-nav .nav-link {
+        display: block;
+        text-align: left;
+        width: 100%;
+        padding: 13px 8px;
+        color: #fff8ed;
+    }
+
+    /* Цвет при наведении */
+    .navbar-kuharica .navbar-nav .nav-link:hover,
+    .navbar-kuharica .navbar-nav .nav-link:focus {
+        color: #e9b88b;
+        background-color: rgba(255, 248, 237, 0.011);
+    }
+
+    /* Выпадающие списки */
+    .navbar-kuharica .dropdown-menu {
+        width: 100%;
+        margin: 0 0 8px;
+        text-align: left;
+        background-color: #2d3d32;
+        border: none;
+        border-radius: 0;
+    }
+
+    .navbar-kuharica .dropdown-item:hover,
+    .navbar-kuharica .dropdown-item:focus {
+        color: #e9b88b;
+        background-color: rgba(255, 248, 237, 0.05);
+    }
+
+    .navbar-kuharica .dropdown-divider {
+        border-top: 1px solid rgba(255, 250, 242, 0.25);
+        margin: 5px 12px;
+    }
 }
