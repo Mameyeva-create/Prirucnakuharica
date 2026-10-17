@@ -32,17 +32,25 @@ export default function KategorijaPregled() {
     return (
         <>
             <div style={{ overflowX: 'auto' }}>
-                <div style={{ minWidth: '850px' }}>
+                
                     <Link to={RouteNames.KATEGORIJE_NOVI}
-                        className="btn btn-success w-100 my-3">
+                        className="btn btn-success w-100 my-3"
+                        style={{
+                            display: 'block',
+                            boxSizing: 'border-box',
+                            whiteSpace: 'normal',
+                            overflowWrap: 'break-word'
+                        }}>
                         Dodavanje nove kategorije
                     </Link>
+                    <div style={{ width: '100%' }}>
+
 
                     <Table hover striped className="table-kategorije">
                         <thead>
                             <tr>
                                 <th>Naziv</th>
-                                <th>Akcija</th>
+                                <th className="text-end">Akcija</th>
                             </tr>
                         </thead>
 
@@ -53,7 +61,8 @@ export default function KategorijaPregled() {
                                         {kategorija.naziv}
                                     </td>
 
-                                    <td style={{ minWidth: '190px', whiteSpace: 'nowrap' }}>
+                                    <td className="text-end"
+                                    style={{ minWidth: '190px', whiteSpace: 'nowrap' }}>
 
                                         <Button className="btn-promijeni me-2"
                                             onClick={(e) => {
@@ -70,12 +79,11 @@ export default function KategorijaPregled() {
                                     </td>
                                 </tr>
                             ))}
-
                            
                         </tbody>
                     </Table>
                 </div>
-            </div>
+           </div>
         </>
     )
 }

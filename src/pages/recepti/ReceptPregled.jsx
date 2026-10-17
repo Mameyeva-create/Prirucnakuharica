@@ -92,13 +92,13 @@ export default function ReceptPregled() {
 
     return (
         <>
-            <Link to={RouteNames.RECEPTI_NOVI}
-                className="btn btn-success w-100 my-3">
-                Ovdje Pretraži recept
-            </Link>
+            <div className="naslov-recepti my-3">
+                <h2>Svi recepti</h2>
+                <p>Pronađeno recepata: {prikazaniRecepti.length}</p>
+            </div>
 
             <div className="d-none d-md-block">
-                <div style={{ overflowX: 'auto' }}>
+                <div style={{ overflowX: 'auto', width: '100%' }}>
                     <Table hover striped className="table-recepti">
                         <thead>
                             <tr>
@@ -108,15 +108,15 @@ export default function ReceptPregled() {
                                 <th>Opis</th>
                                 <th>Omiljen</th>
                                 <th>Vegansko</th>
-                                <th>Akcija</th>
+                                <th className="text-end" style={{ width: '1$'}}>Akcija</th>
                             </tr>
                         </thead>
 
                         <tbody>
                             {prikazaniRecepti.map((recept) => (
                                 <tr key={recept.id}
-                                onClick={() => navigate(`/recepti/${recept.id}/detalji`)}
-                                style={{ cursor: 'pointer' }}
+                                    onClick={() => navigate(`/recepti/${recept.id}/detalji`)}
+                                    style={{ cursor: 'pointer' }}
                                 >
                                     <td className="lead">
                                         <Link to={`/recepti/${recept.id}/detalji`}
@@ -137,19 +137,21 @@ export default function ReceptPregled() {
                                     <td>{recept.omiljen ? '❤️' : ''}</td>
                                     <td> {recept.vegansko ? '🌱' : ''} </td>
 
-                                    <td style={{ minWidth: '190px', whiteSpace: 'nowrap' }}>
+                                    <td className="text-end align-middle"
+                                    style={{ whiteSpace: 'nowrap' }}>
 
                                         <Button className="btn-promijeni me-2"
-                                            onClick={() =>
-                                                // e.stopPropagation()
+                                            onClick={(e) => {
+                                                e.stopPropagation()
                                                 navigate(`/recepti/${recept.id}`)
-                                            }>
-                                            Promjeni
+                                            }}>
+                                            Promijeni
                                         </Button>
                                         {/* &nbsp;&nbsp; */}
-                                        <Button variant="danger" onClick={() =>
+                                        <Button variant="danger" onClick={(e) => {
+                                            e.stopPropagation()
                                             obrisi(recept.id)
-                                        }>
+                                        }}>
                                             Obriši
                                         </Button>
                                     </td>
@@ -207,13 +209,15 @@ export default function ReceptPregled() {
 
                             <Button size="sm"
                                 className="btn-promijeni me-2 mb-2"
-                                onClick={(e) => { e.stopPropagation()
+                                onClick={(e) => {
+                                    e.stopPropagation()
                                     navigate(`/recepti/${recept.id}`)
                                 }}
                             >Promijeni</Button>
 
                             <Button size="sm" variant="danger" className="mb-2"
-                                onClick={(e) => { e.stopPropagation()
+                                onClick={(e) => {
+                                    e.stopPropagation()
                                     obrisi(recept.id)
                                 }}
                             >Obriši</Button>

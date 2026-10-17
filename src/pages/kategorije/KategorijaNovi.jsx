@@ -48,14 +48,14 @@ export default function KategorijaNovi() {
                 </Form.Group>
 
 
-                <Row className="mt-4">
+                <Row className="mt-4 g-2">
                     <Col>
                         <Link to={RouteNames.KATEGORIJE} className="btn btn-danger">
                             Odustani
                         </Link>
                     </Col>
                     <Col>
-                        <Button type="submit" variant="success">
+                        <Button type="submit" variant="success" className="btn-dodaj-ketegoriju" >
                             Dodaj novu kategoriju
                         </Button>
                     </Col>

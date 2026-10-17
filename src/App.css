@@ -65,11 +65,6 @@ main {
     box-sizing: border-box;
 }
 
-/* .navbar-kuharica .navbar-brand,
-.navbar-kuharica .nav-link,
-.navbar-kuharica .navbar-toggler {
-    color: #fff8ed;
-} */
 /* Svijetli tekst u izborniku */
 .navbar-kuharica .navbar-brand,
 .navbar-kuharica .navbar-nav .nav-link,
@@ -277,9 +272,24 @@ footer hr {
         -webkit-overflow-scrolling: touch;
     }
 
-    table {
+    /* table {
         min-width: 700px;
-    }
+    } */
+     .table-kategorije {
+    width: 100%;
+    min-width: 0;
+    table-layout: fixed;
+}
+
+.table-kategorije th:first-child,
+.table-kategorije td:first-child {
+    width: 45%;
+}
+
+.table-kategorije th:last-child,
+.table-kategorije td:last-child {
+    width: 55%;
+}
 
     /* Кнопки */
     .btn {
@@ -621,4 +631,38 @@ footer hr {
         border-top: 1px solid rgba(255, 250, 242, 0.25);
         margin: 5px 12px;
     }
+}
+
+.naslov-recepti {
+    padding: 16px 20px;
+    background-color: #f7f5ef;
+    border-left: 5px solid #35483b;
+    border-radius: 8px;
+}
+
+.naslov-recepti h2 {
+    margin: 0 0 6px;
+    color: #35483b;
+    font-size: 1.7rem;
+    font-weight: 600;
+}
+
+.naslov-recepti p {
+    margin: 0;
+    columns: #68766b;
+    font-size: 0.95rem;
+}
+
+@media (max-width: 576px) {
+    .naslov-recepti h2 {
+        font-size: 1.4rem;
+    }
+
+}
+.table-recepti th:last-child,
+.table-recepti td:last-child {
+    text-align: right;
+}
+.table-recepti {
+    width: 100%;
 }
