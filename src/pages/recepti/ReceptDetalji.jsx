@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom"
 import ReceptService from "../../services/recepti/ReceptService"
 import { Button, Form } from "react-bootstrap"
 import { slikeRecepata } from "../../services/recepti/slikeRecepata"
-
+import SastojakService from "../../services/SastojakService"
 
 export default function ReceptDetalji() {
     const { id } = useParams()
@@ -11,8 +11,9 @@ export default function ReceptDetalji() {
 
     const [recept, setRecept] = useState(null)
     const [porcije, setPorcije] = useState(2)
+    const [sviSastojci, setSviSastojci] = useState([])
 
-     async function promjeniOmiljen() {
+    async function promjeniOmiljen() {
         const azuriraniRecept = {
             ...recept, omiljen: !recept.omiljen
         }
@@ -25,6 +26,16 @@ export default function ReceptDetalji() {
     }
 
     useEffect(() => {
+async function ucitajSastojke() {
+    try {
+        const podaci = await SastojakService.get()
+        setSviSastojci(podaci)
+    } catch (error) {
+        console.error("Greška pri učinavanju sastojka", error)
+    }
+}
+ucitajSastojke()
+
         async function ucitajRecept() {
             try {
                 const odgovor = await ReceptService.getById(id)
@@ -38,33 +49,57 @@ export default function ReceptDetalji() {
         ucitajRecept()
     }, [id])
 
-   
+
     function prilagodiKolicinu(sastojak) {
-        const rezultat = sastojak.match(/^(\d+(?:[.,]\d+)?)\s*(.*)$/)
+        // Stari format: "200 g brašna"
+        if (typeof sastojak === 'string') {
+            const rezultat = sastojak.match(/^(\d+(?:[.,]\d+)?)\s*(.*)$/)
 
-        if (!rezultat) {
-            return sastojak
+            if (!rezultat) {
+                return sastojak
+            }
+
+            const kolicina = parseFloat(
+                rezultat[1].replace(",", ".")
+            )
+
+            const novaKolicina = kolicina * porcije / 2
+
+            // Prikaži najviše dvije decimale
+            const prikazKolicine = Number(novaKolicina.toFixed(2)).toLocaleString("hr-HR")
+            return `${prikazKolicine} ${rezultat[2]}`
         }
+        // Novi format: objekt sa sastojakId, kolicina i jedinica
+        if (sastojak && typeof sastojak === 'object') {
+            const kolicina = Number(sastojak.kolicina)
 
-        const kolicina = parseFloat(
-            rezultat[1].replace(",", ".")
-        )
+            const novaKolicina = Number.isFinite(kolicina)
+                ? kolicina * porcije / 2
+                : 0
+            const prikazKolicine = Number(
+                novaKolicina.toFixed(2)
+            ).toLocaleString("hr-HR")
 
-        const novaKolicina = kolicina * porcije / 2
+            const podatakSastojka = sviSastojci.find(
+                (item) => item.id === Number(sastojak.sastojakId)
+            )
+            const nazivSastojka = sastojak.naziv || 
+            sastojak.sastojak?.naziv || podatakSastojka?.naziv ||
+            "Sastojak nije pronađen"
 
-        // Prikaži najviše dvije decimale
-        const prikazKolicine = Number(novaKolicina.toFixed(2)).toLocaleString("hr-HR")
-        return `${prikazKolicine} ${rezultat[2]}`
+            const jedinica = sastojak.jedinica || ""
+            return `${prikazKolicine} ${jedinica} ${nazivSastojka}`.trim()
+        }
+        return ""
     }
-
-    if (!recept || !recept.id) {
-        return (
-            <p className="container mt-4">Recept nije pronađen</p>
-        )
-    }
-    const sastojci = Array.isArray(recept.sastojci)
-        ? recept.sastojci : recept.sastojci
-            ? recept.sastojci.split(',').map(s => s.trim()) : []
+    // if (!recept || !recept.id) {
+    //     return (
+    //         <p className="container mt-4">Recept nije pronađen</p>
+    //     )
+    // }
+    // const sastojci = Array.isArray(recept.sastojci)
+    //     ? recept.sastojci : recept.sastojci
+    //         ? recept.sastojci.split(',').map(s => s.trim()) : []
 
     return (
         <div className="container mt-4 mb-5">
