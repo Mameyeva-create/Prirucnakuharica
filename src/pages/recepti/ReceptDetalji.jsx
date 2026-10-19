@@ -53,7 +53,7 @@ ucitajSastojke()
     function prilagodiKolicinu(sastojak) {
         // Stari format: "200 g brašna"
         if (typeof sastojak === 'string') {
-            const rezultat = sastojak.match(/^(\d+(?:[.,]\d+)?)\s*(.*)$/)
+            const rezultat = sastojak.match(/^(\d+(?:[.,]\d+)?)\s+(.+)$/)
 
             if (!rezultat) {
                 return sastojak
