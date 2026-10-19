@@ -12,6 +12,11 @@ export const RouteNames = {
     KATEGORIJE_NOVI: '/kategorije/novi',
     KATEGORIJE_PROMJENA: '/kategorije/:id',
 
+    SASTOJCI: '/sastojci',
+    SASTOJAK_NOVI: '/sastojak/novi',
+    
+
+    
 }
 // memorija, LocalStorage
 export const DATA_SOURCE = 'memorija'

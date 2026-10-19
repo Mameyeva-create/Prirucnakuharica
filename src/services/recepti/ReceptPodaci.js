@@ -6,6 +6,9 @@ import piletina from '../../assets/slike/piletina.jpg'
 import pizza from '../../assets/slike/pizza.jpg'
 import povrtnaJuha from '../../assets/slike/povrtna-juha.jpg'
 
+// Svaki sastojak ima naziv, količinu, jedinicu i opcionalnu napomenu.
+// Ako količina nije brojčano određena, koristimo null i napomenu.
+
 
 export const recepti = [
     {

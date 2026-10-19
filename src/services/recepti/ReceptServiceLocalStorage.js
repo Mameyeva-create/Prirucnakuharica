@@ -1,3 +1,5 @@
+import { data } from "react-router-dom"
+
 const STORAGE_KEY = 'recepti'
 
 function dohvatiSveIzStorage() {
@@ -28,6 +30,10 @@ async function getById(id) {
     }
 
     const recept = recepti.find(i => i.id === parseInt(id, 10))
+
+    if (!recept) {
+        return {data: null}
+    }
 
     if (!recept.slikaPutanja && slikePoId[recept.id]) {
         recept.slikaPutanja = slikePoId[recept.id]

@@ -151,11 +151,15 @@ export default function Izbornik() {
                             <>
                                 <BiBookAdd color="#e9b88b" size={20} className='me-2' />
                                 {' '}Dodaj
-                            </>}
-                            id="dodaj-dropdown">
+                            </>
+                            } id="dodaj-dropdown">
                             <NavDropdown.Item
                                 onClick={() => navigate(RouteNames.RECEPTI_NOVI)}
-                            > Dodaj Svoj Recept </NavDropdown.Item>
+                            > 🍲 Dodaj Svoj Recept </NavDropdown.Item>
+
+                            <NavDropdown.Divider />
+                            <NavDropdown.Item onClick={() => navigate("/sastojci/novi")}
+                            > 🥕 Dodaj sastojak</NavDropdown.Item>
                         </NavDropdown>
 
                     </Nav>

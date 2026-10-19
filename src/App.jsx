@@ -13,6 +13,8 @@ import ReceptDetalji from './pages/recepti/ReceptDetalji'
 import KategorijaPregled from './pages/kategorije/KategorijaPregled'
 import KategorijaNovi from './pages/kategorije/KategorijaNovi'
 import KategorijaPromjena from './pages/kategorije/KategorijaPromjena'
+import SastojakNovi from './pages/sastojci/SastojakNovi'
+
 
 function App() {
 
@@ -46,6 +48,8 @@ function App() {
             <Route path={RouteNames.KATEGORIJE_NOVI} element={<KategorijaNovi />} />
 
             <Route path={RouteNames.KATEGORIJE_PROMJENA} element={<KategorijaPromjena />} />
+
+            <Route path='/sastojci/novi' element={<SastojakNovi />} />
 
           </Routes>
         </main>
