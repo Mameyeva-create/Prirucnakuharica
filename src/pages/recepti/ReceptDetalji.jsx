@@ -29,7 +29,7 @@ export default function ReceptDetalji() {
 async function ucitajSastojke() {
     try {
         const podaci = await SastojakService.get()
-        setSviSastojci(podaci)
+        setSviSastojci(Array.isArray(podaci) ? podaci : [])
     } catch (error) {
         console.error("Greška pri učinavanju sastojka", error)
     }
@@ -92,14 +92,14 @@ ucitajSastojke()
         }
         return ""
     }
-    // if (!recept || !recept.id) {
-    //     return (
-    //         <p className="container mt-4">Recept nije pronađen</p>
-    //     )
-    // }
-    // const sastojci = Array.isArray(recept.sastojci)
-    //     ? recept.sastojci : recept.sastojci
-    //         ? recept.sastojci.split(',').map(s => s.trim()) : []
+    if (!recept || !recept.id) {
+        return (
+            <p className="container mt-4">Recept nije pronađen</p>
+        )
+    }
+    const sastojci = Array.isArray(recept.sastojci)
+        ? recept.sastojci : recept.sastojci
+            ? recept.sastojci.split(',').map(s => s.trim()) : []
 
     return (
         <div className="container mt-4 mb-5">
