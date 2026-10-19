@@ -1,4 +1,4 @@
-import { DATA_SOURCE } from "../constants";
+import { DATA_SOURCE } from "../../constants";
 import SastojakServiceLocalStorage from "./SastojakServiceLocalStorage";
 import SastojakServiceMemorija from "./SastojakServiceMemorija";
 

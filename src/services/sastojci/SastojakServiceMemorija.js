@@ -1,5 +1,5 @@
 
-import Sastojak from "../models/Sastojak"
+import Sastojak from "../../models/Sastojak"
 
 let sastojci = []
 

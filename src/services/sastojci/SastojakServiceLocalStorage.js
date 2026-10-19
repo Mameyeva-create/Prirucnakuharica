@@ -1,5 +1,5 @@
 
-import Sastojak from "../models/Sastojak"
+import Sastojak from "../../models/Sastojak"
 
 const STORAGE_KEY = 'sastojci'
 
