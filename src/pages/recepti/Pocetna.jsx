@@ -1,5 +1,5 @@
 
-import { Button, Form } from 'react-bootstrap';
+import { Button, Col, Form, Row } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 
 import hladnjak1 from '../../assets/slike/hladnjak1.png';
@@ -29,18 +29,10 @@ export default function Pocetna() {
 
   return (
     <>
-      <div className='hero-banner'>
-
-        <div className="hero-naslov">
-          <img src={chefHat} alt="Kuharska kapa"
-            className='hero-kapa' />
-
-          <h1 className='hero-ime'>
-            <span className='hero-red'>Priručna</span> {' '}
-            <span className='hero-green'>kuharica</span>
-          </h1>
-
-          <div className="hero-ukras">
+      <div className='pocetna-gore'>
+            <span className='hero-ime hero-red'>Priručna</span> {' '}
+            <span className='hero-ime hero-green'>kuharica</span>
+            <div className="hero-ukras">
             <svg className="hero-line" viewBox="0 0 80 14">
               <svg className="hero-line lijeva-linija" viewBox="0 0 80 14">
                 <path d="M1 3 C18 13, 28 12, 42 6 S64 0, 79 10" />
@@ -54,16 +46,10 @@ export default function Pocetna() {
           </div>
           <p className='hero-slogan'>Brzi i jednostavni recepti</p>
           <p className='hero-slogan'>za svaki dan.</p>
-
-        </div>
       </div>
-      <section className='hladnjak-sekcija'>
-        <div className='hladnjak-grid'>
-
-          <div>
-            <img src={hladnjak2} alt="Namirnice u hladnjaku" />
-
-            <Form className='pretraga-forma'
+      <Row style={{marginRight: '0px', marginLeft: '0px'}}>
+        <Col className='dolje-lijevo'>
+        <Form className='pretraga-forma'
               onSubmit={pretrazi} >
               <Form.Control type='search' placeholder='Unesi namirnicu...'
                 value={trazi} onChange={(e) =>
@@ -75,14 +61,11 @@ export default function Pocetna() {
                 Pronađi recept
               </Button>
             </Form>
-          </div>
-
-          {/* Desna slika */}
-          <div>
-            <img src={hladnjak1} alt='Priprema hrane' />
-          </div>
-        </div>
-      </section>
+        </Col>
+        <Col  className='dolje-desno'>
+        Desno
+        </Col>
+      </Row>
     </>
   );
 

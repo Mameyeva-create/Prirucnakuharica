@@ -5,7 +5,7 @@ import { RouteNames } from "../../constants";
 import { Button, Col, Form, Row } from "react-bootstrap";
 import { useEffect } from "react";
 import KategorijaService from "../../services/kategorije/KategorijaService";
-import SastojakService from "../../services/SastojakService";
+import SastojakService from "../../services/sastojci/SastojakService";
 
 export default function ReceptPromjena() {
 

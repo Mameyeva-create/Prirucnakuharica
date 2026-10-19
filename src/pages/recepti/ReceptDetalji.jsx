@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom"
 import ReceptService from "../../services/recepti/ReceptService"
 import { Button, Form } from "react-bootstrap"
 import { slikeRecepata } from "../../services/recepti/slikeRecepata"
-import SastojakService from "../../services/SastojakService"
+import SastojakService from "../../services/sastojci/SastojakService"
 
 export default function ReceptDetalji() {
     const { id } = useParams()
@@ -103,7 +103,7 @@ ucitajSastojke()
 
     return (
         <div className="container mt-4 mb-5">
-            <div className="row align-items-center g-4 mb-4">
+            <div className="row align-items-center g-4 mb-4"  style={{marginRight: '0px', marginLeft: '0px'}}>
                 <div className="col-12 col-md-6">
                     <img
                         className="img-fluid rounded-4 shadow"

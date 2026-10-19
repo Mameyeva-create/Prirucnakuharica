@@ -26,7 +26,7 @@ function App() {
   
       <Izbornik />
 
-      <Container fluid className='app'>
+      <Container className='app'>
         <main>
           <Routes>
             <Route path={RouteNames.HOME} element={<Pocetna />} />

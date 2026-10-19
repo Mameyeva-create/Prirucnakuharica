@@ -1,6 +1,6 @@
 
 import { Link, useNavigate } from "react-router-dom";
-import SastojakService from "../../services/SastojakServiceLocalStorage";
+import SastojakService from "../../services/sastojci/SastojakServiceLocalStorage";
 import { RouteNames } from "../../constants";
 import { Alert, Button, Form } from "react-bootstrap";
 import { useState } from "react";

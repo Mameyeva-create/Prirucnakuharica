@@ -41,7 +41,7 @@ main {
    ===================================== */
 .app {
     width: 100%;
-    padding: 30px 24px 0;
+    /* padding: 30px 24px 0; */
     min-height: 900px;
 }
 
@@ -666,3 +666,55 @@ footer hr {
 .table-recepti {
     width: 100%;
 }
+
+
+
+
+.pocetna-gore{
+    background-image: url('./assets/slike/kuhinja.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    padding: 0px;
+    padding-top: 4rem;
+    margin: 0px;
+    height: 500px;
+    text-align: center;
+}
+
+@media (min-width: 1400px) {
+    .container, .container-lg, .container-md, .container-sm, .container-xl, .container-xxl {
+         max-width: 100%; 
+    }
+}
+
+.container, .container-fluid, .container-lg, .container-md, .container-sm, .container-xl, .container-xxl {
+    padding-right: 0px; 
+    padding-left: 0px;
+}
+
+
+
+.dolje-lijevo{
+    background-image: url('./assets/slike/hladnjak2.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    padding: 0px;
+    padding-top: 19rem;
+    margin: 0px;
+    height: 400px;
+}
+
+.dolje-desno{
+    background-image: url('./assets/slike/hladnjak1.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    padding: 0px;
+    padding-top: 4rem;
+    margin: 0px;
+    height: 400px;
+    text-align: center;
+}
+
