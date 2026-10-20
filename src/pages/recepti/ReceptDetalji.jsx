@@ -59,35 +59,33 @@ ucitajSastojke()
                 return sastojak
             }
 
-            const kolicina = parseFloat(
-                rezultat[1].replace(",", ".")
-            )
-
+            const kolicina = parseFloat(rezultat[1].replace(",", "."))
             const novaKolicina = kolicina * porcije / 2
-
-            // Prikaži najviše dvije decimale
             const prikazKolicine = Number(novaKolicina.toFixed(2)).toLocaleString("hr-HR")
+
             return `${prikazKolicine} ${rezultat[2]}`
         }
         // Novi format: objekt sa sastojakId, kolicina i jedinica
         if (sastojak && typeof sastojak === 'object') {
             const kolicina = Number(sastojak.kolicina)
-
             const novaKolicina = Number.isFinite(kolicina)
                 ? kolicina * porcije / 2
                 : 0
-            const prikazKolicine = Number(
-                novaKolicina.toFixed(2)
-            ).toLocaleString("hr-HR")
+            const prikazKolicine = Number(novaKolicina.toFixed(2)).toLocaleString("hr-HR")
+
+            const idSastojka = Number(sastojak.sastojakId 
+                ?? sastojak.sastojak?.id ?? sastojak.sastojak)
 
             const podatakSastojka = sviSastojci.find(
-                (item) => item.id === Number(sastojak.sastojakId)
-            )
+                (item) => Number(item.id) === idSastojka)
+
             const nazivSastojka = sastojak.naziv || 
-            sastojak.sastojak?.naziv || podatakSastojka?.naziv ||
+           (typeof sastojak.sastojak === 'object' 
+            ? sastojak.sastojak.naziv : '') || podatakSastojka?.naziv ||
             "Sastojak nije pronađen"
 
-            const jedinica = sastojak.jedinica || ""
+            const jedinica = sastojak.jedMjere || sastojak.jedinica || ""
+            
             return `${prikazKolicine} ${jedinica} ${nazivSastojka}`.trim()
         }
         return ""

@@ -4,6 +4,7 @@ export const RouteNames = {
     HOME: '/',
     RECEPTI: '/recepti',
     RECEPTI_NOVI: '/recepti/novi',
+    RECEPTI_GENERIRANJE: '/recepti/generiranje',
     OMILJENI: '/omiljeni',
     VEGANSKO: '/vegansko',
     RECEPTI_PROMJENA: '/recepti/:id',

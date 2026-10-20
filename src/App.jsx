@@ -14,6 +14,7 @@ import KategorijaPregled from './pages/kategorije/KategorijaPregled'
 import KategorijaNovi from './pages/kategorije/KategorijaNovi'
 import KategorijaPromjena from './pages/kategorije/KategorijaPromjena'
 import SastojakNovi from './pages/sastojci/SastojakNovi'
+import GeneriranjeRecepta from './pages/recepti/GeneriranjeRecepta'
 
 
 function App() {
@@ -38,6 +39,8 @@ function App() {
             <Route path={RouteNames.OMILJENI} element={<Omiljeni />} />
 
             <Route path={RouteNames.RECEPTI_PROMJENA} element={<ReceptPromjena />} />
+
+            <Route path={RouteNames.RECEPTI_GENERIRANJE} element={<GeneriranjeRecepta />} />
 
             <Route path="/recepti/:id/detalji" element={<ReceptDetalji />} />
 

@@ -68,6 +68,11 @@ export default function Izbornik() {
                                 onClick={() => navigate(RouteNames.RECEPTI)}
                             >SVE</NavDropdown.Item>
 
+                            <NavDropdown.Item
+                            onClick={() => navigate(RouteNames.RECEPTI_GENERIRANJE)}>
+                                 🎲 Generiranje recepta
+                            </NavDropdown.Item>
+
                             <NavDropdown.Divider />
                             {kategorije.map((kategorija) => (
                                 <NavDropdown.Item key={kategorija.id}

@@ -1,3 +1,4 @@
+
 import { data } from "react-router-dom"
 import { recepti } from "./ReceptPodaci"
 
@@ -6,17 +7,20 @@ async function get() {
 }
 
 async function getById(id) {
-    return { data: recepti.find(i => i.id === parseInt(id)) }
+    return { data: recepti.find(i => i.id === Number(id)) }
 }
 
 async function dodaj(recept) {
-    if (recepti.length === 0) {
-        recept.id = 1
-    } else {
-        recept.id = recepti[recepti.length - 1].id + 1
-    }
-    recepti.push(recept)
+    const noviId = recepti.length === 0
+        ? 1
+        : Math.max(...recepti.map(i => Number(i.id) || 0)) + 1
+
+    const noviRecept = { ...recept, id: noviId }
+
+    recepti.push(noviRecept)
+    return { data: noviRecept }
 }
+
 
 async function promijeni(id, recept) {
     const index = nadiIndex(id)
@@ -24,17 +28,20 @@ async function promijeni(id, recept) {
         throw new Error("Recept nije pronađen, ID: " + id);
     }
     recepti[index] = { ...recepti[index], ...recept, id: Number(id) }
+
     return { data: recepti[index] }
 }
 function nadiIndex(id) {
-    return recepti.findIndex(i => i.id === parseInt(id))
+    return recepti.findIndex(i => i.id === Number(id))
 }
 
 async function obrisi(id) {
     const index = nadiIndex(id)
-    recepti.splice(index, 1)
-}
 
+    if (index !== -1) {
+        recepti.splice(index, 1)
+    }
+}
 export default {
     get,
     dodaj,
