@@ -147,7 +147,7 @@ export default function Izbornik() {
                             > ❤️ Omiljeni </NavDropdown.Item>
                         </NavDropdown>
 
-                        <NavDropdown title={
+                        <NavDropdown align="end" title={
                             <>
                                 <BiBookAdd color="#e9b88b" size={20} className='me-2' />
                                 {' '}Dodaj

@@ -1,0 +1,8 @@
+sastojci: [
+            {sastojak: 1, kolicina: 200, jedMjere: 'g'},
+            {sastojak: 2, kolicina: 100, jedMjere: 'g'},
+            {sastojak: 3, kolicina: 2, jedMjere: 'kom'},
+            {sastojak: 4, kolicina: 50, jedMjere: 'g'},
+            {sastojak: 9, kolicina: 1, jedMjere: 'po ukusu'},
+            {sastojak: 10, kolicina: 1, jedMjere: 'po ukusu'}
+        ]
