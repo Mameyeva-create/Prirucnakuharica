@@ -13,7 +13,7 @@ export default function ReceptNovi() {
     const [kategorije, setKategorije] = useState([])
     const [sviSastojci, setSviSastojci] = useState([])
 
-    const [stavkeRecepta, setStavkeRecepta] useState([
+    const [stavkeRecepta, setStavkeRecepta] = useState([
         { sastojakId: "", kolicina: "", jedinica: "g" }
     ])
 
@@ -55,7 +55,7 @@ export default function ReceptNovi() {
 
     function obrisiStavku(index) {
         setStavkeRecepta((prethodne) =>
-            prethodne.filter(( , i) => i !== index))
+            prethodne.filter((stavka, i) => i !== index))
     }
 
     async function odradiSubmit(e) {
@@ -120,7 +120,7 @@ export default function ReceptNovi() {
                     sastojakId: Number(stavka.sastojakId),
                     kolicina: Number(stavka.kolicina),
                     jedinica: stavka.jedinica
-                }))
+                })),
             omiljen: podaci.get('omiljen') === 'on',
             vegansko: podaci.get('vegansko') === 'on'
         }
@@ -196,7 +196,7 @@ export default function ReceptNovi() {
                                         <option value="">-- Odaberi sastojak --</option>
                                         {sviSastojci.map((sastojak) => (
                                             <option key={sastojak.id}
-                                                value={sastojak.id}></option>
+                                                value={sastojak.id}>{sastojak.naziv}</option>
                                         ))}
                                     </Form.Select>
                                 </Col>
