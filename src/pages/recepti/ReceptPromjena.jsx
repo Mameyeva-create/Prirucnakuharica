@@ -6,6 +6,7 @@ import { Button, Col, Form, Row } from "react-bootstrap";
 import { useEffect } from "react";
 import KategorijaService from "../../services/kategorije/KategorijaService";
 import SastojakService from "../../services/sastojci/SastojakService";
+import { sastojci } from "../../services/sastojci/SastojakPodaci";
 
 export default function ReceptPromjena() {
 
@@ -54,8 +55,8 @@ export default function ReceptPromjena() {
 
     async function ucitajSastojke() {
         try {
-            const sastojci = SastojakService.get()
-            setSviSastojci(sastojci)
+            const odgovor = await SastojakService.get()
+            setSviSastojci(odgovor.data)
         } catch (greska) {
             console.error('Greška pri učitavanju sastojka:', greska)
         }
@@ -67,7 +68,7 @@ export default function ReceptPromjena() {
             const i = odgovor.data
 
             if (!i) {
-                console.error('Recept nije pronađen, ID:', params.id)
+                console.error('Recept nije pronađen')
                 navigate(RouteNames.RECEPTI)
                 return
             }
@@ -75,40 +76,59 @@ export default function ReceptPromjena() {
             setRecept(i)
             setOmiljen(i.omiljen ?? false)
             setVegansko(i.vegansko ?? false)
-            setOsnovnePorcije(i.osnovnePorcije || 2)
-            // setStavkeRecepta(Array.isArray(i.sastojci) ? i.sastojci : [])
-            const sastojciRecepta = Array.isArray(i.sastojci)
-                ? i.sastojci : []
-            // Učitavamo aktualni popis sastojaka iz localStorage
-            const sviDostupniSastojci = SastojakService.get()
-            setSviSastojci(sviDostupniSastojci)
 
-            const noveStavke = sastojciRecepta.map((stavka) => {
-                // Ako je sastojak već spremljen kao objekt
+            const porcije = i.osnovnePorcije || 2
+            setOsnovnePorcije(porcije)
+
+            // Učitavamo katalog sastojaka
+            const odgovorSastojci = await SastojakService.get()
+            const sviDostupniSastojci = [...odgovorSastojci.data]
+
+            const stariSastojci = Array.isArray(i.sastojci)
+                ? i.sastojci : []
+
+            const noveStavke = []
+
+            for (const stavka of stariSastojci) {
+                // Ako je sastojak već u novom formatu
                 if (typeof stavka === 'object' && stavka !== null) {
-                    return {
+                    noveStavke.push({
                         sastojakId: stavka.sastojakId ?? '',
                         kolicina: stavka.kolicina ?? '',
                         jedinica: stavka.jedinica || 'g'
-                    }
+                    })
+                    continue
                 }
-                // Ako je sastojak stara tekstualna vrijednost
-                const stari = pretvoriStariSastojak(stavka)
+                // Pretvaramo stari tekst u količinu, jedinicu i naziv
+                const stari = pretvoriStariSastojak(String(stavka))
                 let pronadeniSastojak = sviDostupniSastojci.find(
                     (sastojak) =>
                         sastojak.naziv.toLocaleLowerCase('hr') ===
                         stari.naziv.toLocaleLowerCase('hr')
                 )
+                // Ako sastojak ne postoji u katalogu, dodajemo ga
                 if (!pronadeniSastojak && stari.naziv.trim()) {
-                    pronadeniSastojak = SastojakService.dodaj(stari.naziv)
-                    sviDostupniSastojci.push(pronadeniSastojak)
+                    await SastojakService.dodaj({
+                        naziv: stari.naziv
+                    })
+
+                    const osvjezeniOdgovor = await SastojakService.get()
+                    sviDostupniSastojci.splice(
+                        0, sviDostupniSastojci.length, ...osvjezeniOdgovor.data)
+
+                    pronadeniSastojak = sviDostupniSastojci.find(
+                        (sastojak) =>
+                            sastojak.naziv.toLocaleLowerCase('hr') ===
+                            stari.naziv.toLocaleLowerCase('hr')
+                    )
                 }
-                return {
-                    sastojakId: pronadeniSastojak ? pronadeniSastojak.id : '',
+                noveStavke.push({
+                    sastojakId: pronadeniSastojak?.id ?? '',
                     kolicina: stari.kolicina,
                     jedinica: stari.jedinica
-                }
-            })
+                })
+            }
+            setSviSastojci(sviDostupniSastojci)
             setStavkeRecepta(noveStavke)
 
         } catch (greska) {
@@ -149,9 +169,10 @@ export default function ReceptPromjena() {
         promijeni({
             naziv: podaci.get('naziv'),
             kategorija: podaci.get('kategorija'),
-            vrijeme: parseInt(podaci.get('vrijeme')),
+            vrijeme: parseInt(podaci.get('vrijeme'), 10),
             opis: podaci.get('opis'),
             osnovnePorcije: Number(osnovnePorcije),
+             // Sastojci recepta
             sastojci: stavkeRecepta.map((stavka) => ({
                 sastojakId: Number(stavka.sastojakId),
                 kolicina: Number(stavka.kolicina),

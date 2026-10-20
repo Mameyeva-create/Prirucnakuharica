@@ -28,8 +28,8 @@ export default function ReceptDetalji() {
     useEffect(() => {
 async function ucitajSastojke() {
     try {
-        const podaci = await SastojakService.get()
-        setSviSastojci(Array.isArray(podaci) ? podaci : [])
+        const odgovor = await SastojakService.get()
+        setSviSastojci(Array.isArray(odgovor.data) ? odgovor.data : [])
     } catch (error) {
         console.error("Greška pri učinavanju sastojka", error)
     }
