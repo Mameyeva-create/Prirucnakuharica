@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import ReceptService from "../../services/recepti/ReceptService"
 import { Button, Card, Table } from "react-bootstrap"
 import { Link, useNavigate, useSearchParams } from "react-router-dom"
-import { RouteNames } from "../../constants"
+
 
 
 function korijenRijeci(rijec) {
@@ -23,6 +23,7 @@ export default function ReceptPregled() {
     const [recepti, setRecepti] = useState([])
     const navigate = useNavigate()
     const [searchParams] = useSearchParams()
+    const prikaziGenerirane = searchParams.get('generirani') === 'true'
 
     const kategorija = searchParams.get('kategorija')
     const samoVegansko = searchParams.get('vegansko') === 'true'
@@ -51,6 +52,9 @@ export default function ReceptPregled() {
     }
 
     const prikazaniRecepti = recepti.filter((recept) => {
+        if (prikaziGenerirane && recept.generirano !== true) {
+            return false
+        }
         if (samoVegansko && recept.vegansko !== true) {
             return false
         }

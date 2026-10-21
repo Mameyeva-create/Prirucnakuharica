@@ -695,7 +695,7 @@ footer hr {
 
 
 
-.dolje-lijevo{
+/* .dolje-lijevo{
     background-image: url('./assets/slike/hladnjak2.png');
     background-size: cover;
     background-position: center;
@@ -704,9 +704,9 @@ footer hr {
     padding-top: 19rem;
     margin: 0px;
     height: 400px;
-}
+} */
 
-.dolje-desno{
+/* .dolje-desno{
     background-image: url('./assets/slike/hladnjak1.png');
     background-size: cover;
     background-position: center;
@@ -716,5 +716,5 @@ footer hr {
     margin: 0px;
     height: 400px;
     text-align: center;
-}
+} */
 

@@ -1,12 +1,7 @@
 
 import { Button, Col, Form, Row } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-
-import hladnjak1 from '../../assets/slike/hladnjak1.png';
-import hladnjak2 from '../../assets/slike/hladnjak2.png'
 import { useState } from 'react';
-
-import chefHat from '../../assets/slike/chef-hat.png'
 
 
 export default function Pocetna() {
@@ -25,7 +20,6 @@ export default function Pocetna() {
 
     navigate(`/recepti?trazi=${encodeURIComponent(unos)}`)
   }
-
 
   return (
     <>
@@ -48,7 +42,7 @@ export default function Pocetna() {
           <p className='hero-slogan'>za svaki dan.</p>
       </div>
       <Row style={{marginRight: '0px', marginLeft: '0px'}}>
-        <Col className='dolje-lijevo'>
+        <Col>
         <Form className='pretraga-forma'
               onSubmit={pretrazi} >
               <Form.Control type='search' placeholder='Unesi namirnicu...'
@@ -62,9 +56,7 @@ export default function Pocetna() {
               </Button>
             </Form>
         </Col>
-        <Col  className='dolje-desno'>
-        Desno
-        </Col>
+        
       </Row>
     </>
   );

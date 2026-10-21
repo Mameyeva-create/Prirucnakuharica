@@ -105,40 +105,8 @@ export default function Izbornik() {
                                 onClick={() => navigate(RouteNames.KATEGORIJE_NOVI)}>
                                 ✏️ Dodaj svoju kategoriju
                             </NavDropdown.Item>
-
-                            {/* <NavDropdown.Item
-                                onClick={() => navigate(RouteNames.RECEPTI + '?kategorija=Doručak')}
-                            >🥗 Doručak</NavDropdown.Item>
-
-                            <NavDropdown.Item
-                                onClick={() => navigate(RouteNames.RECEPTI + '?kategorija=Ručak')}
-                            >🍲 Ručak</NavDropdown.Item>
-
-                            <NavDropdown.Item
-                                onClick={() => navigate(RouteNames.RECEPTI + '?kategorija=Večera')}
-                            >🍱 Večera</NavDropdown.Item>
-
-                            <NavDropdown.Item
-                                onClick={() => navigate(RouteNames.RECEPTI + '?kategorija=Desert')}
-                            >🧁 Desert</NavDropdown.Item>
-
-                            <NavDropdown.Item
-                                onClick={() => navigate(RouteNames.RECEPTI + '?vegansko=true')}
-                            >🌱 Vegansko</NavDropdown.Item>
-
-                            <NavDropdown.Divider />
-                            <NavDropdown.Item
-                                onClick={() => navigate(RouteNames.KATEGORIJE)}
-                            >
-                                📋 Sve kategorije
-                            </NavDropdown.Item>
-                            <NavDropdown.Item
-                                onClick={() => navigate(RouteNames.KATEGORIJE_NOVI)}
-                            >
-                                ✏️ Dodaj svoju kategoriju
-                            </NavDropdown.Item> */}
-
                         </NavDropdown>
+
 
                         <NavDropdown title={
                             <>
