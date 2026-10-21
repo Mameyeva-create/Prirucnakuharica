@@ -92,10 +92,14 @@ export default function ReceptPromjena() {
             for (const stavka of stariSastojci) {
                 // Ako je sastojak već u novom formatu
                 if (typeof stavka === 'object' && stavka !== null) {
+                    const idSastojka =
+                        stavka.sastojakId ?? stavka.sastojak?.id ?? stavka.sastojakId?.id ?? stavka.sastoja
+
                     noveStavke.push({
-                        sastojakId: stavka.sastojakId ?? '',
+                        sastojakId: idSastojka === "" || idSastojka == null
+                            ? "" : Number(idSastojka),
                         kolicina: stavka.kolicina ?? '',
-                        jedinica: stavka.jedinica || 'g'
+                        jedinica: stavka.jedinica || stavka.jedMjere || 'g'
                     })
                     continue
                 }
@@ -172,7 +176,7 @@ export default function ReceptPromjena() {
             vrijeme: parseInt(podaci.get('vrijeme'), 10),
             opis: podaci.get('opis'),
             osnovnePorcije: Number(osnovnePorcije),
-             // Sastojci recepta
+            // Sastojci recepta
             sastojci: stavkeRecepta.map((stavka) => ({
                 sastojakId: Number(stavka.sastojakId),
                 kolicina: Number(stavka.kolicina),

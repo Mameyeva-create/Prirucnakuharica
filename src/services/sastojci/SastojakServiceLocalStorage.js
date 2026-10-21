@@ -1,3 +1,5 @@
+import { sastojci as pocetniSastojci } from "./SastojakPodaci"
+
 const STORAGE_KEY = 'sastojci'
 
 function dohvatiSveIzStorage() {
@@ -5,7 +7,8 @@ function dohvatiSveIzStorage() {
     if (podaci) {
         return JSON.parse(podaci)
     }
-    return []
+    spremiUStorage(pocetniSastojci)
+    return [...pocetniSastojci]
 }
 
 function spremiUStorage(podaci) {
