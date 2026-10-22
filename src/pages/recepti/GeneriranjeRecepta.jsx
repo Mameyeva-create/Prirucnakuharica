@@ -266,10 +266,6 @@ export default function GeneriranjeRecepata() {
                 await ReceptService.dodaj(recept);
                 dodano++;
             }
-            // if (dodano < broj) {
-            //             setGreska(true);
-            //             setPoruka(Dodano je ${ dodano } od ${ broj } recepata Provjeri sastojke u bazi)
-            //         } else {
             setPoruka(`Uspješno dodano recepata: ${dodano}.`);
         } catch (error) {
             console.error("Greška pri generiranju recepata:", error);
