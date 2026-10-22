@@ -497,7 +497,7 @@ footer hr {
     margin: 0 auto -12px;
     transform: rotate(15deg);
     filter: brightness(0) saturate(100%) invert(25%) sepia(10%) saturate(850%) hue-rotate(85deg) brightness(85%) contrast(90%);
-} */
+} 
 
 /* Naziv aplikacije */
  .hero-ime {
@@ -553,7 +553,7 @@ footer hr {
     flex-shrink: 0;
 
 } 
-*/ .hero-slogan {
+.hero-slogan {
     /* font-size: clamp(14px, 1.8vw, 21px); */
     color: #25342d;
     font-weight: 400;
