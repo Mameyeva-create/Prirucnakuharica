@@ -26,6 +26,10 @@ export default function Omiljeni() {
 
     return (
         <>
+         <div className="naslov-recepti my-2 px-3 py-2">
+            <h2>Omiljeni recepti</h2>
+            <p>Pronađeno recepata: {recepti.length}</p>
+        </div>
             <div className="d-none d-md-block table-responsive">
                 <Table hover striped className="table-recepti">
                     <thead>

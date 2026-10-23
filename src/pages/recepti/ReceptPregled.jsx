@@ -96,7 +96,7 @@ export default function ReceptPregled() {
 
     return (
         <>
-            <div className="naslov-recepti my-3">
+            <div className="naslov-recepti my-2 px-3 py-2">
                 <h2>Svi recepti</h2>
                 <p>Pronađeno recepata: {prikazaniRecepti.length}</p>
             </div>

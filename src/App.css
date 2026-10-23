@@ -260,10 +260,12 @@ footer hr {
 }
 
 .naslov-recepti {
-    padding: 16px 20px;
+    padding: 10px 20px;
     background-color: #f7f5ef;
+    border: 1px solid #d5d9d0;
     border-left: 5px solid #35483b;
     border-radius: 8px;
+    margin-bottom: 12px;
 }
 
 .naslov-recepti h2 {
