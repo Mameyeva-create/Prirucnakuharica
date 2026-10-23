@@ -4,6 +4,7 @@
     font-weight: 400;
     font-style: italic;
 }
+
 /* =========================
    ОБЩИЕ СТИЛИ
    ========================= */
@@ -33,6 +34,7 @@ body {
 main {
     padding: 0;
 }
+
 /* =====================================
    ОСНОВНОЙ КОНТЕНТ
    ===================================== */
@@ -51,6 +53,7 @@ main {
     padding: 0;
     margin: 0;
 }
+
 /* =========================
    ШАПКА
    ========================= */
@@ -140,6 +143,7 @@ main {
 table {
     width: 100%;
 }
+
 .table-recepti th:last-child,
 .table-recepti td:last-child {
     text-align: right;
@@ -158,13 +162,13 @@ footer {
     padding: 5px 20px;
     color: #fff8ed;
     background-color: #35483b;
-    /* margin-top: auto; */
     flex-shrink: 0;
 }
 
 footer hr {
-    margin:0;
+    margin: 0;
 }
+
 /* =========================
  GUMB PROMIJENI
  ========================= */
@@ -231,7 +235,6 @@ footer hr {
     stroke-width: 1.3;
     stroke-linecap: round;
     flex-shrink: 0;
-
 }
 
 .hero-slogan {
@@ -275,6 +278,7 @@ footer hr {
     color: #68766b;
     font-size: 0.95rem;
 }
+
 .container,
 .container-fluid,
 .container-lg,
@@ -283,8 +287,6 @@ footer hr {
 .container-xl,
 .container-xxl {
     max-width: 100%;
-    /* padding-right: 0px; */
-    /* padding-left: 0px; */
 }
 
 /* Glavna stranica - kartice */
@@ -298,7 +300,6 @@ footer hr {
     margin: 0px;
     text-align: center;
     box-sizing: border-box;
-  
 }
 
 .pocetna-kartice {
@@ -324,7 +325,6 @@ footer hr {
 .pocetna-kartica-naslov {
     display: flex;
     gap: 10px;
-    /* margin-bottom: 18px; */
     color: #35483b;
 }
 
@@ -355,7 +355,6 @@ footer hr {
 }
 
 .pocetna-statistika-broj {
-    /* margin: 16px 0 4px; */
     font-size: 2rem;
     line-height: 1.1;
     font-weight: 700;
@@ -365,6 +364,7 @@ footer hr {
 .pocetna-statistika svg {
     margin-bottom: 5px;
 }
+
 .pocetna-statistika-sadrzaj {
     display: flex;
     flex-direction: row;
@@ -386,6 +386,7 @@ footer hr {
     width: 180px;
     max-width: 100%;
 }
+
 /* ========================================
    ADAPTACIJA POD RAZLIČITE EKRANE
    АДАПТАЦИЯ ПОД РАЗНЫЕ ЭКРАНЫ
@@ -396,6 +397,7 @@ footer hr {
    ======================================== */
 
 @media (min-width: 1400px) {
+
     .container,
     .container-lg,
     .container-md,
@@ -422,10 +424,6 @@ footer hr {
     .pocetna h1 {
         font-size: 44px;
     }
-
-    /* .app {
-        padding: 0 20px 0 20px;
-    } */
 }
 
 /* ========================================
@@ -447,7 +445,7 @@ footer hr {
         padding: 0;
     }
 
-    .navbar-kuharica .navbar-nav > .nav-item {
+    .navbar-kuharica .navbar-nav>.nav-item {
         width: 100%;
         border-bottom: 1px solid rgba(255, 248, 237, 0.25);
     }
@@ -521,12 +519,6 @@ footer hr {
         font-size: 16px;
     }
 
-    /* Glavni sadržaj */
-    /* .app {
-        padding: 0 !important;
-        margin: 0;
-    } */
-
     .pocetna {
         padding: 15px 15px;
     }
@@ -556,10 +548,10 @@ footer hr {
 
     /* Tablice */
     .table-responsive {
-    width: 100%;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-}
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
 
     .table-kategorije {
         width: 100%;
@@ -641,11 +633,6 @@ footer hr {
         height: 30px;
     }
 
-    /* Glavni sadržaj */
-    /* .app {
-       padding: 15px 10px 0 10px !important;
-    } */
-
     .pocetna h1 {
         font-size: 27px;
     }
@@ -657,11 +644,13 @@ footer hr {
     .hero-naslov {
         top: 100px;
     }
+
     /* Kartice statistike */
     .pocetna-statistika-sadrzaj {
         padding: 16px;
         gap: 6px;
     }
+
     .pocetna-statistika-tekst h2 {
         font-size: 1.05rem;
     }
