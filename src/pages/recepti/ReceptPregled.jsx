@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import ReceptService from "../../services/recepti/ReceptService"
 import { Button, Card, Table } from "react-bootstrap"
 import { Link, useNavigate, useSearchParams } from "react-router-dom"
+import SastojakService from "../../services/sastojci/SastojakService"
 
 
 
@@ -21,6 +22,7 @@ function korijenRijeci(rijec) {
 
 export default function ReceptPregled() {
     const [recepti, setRecepti] = useState([])
+    const [sviSastojci, setSviSastojci] = useState([])
     const navigate = useNavigate()
     const [searchParams] = useSearchParams()
     const prikaziGenerirane = searchParams.get('generirani') === 'true'
@@ -32,8 +34,8 @@ export default function ReceptPregled() {
         .toLocaleLowerCase('hr')
 
     useEffect(() => {
-        // console.log('Dosla na pregled recepta')
         ucitajRecepti()
+        ucitajSastojke()
     }, [])
 
 
@@ -41,6 +43,15 @@ export default function ReceptPregled() {
         const odgovor = await ReceptService.get()
         // console.table(odgovor.data)
         setRecepti(odgovor.data)
+    }
+
+    async function ucitajSastojke() {
+        try {
+            const odgovor = await SastojakService.get()
+            setSviSastojci(odgovor.data)
+        } catch (greska) {
+            console.error('Greška pri učitavanju sastojaka:', greska)
+        }
     }
 
     async function obrisi(id) {
@@ -62,8 +73,38 @@ export default function ReceptPregled() {
             return false
         }
         const sastojciTekst = Array.isArray(recept.sastojci)
-            ? recept.sastojci.join(" ")
+            ? recept.sastojci.map((sastojak) => {
+                if (typeof sastojak === 'string') {
+                    return sastojak
+                }
+
+                if (typeof sastojak === 'number') {
+                    return sviSastojci.find(
+                        s => String(s.id) === String(sastojak)
+                    )?.naziv || ""
+                }
+
+                if (sastojak && typeof sastojak === 'object') {
+                    if (sastojak.naziv) {
+                        return sastojak.naziv
+                    }
+
+                    if (sastojak.sastojak &&
+                        typeof sastojak.sastojak === 'object'
+                    ) {
+                        return sastojak.sastojak.naziv || ""
+                    }
+                    const id = sastojak.sastojakId
+                        ?? sastojak.sastojak ?? sastojak.id
+
+                    return sviSastojci.find(
+                        s => String(s.id) === String(id)
+                    )?.naziv || ""
+                }
+                return ""
+            }).join(" ")
             : recept.sastojci || ""
+
 
         const tekstRecepta = [
             recept.naziv,
@@ -112,7 +153,7 @@ export default function ReceptPregled() {
                                 <th>Opis</th>
                                 <th>Omiljen</th>
                                 <th>Vegansko</th>
-                                <th className="text-end" style={{ width: '1$'}}>Akcija</th>
+                                <th className="text-end" style={{ width: '1$' }}>Akcija</th>
                             </tr>
                         </thead>
 
@@ -142,7 +183,7 @@ export default function ReceptPregled() {
                                     <td> {recept.vegansko ? '🌱' : ''} </td>
 
                                     <td className="text-end align-middle"
-                                    style={{ whiteSpace: 'nowrap' }}>
+                                        style={{ whiteSpace: 'nowrap' }}>
 
                                         <Button className="btn-promijeni me-2"
                                             onClick={(e) => {

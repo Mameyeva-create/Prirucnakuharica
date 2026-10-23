@@ -1,6 +1,6 @@
 
 import { Link, useNavigate } from "react-router-dom";
-import SastojakService from "../../services/sastojci/SastojakServiceLocalStorage";
+import SastojakService from "../../services/sastojci/SastojakService";
 import { RouteNames } from "../../constants";
 import { Alert, Button, Form } from "react-bootstrap";
 import { useState } from "react";
@@ -11,12 +11,14 @@ export default function SastojakNovi() {
     const [naziv, setNaziv] = useState("")
     const [greska, setGreska] = useState("")
 
-    function odradiSubmit(e) {
+     async function odradiSubmit(e) {
         e.preventDefault()
         setGreska("")
 
         try {
-            SastojakService.dodaj(naziv)
+           await SastojakService.dodaj({
+            naziv: naziv.trim()
+        })
             navigate(RouteNames.RECEPTI)
         } catch (error) {
             setGreska(error.message)
