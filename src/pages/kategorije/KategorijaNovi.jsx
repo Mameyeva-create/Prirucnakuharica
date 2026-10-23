@@ -35,7 +35,7 @@ export default function KategorijaNovi() {
     }
 
     return (
-        <>
+         <div className="px-4 py-3">
             <h3>
                 Unos nove kategorije
             </h3>
@@ -63,6 +63,6 @@ export default function KategorijaNovi() {
 
             </Form>
 
-        </>
+       </div>
     )
 }

@@ -188,7 +188,7 @@ export default function ReceptPromjena() {
     }
 
     return (
-        <>
+         <div className="px-4 py-3">
             <h3>
                 Promijeni recept
             </h3>
@@ -346,6 +346,6 @@ export default function ReceptPromjena() {
 
             </Form>
 
-        </>
+        </div>
     )
 }

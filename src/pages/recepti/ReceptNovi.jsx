@@ -139,7 +139,7 @@ export default function ReceptNovi() {
                 Unos novog recepata
             </h3>
             <Form onSubmit={odradiSubmit}>
-                <Row className="g-4">
+                <Row className="g-4 mx-0" >
                     <Col md={6} className="d-flex flex-column">
                         <Form.Group controlId="naziv" className="mb-3">
                             <Form.Label>Naziv recepta</Form.Label>
@@ -185,7 +185,7 @@ export default function ReceptNovi() {
                         <Form.Label>Sastojci</Form.Label>
                         {stavkeRecepta.map((stavka, index) => (
                             <Row key={index}
-                                className="g-2 mb-3 align-items-end">
+                                className="g-2 mb-3 align-items-end mx-0">
                                 <Col xs={12}>
                                     <Form.Label>Sastojak {index + 1}</Form.Label>
                                     <Form.Select value={stavka.sastojakId}

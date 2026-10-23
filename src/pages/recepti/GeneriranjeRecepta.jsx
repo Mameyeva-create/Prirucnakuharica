@@ -310,7 +310,7 @@ export default function GeneriranjeRecepata() {
     }
 
     return (
-        <>
+        <div className="px-4 py-3">
             <h3>Generiranje testnih recepata</h3>
 
             <Form.Group className="mb-3" controlId="kolicina">
@@ -362,7 +362,7 @@ export default function GeneriranjeRecepata() {
                     {poruka}
                 </Alert>
             )}
-        </>
+        </div>
     );
 }
 

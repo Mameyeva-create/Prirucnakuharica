@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import chefHat from '../../assets/slike/chef-hat.png'
 import { GiCookingPot } from 'react-icons/gi';
 import { MdKitchen } from 'react-icons/md';
+import ReceptService from '../../services/recepti/ReceptService';
 
 
 
@@ -19,6 +20,7 @@ export default function Pocetna() {
       try {
         const odgovor = await ReceptService.get()
         const recepti = odgovor.data || []
+
         setBrojGeneriranih(recepti.filter(recept => recept.generirano === true).length)
       } catch (error) {
         console.error('Greška pri učitavanju statistike:', error)
@@ -27,7 +29,6 @@ export default function Pocetna() {
     ucitajStatistiku()
   }, [])
 
-  // const [trazi, setTrazi] = useState('')
 
   function pretrazi(e) {
     e.preventDefault()
@@ -66,7 +67,6 @@ export default function Pocetna() {
 
       <div className="pocetna-kartice">
         <Row className="g-3">
-          {/* <Row style={{marginRight: '0px'}}> */}
           <Col xs={12} md={6}>
             <Card className='pocetna-kartica h-100'>
               <Card.Body className='d-flex flex-column'>
@@ -93,7 +93,6 @@ export default function Pocetna() {
             <Card className='pocetna-kartica pocetna-statistika h-100'>
               <Card.Body className='pocetna-statistika-sadrzaj'>
                 <div className="pocetna-statistika-tekst">
-                  {/* <Card.Body className='d-flex flex-column align-items-center justify-content-center text-center'> */}
                   <GiCookingPot size={50} />
                   <h2>Statistika recepata</h2>
                   <div className='pocetna-statistika-broj'>

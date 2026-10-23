@@ -40,12 +40,14 @@ main {
     width: 100%;
     min-height: 0;
     flex: 1 0 auto;
-    padding: 0 !important;
+    padding: 0;
     margin: 0;
-    /* background-color: #fff8ed; */
+    background-color: whitesmoke;
 }
 
 .app main {
+    width: 100%;
+    min-width: 0;
     padding: 0;
     margin: 0;
 }
@@ -54,7 +56,7 @@ main {
    ========================= */
 .navbar-kuharica {
     width: 100%;
-    min-height: 50px;
+    min-height: 30px;
     padding: 0;
     background-color: #35483b;
     box-sizing: border-box;
@@ -138,24 +140,6 @@ main {
 table {
     width: 100%;
 }
-
-/* =========================
-   FOOTER
-   ========================= */
-footer {
-    width: 100%;
-    text-align: center;
-    padding: 5px 20px;
-    margin: 0;
-    color: #fff8ed;
-    background-color: #35483b;
-    margin-top: auto;
-    flex-shrink: 0;
-}
-
-footer hr {
-    margin: 0 0 10px 0;
-}
 .table-recepti th:last-child,
 .table-recepti td:last-child {
     text-align: right;
@@ -166,10 +150,26 @@ footer hr {
 }
 
 /* =========================
+   FOOTER
+   ========================= */
+footer {
+    width: 100%;
+    text-align: center;
+    padding: 5px 20px;
+    color: #fff8ed;
+    background-color: #35483b;
+    /* margin-top: auto; */
+    flex-shrink: 0;
+}
+
+footer hr {
+    margin:0;
+}
+/* =========================
  GUMB PROMIJENI
  ========================= */
 .btn-promijeni {
-    background-color: #35483B;
+    background-color: #3c8453;
     color: #fff8ed;
     border: none;
     padding: 6px 14px;
@@ -178,7 +178,7 @@ footer hr {
 
 .btn-promijeni:hover {
     background-color: #e9b88b;
-    color: #35483B;
+    color: #3c8453;
 }
 
 .hero-ime {
@@ -235,12 +235,11 @@ footer hr {
 }
 
 .hero-slogan {
-    /* font-size: clamp(14px, 1.8vw, 21px); */
     color: #25342d;
     font-weight: 400;
     font-style: italic;
     font-family: cursive;
-    margin-top: 50px;
+    margin-top: 30px;
     text-shadow: 1px 1px 3px #fff8ed;
 }
 
@@ -273,7 +272,7 @@ footer hr {
 
 .naslov-recepti p {
     margin: 0;
-    columns: #68766b;
+    color: #68766b;
     font-size: 0.95rem;
 }
 .container,
@@ -283,28 +282,30 @@ footer hr {
 .container-sm,
 .container-xl,
 .container-xxl {
-    padding-right: 0px;
-    padding-left: 0px;
+    max-width: 100%;
+    /* padding-right: 0px; */
+    /* padding-left: 0px; */
 }
 
 /* Glavna stranica - kartice */
 .pocetna-gore {
-    min-height: 60vh;
+    min-height: 65vh;
     background-image: url('./assets/slike/kuhinja.png');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    padding: 2rem 1rem;
-    padding-top: 4rem;
+    padding: 6rem 1rem 2rem;
     margin: 0px;
     text-align: center;
+    box-sizing: border-box;
+  
 }
 
 .pocetna-kartice {
     width: 100%;
-    padding: 24px;
+    padding: 26px 24px 0;
     margin: 0;
-    background-color: #fff8ed;
+    background-color: whitesmoke
 }
 
 .pocetna-kartica {
@@ -322,8 +323,8 @@ footer hr {
 
 .pocetna-kartica-naslov {
     display: flex;
-    gap: 12px;
-    margin-bottom: 18px;
+    gap: 10px;
+    /* margin-bottom: 18px; */
     color: #35483b;
 }
 
@@ -332,16 +333,16 @@ footer hr {
 }
 
 .pocetna-kartica p {
-    margin-bottom: 16px;
+    margin-bottom: 10px;
 }
 
 .pocetna-kartica .form-control {
-    min-height: 46 px;
+    min-height: 35px;
     border-color: #d7d9d2;
 }
 
 .pocetna-gumb {
-    min-height: 46px;
+    min-height: 30px;
     border: none;
     background-color: #35483b;
     color: #fff8ed;
@@ -354,7 +355,7 @@ footer hr {
 }
 
 .pocetna-statistika-broj {
-    margin: 16px 0 4px;
+    /* margin: 16px 0 4px; */
     font-size: 2rem;
     line-height: 1.1;
     font-weight: 700;
@@ -362,12 +363,11 @@ footer hr {
 }
 
 .pocetna-statistika svg {
-    margin-bottom: 10px;
+    margin-bottom: 5px;
 }
 .pocetna-statistika-sadrzaj {
     display: flex;
     flex-direction: row;
-
     justify-content: flex-start;
     gap: 0px;
     padding: 24px;
@@ -380,13 +380,6 @@ footer hr {
 
 .pocetna-statistika-tekst h2 {
     margin: 10px 0;
-}
-
-.statistika-ilustracija {
-    display: block;
-    width: 35%;
-    margin: 0;
-    transform: translateX(-100px)
 }
 
 .recepti-naslov {
@@ -430,10 +423,9 @@ footer hr {
         font-size: 44px;
     }
 
-    .app {
-        padding-left: 20px;
-        padding-right: 20px;
-    }
+    /* .app {
+        padding: 0 20px 0 20px;
+    } */
 }
 
 /* ========================================
@@ -530,13 +522,13 @@ footer hr {
     }
 
     /* Glavni sadržaj */
-    .app {
+    /* .app {
         padding: 0 !important;
         margin: 0;
-    }
+    } */
 
     .pocetna {
-        padding: 25px 15px;
+        padding: 15px 15px;
     }
 
     .pocetna h1 {
@@ -564,9 +556,10 @@ footer hr {
 
     /* Tablice */
     .table-responsive {
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-    }
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
 
     .table-kategorije {
         width: 100%;
@@ -649,11 +642,9 @@ footer hr {
     }
 
     /* Glavni sadržaj */
-    .app {
-        padding-left: 10px;
-        padding-right: 10px;
-        padding-top: 15px;
-    }
+    /* .app {
+       padding: 15px 10px 0 10px !important;
+    } */
 
     .pocetna h1 {
         font-size: 27px;
@@ -666,18 +657,11 @@ footer hr {
     .hero-naslov {
         top: 100px;
     }
-
     /* Kartice statistike */
     .pocetna-statistika-sadrzaj {
         padding: 16px;
         gap: 6px;
     }
-
-    .statistika-ilustracija {
-        width: 30%;
-        height: 70px;
-    }
-
     .pocetna-statistika-tekst h2 {
         font-size: 1.05rem;
     }
