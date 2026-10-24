@@ -5,7 +5,6 @@ import { Link, useNavigate, useSearchParams } from "react-router-dom"
 import SastojakService from "../../services/sastojci/SastojakService"
 
 
-
 function korijenRijeci(rijec) {
     let rezultat = rijec
         .toLocaleLowerCase('hr')

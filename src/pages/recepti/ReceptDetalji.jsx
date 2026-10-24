@@ -106,7 +106,6 @@ ucitajSastojke()
                     <img
                         className="img-fluid rounded-4 shadow"
                         src={slikeRecepata[recept.naziv] || recept.slikaPutanja || recept.slika}
-                        // src={recept.slikaPutanja || recept.slika} alt={recept.naziv}
                         style={{
                             width: '100%',
                             height: '350px',

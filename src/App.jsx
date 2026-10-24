@@ -1,8 +1,7 @@
 import { Container } from 'react-bootstrap'
 import Izbornik from './components/Izbornik'
-import {DATA_SOURCE, IME_APLIKACIJE, RouteNames } from './constants'
+import { DATA_SOURCE, IME_APLIKACIJE, RouteNames } from './constants'
 import { Route, Routes } from 'react-router-dom'
-// import Home from './pages/Home'
 import './App.css'
 import ReceptPregled from './pages/recepti/ReceptPregled'
 import ReceptNovi from './pages/recepti/ReceptNovi'
@@ -23,8 +22,7 @@ function App() {
 
   return (
     <div className='d-flex flex-column min-vh-100'>
-    {/* // <Container> */}
-  
+
       <Izbornik />
 
       <Container fluid className='app'>
@@ -61,10 +59,8 @@ function App() {
       <footer>
         <hr />
         &copy; {IME_APLIKACIJE} ({DATA_SOURCE})
-        {/* </Container> */}
       </footer>
-      </div>
-   
+    </div>
   )
 }
 export default App

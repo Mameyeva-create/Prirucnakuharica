@@ -7,17 +7,6 @@ import ReceptServiceMemorija from "./ReceptServiceMemorija"
 
 let Servis = null
 
-// switch (DATA_SOURCE) {
-//     case 'memorija':
-//         Servis = ReceptServiceMemorija
-//         break
-//     case 'LocalStorage':
-//         Servis = ReceptServiceLocalStorage
-//         break
-//     default:
-//         Servis = null
-// }
-
 if (DATA_SOURCE.trim() === 'LocalStorage') {
     Servis = ReceptServiceLocalStorage
 } else if (DATA_SOURCE.trim() === 'memorija') {
@@ -25,8 +14,6 @@ if (DATA_SOURCE.trim() === 'LocalStorage') {
 } else {
     console.error('Nepoznat DATA_SOURCE:', DATA_SOURCE)
 }
-
-
 
 const PrazanServis = {
     get: async () => ({ data: [] }),
@@ -37,9 +24,6 @@ const PrazanServis = {
 }
 
 const AktivniServis = Servis || PrazanServis
-
-
-
 
 
 export default {

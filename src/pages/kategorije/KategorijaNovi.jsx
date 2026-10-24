@@ -21,12 +21,11 @@ export default function KategorijaNovi() {
             return
         }
 
-       
         const kategorija = {
             naziv
         }
         try {
-             await KategorijaService.dodaj(kategorija)
+            await KategorijaService.dodaj(kategorija)
             navigate(RouteNames.KATEGORIJE)
         } catch (greska) {
             console.error('Greška pri dodavanju kategorije:', greska)
@@ -35,7 +34,7 @@ export default function KategorijaNovi() {
     }
 
     return (
-         <div className="px-4 py-3">
+        <div className="px-4 py-3">
             <h3>
                 Unos nove kategorije
             </h3>
@@ -63,6 +62,6 @@ export default function KategorijaNovi() {
 
             </Form>
 
-       </div>
+        </div>
     )
 }

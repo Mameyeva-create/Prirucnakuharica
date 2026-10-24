@@ -53,10 +53,6 @@ export default function Izbornik() {
                             <BiHomeAlt color='#e9b88b' size={20} className='me-2' />
                             Početna</Nav.Link>
 
-                        {/* <Nav.Link
-                            onClick={() => { navigate(RouteNames.KATEGORIJE) }}
-                        >Kategorije</Nav.Link> */}
-
                         <NavDropdown title={
                             <>
                                 <BiRestaurant color='#e9b88b' size={20} className='me-2' />
@@ -66,7 +62,7 @@ export default function Izbornik() {
                             id="recepti-dropdown">
                             <NavDropdown.Item
                                 onClick={() => navigate(RouteNames.RECEPTI)}
-                            >SVE</NavDropdown.Item>
+                            >📖 Svi recepti</NavDropdown.Item>
 
                             <NavDropdown.Item
                             onClick={() => navigate(RouteNames.RECEPTI_GENERIRANJE)}>
