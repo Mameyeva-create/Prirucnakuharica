@@ -657,8 +657,22 @@ footer hr {
         font-size: 1.05rem;
     }
 
-    /* Podnožje */
     footer {
         font-size: 13px;
     }
+}
+
+.stranica-dodaj-sastojak {
+    padding-bottom: 0;
+}
+
+.ilustracija-dodaj-sastojak {
+    margin-top: 80px;
+}
+
+.ilustracija-dodaj-sastojak img {
+    width: 100%;
+    max-width: 100%;
+    height: 50vh;
+    object-fit: contain;
 }
