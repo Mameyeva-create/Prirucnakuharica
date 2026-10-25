@@ -1,27 +1,34 @@
 import { Button, Card, Col, Form, Row } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import chefHat from '../../assets/slike/chef-hat.png'
 import { GiCookingPot } from 'react-icons/gi';
 import { MdKitchen } from 'react-icons/md';
 import ReceptService from '../../services/recepti/ReceptService';
+import KategorijaService from '../../services/kategorije/KategorijaService';
+import { BiCategory } from 'react-icons/bi';
 
 
 
 export default function Pocetna() {
   const navigate = useNavigate()
-  const [trazi, setTrazi] = useState('')
+  // const [trazi, setTrazi] = useState('')
   const [namirnice, setNamirnice] = useState('')
-  const [brojGeneriranih, setBrojGeneriranih] = useState('')
+  const [brojGeneriranih, setBrojGeneriranih] = useState(0)
+  const [brojGeneriranihKategorija, setBrojGeneriranihKategorija] = useState(0)
 
 
   useEffect(() => {
     async function ucitajStatistiku() {
       try {
-        const odgovor = await ReceptService.get()
-        const recepti = odgovor.data || []
+        const [odgovorRecepata, odgovorKategorija] = await Promise.all([
+          ReceptService.get(),
+          KategorijaService.get()
+        ])
+        const recepti = odgovorRecepata.data || []
+        const kategorije = odgovorKategorija.data || []
 
         setBrojGeneriranih(recepti.filter(recept => recept.generirano === true).length)
+        setBrojGeneriranihKategorija(kategorije.filter(kategorija => kategorija.generirano === true).length)
       } catch (error) {
         console.error('Greška pri učitavanju statistike:', error)
       }
@@ -92,15 +99,21 @@ export default function Pocetna() {
           <Col xs={12} md={6}>
             <Card className='pocetna-kartica pocetna-statistika h-100'>
               <Card.Body className='pocetna-statistika-sadrzaj'>
-                <div className="pocetna-statistika-tekst">
-                  <GiCookingPot size={50} />
-                  <h2>Statistika recepata</h2>
-                  <div className='pocetna-statistika-broj'>
-                    {brojGeneriranih}
-                  </div>
-                  <p>Ukupno generiranih recepata</p>
-                </div>
+                <Row className='g-0 h-100'>
+                  <Col xs={6} className='p-2'>
+                    <GiCookingPot size={50} />
+                    <h2 className='fs-6 mb-2'>Statistika recepata</h2>
+                    <span className='d-block fs-3 fw-bold'>{brojGeneriranih}</span>
+                    <p className='mb-0'>Ukupno generiranih recepata</p>
+                  </Col>
 
+                  <Col xs={6} className='p-2 border-start'>
+                    <BiCategory size={50} />
+                    <h2 className='fs-6 mb-2'>Statistika kategorija</h2>
+                    <span className='d-block fs-3 fw-bold'>{brojGeneriranihKategorija}</span>
+                    <p className='mb-0'>Generirane kategorije</p>
+                  </Col>
+                </Row>
               </Card.Body>
             </Card>
           </Col>

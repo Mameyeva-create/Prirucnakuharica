@@ -28,6 +28,9 @@ function nadiIndex(id) {
 
 async function obrisi(id) {
     const index = nadiIndex(id)
+    if (index === -1) {
+        throw new Error(`Kategorija s ID ${id} nije pronađena`)
+    }
     kategorije.splice(index,1)
 }
 

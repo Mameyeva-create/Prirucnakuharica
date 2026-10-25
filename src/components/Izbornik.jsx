@@ -18,6 +18,14 @@ export default function Izbornik() {
 
     useEffect(() => {
         ucitajKategorije()
+
+        const handleFocus = () => {
+            ucitajKategorije()
+        }
+        window.addEventListener('focus', handleFocus)
+        return () => {
+            window.removeEventListener('focus', handleFocus)
+        }
     }, [location.pathname])
 
     async function ucitajKategorije() {
@@ -66,7 +74,7 @@ export default function Izbornik() {
 
                             <NavDropdown.Item
                             onClick={() => navigate(RouteNames.RECEPTI_GENERIRANJE)}>
-                                 🎲 Generiranje recepta
+                                 🎲 Generiranje podataka
                             </NavDropdown.Item>
 
                             <NavDropdown.Divider />

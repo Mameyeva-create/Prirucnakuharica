@@ -2,11 +2,9 @@
 import { useState } from "react";
 import { Button, Form, Alert } from "react-bootstrap";
 import { Faker, hr } from "@faker-js/faker";
-
 import ReceptService from "../../services/recepti/ReceptService";
 import KategorijaService from "../../services/kategorije/KategorijaService";
 import SastojakService from "../../services/sastojci/SastojakService";
-
 import carbonara from "../../assets/slike/carbonara.jpg";
 import cezarSalata from "../../assets/slike/cezar-salata.jpg";
 import cokoladniKolac from "../../assets/slike/cokoladni-kolac.jpg";
@@ -310,8 +308,8 @@ export default function GeneriranjeRecepata() {
     }
 
     return (
-        <div className="px-4 py-3">
-            <h3>Generiranje testnih recepata</h3>
+        <div className="p-3">
+            <h4>Generiranje testnih recepata</h4>
 
             <Form.Group className="mb-3" controlId="kolicina">
                 <Form.Label>Broj recepata za generiranje</Form.Label>
@@ -329,28 +327,24 @@ export default function GeneriranjeRecepata() {
             </Form.Group>
 
 
-            <div className="d-flex flex-wrap align-items-center gap-2">
+            <div className="d-flex flex-column gap-2">
                 <Button
                     variant="success"
                     onClick={generirajRecepte}
                     disabled={ucitavanje}
-                >
-                    Generiraj recepte
+                >Generiraj recepte
                 </Button>
 
                 <Button
-                    variant="danger"
+                    variant="outline-success"
+                    onClick={() => navigate('/recepti?generirani=true')}
+                >Prikaži generirane recepte
+                </Button>
+                <Button
+                    variant="outline-danger"
                     onClick={obrisiGeneriraneRecepte}
                     disabled={ucitavanje}
-                >
-                    Obriši sve generirane recepte
-                </Button>
-
-                <Button
-                    variant="success"
-                    onClick={() => navigate('/recepti?generirani=true')}
-                >
-                    Vidi generirane recepte
+                > Obriši sve generirane recepte
                 </Button>
             </div>
 
