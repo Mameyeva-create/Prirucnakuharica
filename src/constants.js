@@ -14,10 +14,15 @@ export const RouteNames = {
     KATEGORIJE_PROMJENA: '/kategorije/:id',
 
     SASTOJCI: '/sastojci',
-    SASTOJAK_NOVI: '/sastojak/novi',
-    
+    SASTOJAK_NOVI: '/sastojci/novi',
+    SASTOJAK_PROMJENA: '/sastojci/:id',
+
+
+     JEDINICE_MJERE: '/jediniceMjere',
+    JEDINICE_MJERE_NOVI: '/jediniceMjere/novi',
+    JEDINICE_MJERE_PROMJENA: '/jediniceMjere/:id',
 
     
 }
 // memorija, LocalStorage
-export const DATA_SOURCE = 'LocalStorage'
+export const DATA_SOURCE = 'memorija'

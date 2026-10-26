@@ -15,6 +15,11 @@ import KategorijaPromjena from './pages/kategorije/KategorijaPromjena'
 import SastojakNovi from './pages/sastojci/SastojakNovi'
 import GeneriranjeRecepta from './pages/recepti/GeneriranjeRecepta'
 import GeneriranjePodataka from './components/GeneriranjePodataka'
+import SastojakPregled from './pages/sastojci/SastojakPregled'
+import SastojakPromjena from './pages/sastojci/SastojakPromjena'
+import JedinicaMjerePregled from './pages/jedinicaMjere/JedinicaMjerePregled'
+import JedinicaMjereNovi from './pages/jedinicaMjere/JedinicaMjereNovi'
+import JedinicaMjerePromjena from './pages/jedinicaMjere/JedinicaMjerePromjena'
 
 function App() {
 
@@ -48,9 +53,17 @@ function App() {
 
             <Route path={RouteNames.KATEGORIJE_PROMJENA} element={<KategorijaPromjena />} />
 
-            <Route path={RouteNames.SASTOJCI} element={}
+            <Route path={RouteNames.SASTOJCI} element={<SastojakPregled />} />
+
+            <Route path={RouteNames.SASTOJAK_PROMJENA} element={<SastojakPromjena />} />
 
             <Route path='/sastojci/novi' element={<SastojakNovi />} />
+
+            <Route path={RouteNames.JEDINICE_MJERE} element={<JedinicaMjerePregled />} />
+
+            <Route path={RouteNames.JEDINICE_MJERE_NOVI} element={<JedinicaMjereNovi />} />,
+
+            <Route path={RouteNames.JEDINICE_MJERE_PROMJENA} element={<JedinicaMjerePromjena />} />
 
           </Routes>
         </main>

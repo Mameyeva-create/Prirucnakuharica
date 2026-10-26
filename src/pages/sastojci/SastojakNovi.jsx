@@ -19,7 +19,7 @@ export default function SastojakNovi() {
             await SastojakService.dodaj({
                 naziv: naziv.trim()
             })
-            navigate(RouteNames.RECEPTI)
+            navigate(RouteNames.SASTOJCI)
         } catch (error) {
             setGreska(error.message)
         }
@@ -43,7 +43,7 @@ export default function SastojakNovi() {
                         <Button type="submit" variant="success">
                             Spremi sastojak
                         </Button>{" "}
-                        <Link to={RouteNames.RECEPTI}
+                        <Link to={RouteNames.SASTOJCI}
                             className="btn btn-danger">
                             Odustani
                         </Link>

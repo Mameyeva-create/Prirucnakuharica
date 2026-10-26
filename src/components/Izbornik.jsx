@@ -102,7 +102,11 @@ export default function Izbornik() {
 
                             <NavDropdown.Divider />
                             <NavDropdown.Item
-                                onClick={() => navigate(RouteNames.KATEGORIJE)}>
+                                onClick={() => navigate(RouteNames.JEDINICE_MJERE)}>
+                                XX Sve jedinice mjera
+                            </NavDropdown.Item>
+                            <NavDropdown.Item
+                                onClick={() => navigate(RouteNames.SASTOJCI)}>
                                 🥕 Svi sastojke
                             </NavDropdown.Item>
 

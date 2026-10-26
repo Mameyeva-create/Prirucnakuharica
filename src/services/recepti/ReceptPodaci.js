@@ -20,11 +20,24 @@ export const recepti = [
         slikaPutanja: '/src/assets/slike/carbonara.jpg',
         opis: 'Jednostavna i iskusna tjestenina s jajima,sirom i pancetom.',
         sastojci: [
-            '200 g tjestenine',
-            '100 g pancete',
-            '2 jaja',
-            '50 g parmezana',
-            'sol i papar po ukusu'
+            {
+                sastojak: 1,
+                jedinicaMjere: 1,
+                kolicina: 200,
+
+            },
+            {
+                sastojak: 2,
+                jedinicaMjere: 1,
+                kolicina: 100,
+
+            },
+            {
+                sastojak: 7,
+                jedinicaMjere: 2,
+                kolicina: 1,
+
+            }
         ],
         priprema: '1. Skuhajte tjesteninu prema uputama na pakiranju.\n2. Narežite pancetu i popržite je na tavi.\n3. Umutite jaja i naribani sir.\n4. Pomiješajte vruću tjesteninu s pancetom i smjesom jaja i sira.\n5. Poslužite odmah.',
         omiljen: true,
@@ -39,12 +52,24 @@ export const recepti = [
         slikaPutanja: '/src/assets/slike/palacinke.jpg',
         opis: 'Brze i jednostavne palačinke koje možete poslužiti sa slatkim nadjevom.',
         sastojci: [
-            '200 g glatkog brašna',
-            '300 ml mlijeka',
-            '2 jaja',
-            '1 žlica šećera',
-            '1 žlica ulja',
-            'prstohvat soli'
+            {
+                sastojak: 1,
+                jedinicaMjere: 1,
+                kolicina: 200,
+
+            },
+            {
+                sastojak: 2,
+                jedinicaMjere: 1,
+                kolicina: 100,
+
+            },
+            {
+                sastojak: 7,
+                jedinicaMjere: 2,
+                kolicina: 1,
+
+            }
         ],
         priprema: '1. Pomiješajte brašno, mlijeko, jaja i malo šećera.\n2. Miješajte dok ne dobijete glatku smjesu.\n3. Zagrijte tavu i lagano je nauljite.\n4. Ulijte malo smjese i pecite palačinku s obje strane.\n5. Poslužite s omiljenim nadjevom.',
         omiljen: false,
@@ -59,13 +84,24 @@ export const recepti = [
         slikaPutanja: '/src/assets/slike/piletina.jpg',
         opis: 'Ukusan i jednostavan obrok s pileetinom i svježim povrćem.',
         sastojci: [
-            '400 g pilećih prsa',
-            '2 mrkve',
-            '3 krumpira',
-            '1 paprika',
-            '1 glavica luka',
-            '2 žlice ulja',
-            'sol i papar po ukusu'
+            {
+                sastojak: 1,
+                jedinicaMjere: 1,
+                kolicina: 200,
+
+            },
+            {
+                sastojak: 2,
+                jedinicaMjere: 1,
+                kolicina: 100,
+
+            },
+            {
+                sastojak: 7,
+                jedinicaMjere: 2,
+                kolicina: 1,
+
+            }
         ],
         priprema: '1. Narežite piletinu i povrće na manje komade.\n2. Začinite solju, paprom i omiljenim začinima.\n3. Stavite sve u posudu za pečenje i dodajte malo ulja.\n4. Pecite na 200 °C oko 25–30 minuta, dok piletina nije potpuno pečena.\n5. Poslužite toplo.',
         omiljen: true,
@@ -80,11 +116,24 @@ export const recepti = [
         slikaPutanja: '/src/assets/slike/pizza.jpg',
         opis: 'Klasična talijanska pizza s rajčicom, mozzarellom i svježim bosiljkom.',
         sastojci: [
-            '300 g tijesta za pizzu',
-            '150 g umaka od rajčice',
-            '200 g mozzarelle',
-            'nekoliko listova svježeg bosiljka',
-            '1 žlica maslinovog ulja'
+            {
+                sastojak: 1,
+                jedinicaMjere: 1,
+                kolicina: 200,
+
+            },
+            {
+                sastojak: 2,
+                jedinicaMjere: 1,
+                kolicina: 100,
+
+            },
+            {
+                sastojak: 7,
+                jedinicaMjere: 2,
+                kolicina: 1,
+
+            }
         ],
         priprema: '1. Razvaljajte tijesto za pizzu.\n2. Premažite tijesto umakom od rajčice.\n3. Dodajte narezanu mozzarellu.\n4. Pecite u prethodno zagrijanoj pećnici na 220 °C oko 10–15 minuta, ovisno o tijestu.\n5. Dodajte svježi bosiljak i poslužite.',
         omiljen: false,
@@ -100,11 +149,24 @@ export const recepti = [
         slikaPutanja: '/src/assets/slike/cezar-salata.jpg',
         opis: 'Svježa salata s piletinom, hrskavim krutonima, parmezanom i Cezar umakom.',
         sastojci: [
-            '300 g pilećih prsa',
-            '1 glavica zelene salate',
-            '80 g krutona',
-            '40 g parmezana',
-            '3 žlice Cezar umaka'
+            {
+                sastojak: 1,
+                jedinicaMjere: 1,
+                kolicina: 200,
+
+            },
+            {
+                sastojak: 2,
+                jedinicaMjere: 1,
+                kolicina: 100,
+
+            },
+            {
+                sastojak: 7,
+                jedinicaMjere: 2,
+                kolicina: 1,
+
+            }
         ],
         priprema: '1. Operite i narežite salatu.\n2. Začinite piletinu i ispecite je u tavi.\n3. Narežite pečenu piletinu na komade.\n4. Pomiješajte salatu, piletinu, krutone i Cezar umak.\n5. Pospite parmezanom i poslužite.',
         omiljen: true,
@@ -119,12 +181,24 @@ export const recepti = [
         slikaPutanja: '/src/assets/slike/cokoladni-kolac.jpg',
         opis: 'Sočan i mekan čokoladni kolač bogatog okusa, idealan za sve ljubitelje čokolade.',
         sastojci: [
-            '200 g čokolade za kuhanje',
-            '150 g brašna',
-            '120 g šećera',
-            '3 jaja',
-            '100 g maslaca',
-            '1 žličica praška za pecivo'
+            {
+                sastojak: 1,
+                jedinicaMjere: 1,
+                kolicina: 200,
+
+            },
+            {
+                sastojak: 2,
+                jedinicaMjere: 1,
+                kolicina: 100,
+
+            },
+            {
+                sastojak: 7,
+                jedinicaMjere: 2,
+                kolicina: 1,
+
+            }
         ],
         priprema: '1. Zagrijte pećnicu na 180 °C.\n2. Otopite čokoladu.\n3. Umutite jaja i šećer, zatim dodajte otopljenu čokoladu i brašno.\n4. Izlijte smjesu u namašćen kalup.\n5. Pecite oko 25–30 minuta i ostavite da se ohladi.',
         omiljen: false,
@@ -139,13 +213,24 @@ export const recepti = [
         slikaPutanja: '/src/assets/slike/povrtna-juha.jpg',
         opis: 'Lagana i zdrava juha od svježeg povrća, savršena za svaki dan.',
         sastojci: [
-            '2 mrkve',
-            '3 krumpira',
-            '1 glavica luka',
-            '1 tikvica',
-            '1,2 l vode ili povrtnog temeljca',
-            '1 žlica ulja',
-            'sol i papar po ukusu'
+            {
+                sastojak: 1,
+                jedinicaMjere: 1,
+                kolicina: 200,
+
+            },
+            {
+                sastojak: 2,
+                jedinicaMjere: 1,
+                kolicina: 100,
+
+            },
+            {
+                sastojak: 7,
+                jedinicaMjere: 2,
+                kolicina: 1,
+
+            }
         ],
         priprema: '1. Operite i narežite povrće na kockice.\n2. Nasjeckajte luk i kratko ga popržite u loncu.\n3. Dodajte ostalo povrće i vodu.\n4. Kuhajte oko 20 minuta, dok povrće ne omekša.\n5. Začinite po želji i poslužite toplo.',
         omiljen: false,
