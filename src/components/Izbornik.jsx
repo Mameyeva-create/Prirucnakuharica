@@ -16,6 +16,7 @@ export default function Izbornik() {
 
     const [kategorije, setKategorie] = useState([])
     const [prikaziKategorije, setPrikaziKategorije] = useState(false)
+    const [receptiOtvoreni, setReceptiOtvoreni] = useState(false)
 
     useEffect(() => {
         ucitajKategorije()
@@ -68,20 +69,22 @@ export default function Izbornik() {
                                 Recepti
                             </>
                         }
-                            id="recepti-dropdown">
+                            id="recepti-dropdown"
+                            show={receptiOtvoreni}
+                            onToggle={(isOpen) => setReceptiOtvoreni(isOpen)}
+                            autoClose='outside'
+                        >
                             <NavDropdown.Item
                                 onClick={() => navigate(RouteNames.RECEPTI)}
                             >📖 Svi recepti</NavDropdown.Item>
 
                             <NavDropdown.Item
-                                onClick={(e) => {
-                                    e.preventDefault()
-                                    e.stopPropagation()
-
+                                onClick={() => {
                                     if (!prikaziKategorije) {
                                         setPrikaziKategorije(true)
                                     } else {
                                         setPrikaziKategorije(false)
+                                        setReceptiOtvoreni(false)
                                         navigate(RouteNames.KATEGORIJE)
                                     }
                                 }} >
@@ -94,6 +97,7 @@ export default function Izbornik() {
                                         <NavDropdown.Item key={kategorija.id}
                                             onClick={() => {
                                                 setPrikaziKategorije(false)
+                                                setReceptiOtvoreni(false)
                                                 navigate(RouteNames.RECEPTI + '?kategorija='
                                                     + encodeURIComponent(kategorija.naziv))
                                             }}
@@ -113,6 +117,7 @@ export default function Izbornik() {
                                     <NavDropdown.Item
                                         onClick={() => {
                                             setPrikaziKategorije(false)
+                                            setReceptiOtvoreni(false)
                                             navigate(RouteNames.RECEPTI + '?vegansko=true')
                                         }}>
                                         🌱 Vegansko
