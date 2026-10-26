@@ -293,7 +293,7 @@ footer hr {
 
 /* Glavna stranica - kartice */
 .pocetna-gore {
-    min-height: 65vh;
+    min-height: 66vh;
     background-image: url('./assets/slike/kuhinja.png');
     background-size: cover;
     background-position: center;
@@ -306,7 +306,7 @@ footer hr {
 
 .pocetna-kartice {
     width: 100%;
-    padding: 26px 24px 0;
+    padding: 24px 24px 0;
     margin: 0;
     background-color: whitesmoke
 }
@@ -667,12 +667,12 @@ footer hr {
 }
 
 .ilustracija-dodaj-sastojak {
-    margin-top: 80px;
+    margin-top: 220px;
 }
 
 .ilustracija-dodaj-sastojak img {
     width: 100%;
     max-width: 100%;
-    height: 50vh;
+    height: 40vh;
     object-fit: contain;
 }

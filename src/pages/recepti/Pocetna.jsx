@@ -99,7 +99,7 @@ export default function Pocetna() {
           <Col xs={12} md={6}>
             <Card className='pocetna-kartica pocetna-statistika h-100'>
               <Card.Body className='pocetna-statistika-sadrzaj'>
-                <Row className='g-0  w-100 h-100'>
+                <Row className='g-0 w-100 h-100'>
                   <Col xs={6} className='p-2'>
                     <GiCookingPot size={50} />
                     <h2 className='fs-6 mb-2'>Statistika recepata</h2>
