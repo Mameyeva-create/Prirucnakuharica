@@ -73,8 +73,8 @@ export default function Izbornik() {
                             >📖 Svi recepti</NavDropdown.Item>
 
                             <NavDropdown.Item
-                            onClick={() => navigate(RouteNames.RECEPTI_GENERIRANJE)}>
-                                 🎲 Generiranje podataka
+                                onClick={() => navigate(RouteNames.RECEPTI_GENERIRANJE)}>
+                                🎲 Generiranje podataka
                             </NavDropdown.Item>
 
                             <NavDropdown.Divider />
@@ -99,6 +99,13 @@ export default function Izbornik() {
                                 onClick={() => navigate(RouteNames.RECEPTI + '?vegansko=true')}>
                                 🌱 Vegansko
                             </NavDropdown.Item>
+
+                            <NavDropdown.Divider />
+                            <NavDropdown.Item
+                                onClick={() => navigate(RouteNames.KATEGORIJE)}>
+                                🥕 Svi sastojke
+                            </NavDropdown.Item>
+
                             <NavDropdown.Divider />
                             <NavDropdown.Item
                                 onClick={() => navigate(RouteNames.KATEGORIJE)}>
@@ -129,7 +136,7 @@ export default function Izbornik() {
                                 <BiBookAdd color="#e9b88b" size={20} className='me-2' />
                                 {' '}Dodaj
                             </>
-                            } id="dodaj-dropdown">
+                        } id="dodaj-dropdown">
                             <NavDropdown.Item
                                 onClick={() => navigate(RouteNames.RECEPTI_NOVI)}
                             > 🍲 Dodaj Svoj Recept </NavDropdown.Item>

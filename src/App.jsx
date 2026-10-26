@@ -48,6 +48,8 @@ function App() {
 
             <Route path={RouteNames.KATEGORIJE_PROMJENA} element={<KategorijaPromjena />} />
 
+            <Route path={RouteNames.SASTOJCI} element={}
+
             <Route path='/sastojci/novi' element={<SastojakNovi />} />
 
           </Routes>
