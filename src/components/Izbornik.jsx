@@ -15,6 +15,7 @@ export default function Izbornik() {
     const location = useLocation()
 
     const [kategorije, setKategorie] = useState([])
+    const [prikaziKategorije, setPrikaziKategorije] = useState(false)
 
     useEffect(() => {
         ucitajKategorije()
@@ -73,53 +74,71 @@ export default function Izbornik() {
                             >📖 Svi recepti</NavDropdown.Item>
 
                             <NavDropdown.Item
-                                onClick={() => navigate(RouteNames.RECEPTI_GENERIRANJE)}>
-                                🎲 Generiranje podataka
-                            </NavDropdown.Item>
+                                onClick={(e) => {
+                                    e.preventDefault()
+                                    e.stopPropagation()
 
-                            <NavDropdown.Divider />
-                            {kategorije.map((kategorija) => (
-                                <NavDropdown.Item key={kategorija.id}
-                                    onClick={() => navigate(RouteNames.RECEPTI + '?kategorija='
-                                        + encodeURIComponent(kategorija.naziv))
+                                    if (!prikaziKategorije) {
+                                        setPrikaziKategorije(true)
+                                    } else {
+                                        setPrikaziKategorije(false)
+                                        navigate(RouteNames.KATEGORIJE)
                                     }
-                                >
-                                    {kategorija.naziv === 'Doručak' && '🥪'}
-                                    {kategorija.naziv === 'Ručak' && '🍲'}
-                                    {kategorija.naziv === 'Večera' && '🍽️'}
-                                    {kategorija.naziv === 'Desert' && '🧁'}
-                                    {!['Doručak', 'Ručak', 'Večera', 'Desert']
-                                        .includes(kategorija.naziv) && '🍴'}
-                                    {' '}{kategorija.naziv}
-                                </NavDropdown.Item>
-                            ))}
-
-                            <NavDropdown.Divider />
-                            <NavDropdown.Item
-                                onClick={() => navigate(RouteNames.RECEPTI + '?vegansko=true')}>
-                                🌱 Vegansko
+                                }} >
+                                📋 Sve kategorije  {prikaziKategorije ? '▵' : '▿'}
                             </NavDropdown.Item>
+                            {prikaziKategorije && (
+                                <>
+                                    <NavDropdown.Divider />
+                                    {kategorije.map((kategorija) => (
+                                        <NavDropdown.Item key={kategorija.id}
+                                            onClick={() => {
+                                                setPrikaziKategorije(false)
+                                                navigate(RouteNames.RECEPTI + '?kategorija='
+                                                    + encodeURIComponent(kategorija.naziv))
+                                            }}
+                                        >
+                                            {kategorija.naziv === 'Doručak' && '🥪'}
+                                            {kategorija.naziv === 'Ručak' && '🍲'}
+                                            {kategorija.naziv === 'Večera' && '🍽️'}
+                                            {kategorija.naziv === 'Desert' && '🧁'}
+                                            {!['Doručak', 'Ručak', 'Večera', 'Desert']
+                                                .includes(kategorija.naziv) && '🍴'}
+                                            {' '}{kategorija.naziv}
+                                        </NavDropdown.Item>
+                                    ))}
+
+                                    <NavDropdown.Divider />
+
+                                    <NavDropdown.Item
+                                        onClick={() => {
+                                            setPrikaziKategorije(false)
+                                            navigate(RouteNames.RECEPTI + '?vegansko=true')
+                                        }}>
+                                        🌱 Vegansko
+                                    </NavDropdown.Item>
+
+                                </>
+                            )}
 
                             <NavDropdown.Divider />
                             <NavDropdown.Item
                                 onClick={() => navigate(RouteNames.JEDINICE_MJERE)}>
-                                XX Sve jedinice mjera
+                                ⚖️ Sve jedinice mjera
                             </NavDropdown.Item>
                             <NavDropdown.Item
                                 onClick={() => navigate(RouteNames.SASTOJCI)}>
-                                🥕 Svi sastojke
+                                🥕 Svi sastojci
                             </NavDropdown.Item>
 
                             <NavDropdown.Divider />
-                            <NavDropdown.Item
-                                onClick={() => navigate(RouteNames.KATEGORIJE)}>
-                                📋 Sve kategorije
-                            </NavDropdown.Item>
+
 
                             <NavDropdown.Item
-                                onClick={() => navigate(RouteNames.KATEGORIJE_NOVI)}>
-                                ✏️ Dodaj svoju kategoriju
+                                onClick={() => navigate(RouteNames.RECEPTI_GENERIRANJE)}>
+                                🎲 Generiranje podataka
                             </NavDropdown.Item>
+
                         </NavDropdown>
 
 
@@ -143,7 +162,12 @@ export default function Izbornik() {
                         } id="dodaj-dropdown">
                             <NavDropdown.Item
                                 onClick={() => navigate(RouteNames.RECEPTI_NOVI)}
-                            > 🍲 Dodaj Svoj Recept </NavDropdown.Item>
+                            > 🍲 Dodaj svoj Recept </NavDropdown.Item>
+
+                            <NavDropdown.Item
+                                onClick={() => navigate(RouteNames.KATEGORIJE_NOVI)}>
+                                ✏️ Dodaj svoju kategoriju
+                            </NavDropdown.Item>
 
                             <NavDropdown.Divider />
                             <NavDropdown.Item onClick={() => navigate("/sastojci/novi")}
