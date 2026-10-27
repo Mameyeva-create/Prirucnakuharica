@@ -2,25 +2,40 @@
 import { Link, useNavigate } from "react-router-dom";
 import ReceptService from "../../services/recepti/ReceptService";
 import { RouteNames } from "../../constants";
-import { Button, Card, Col, Container, Form, Row } from "react-bootstrap";
+import { Button, Card, Col, Container, Form, Row, Table } from "react-bootstrap";
 import { useEffect, useState } from "react";
 import KategorijaService from "../../services/kategorije/KategorijaService"
 import SastojakService from "../../services/sastojci/SastojakService";
+import JedinicaMjereService from "../../services/jedinicaMjere/JedinicaMjereService";
+import { hr } from "@faker-js/faker";
 
 export default function ReceptNovi() {
     const navigate = useNavigate()
 
     const [kategorije, setKategorije] = useState([])
     const [sviSastojci, setSviSastojci] = useState([])
+    const [jediniceMjere, setJediniceMjere] = useState([])
+    const [trenutniSastojak, setTrenutniSastojak] = useState({})
+    const [odabraniSastojci, setOdabraniSastojci] = useState([])
+    const [pretragaSastojka, setPretragaSastojka] = useState('')
+    const [prikaziAutocomplete, setPrikaziAutocomplete] = useState(false)
+    const [odabraniIndex, setOdabraniIndex] = useState(-1)
+    const [trenutnaJedinicaMjere, setTrenutnaJedinicaMjere] = useState(0)
+    const [trenutnaKolicina, setTrenutnaKolicina] = useState('')
 
-    const [stavkeRecepta, setStavkeRecepta] = useState([
-        { sastojakId: "", kolicina: "", jedinica: "g" }
-    ])
+
 
     useEffect(() => {
+        ucitajJediniceMjere()
         ucitajKategorije()
         ucitajSastojke()
     }, [])
+
+    async function ucitajJediniceMjere() {
+        const odgovor = await JedinicaMjereService.get()
+        // console.table(odgovor.data)
+        setJediniceMjere(odgovor.data)
+    }
 
     async function ucitajKategorije() {
         try {
@@ -40,23 +55,30 @@ export default function ReceptNovi() {
         }
     }
 
-    function promijeniStavku(index, polje, vrijednost) {
-        setStavkeRecepta((prethodne) =>
-            prethodne.map((stavka, i) =>
-                i === index ? { ...stavka, [polje]: vrijednost }
-                    : stavka))
-    }
+
 
     function dodajStavku() {
-        setStavkeRecepta((prethodne) => [...prethodne,
-        { sastojakId: "", kolicina: "", jedinica: "g" }
-        ])
+        //console.log("sastojak",trenutniSastojak.id)
+        //console.log("jm",trenutnaJedinicaMjere)
+        //console.log("količina", trenutnaKolicina)
+
+        const nova = {
+            sastojak: trenutniSastojak,
+            jedinicaMjere: jediniceMjere.find(jm => jm.id === parseInt(trenutnaJedinicaMjere)),
+            kolicina: trenutnaKolicina,
+        }
+
+        console.log(JSON.stringify(nova))
+
+        setOdabraniSastojci([...odabraniSastojci, nova])
+        setOdabraniIndex(-1)
+        setPrikaziAutocomplete(false)
+        setTrenutnaJedinicaMjere(0)
+        setTrenutnaKolicina('')
+        setTrenutniSastojak({})
     }
 
-    function obrisiStavku(index) {
-        setStavkeRecepta((prethodne) =>
-            prethodne.filter((stavka, i) => i !== index))
-    }
+
 
     async function odradiSubmit(e) {
         e.preventDefault()
@@ -88,39 +110,23 @@ export default function ReceptNovi() {
             return
         }
 
-        if (stavkeRecepta.length === 0) {
-            alert("Dodaj barem jedan sastojak")
-            return
-        }
 
-        const neispravnaStavka = stavkeRecepta.some(
-            (stavka) =>
-                !stavka.sastojakId ||
-                !Number.isFinite(Number(stavka.kolicina)) ||
-                Number(stavka.kolicina) <= 0 ||
-                !stavka.jedinica
-        )
-
-        if (neispravnaStavka) {
-            alert("Za svaki sastojak odaberi naziv, kolicinu i jedinicu mjere")
-            return
-        }
 
         const recept = {
             naziv,
             kategorija,
             vrijeme,
             opis,
-            osnovnePorcije: 2,
             sastojci:
-                stavkeRecepta.map((stavka) => ({
-                    sastojakId: Number(stavka.sastojakId),
-                    kolicina: Number(stavka.kolicina),
-                    jedinica: stavka.jedinica
+                odabraniSastojci.map(s => ({
+                    sastojak: s.sastojak.id,
+                    jedinicaMjere: s.jedinicaMjere.id,
+                    kolicina: s.kolicina 
                 })),
             omiljen: podaci.get('omiljen') === 'on',
             vegansko: podaci.get('vegansko') === 'on'
         }
+        console.log(JSON.stringify(recept))
         try {
             await ReceptService.dodaj(recept)
             navigate(RouteNames.RECEPTI)
@@ -128,6 +134,52 @@ export default function ReceptNovi() {
             console.error('Greška pri dodavanju recepta:', greska)
             alert('Recept nije dodan. Provjeri konzolu')
         }
+    }
+
+    function filtrirajSastojke() {
+        if (!pretragaSastojka) return []
+        return sviSastojci.filter(p =>
+            !odabraniSastojci.find(op => op.id === p.id) &&
+            (p.naziv.toLowerCase().includes(pretragaSastojka.toLowerCase()))
+        )
+    }
+
+
+    function handleKeyDown(e) {
+        const filtriraniSastojci = filtrirajSastojke()
+
+        if (e.key === 'ArrowDown') {
+            e.preventDefault()
+            setOdabraniIndex(prev => {
+                if (prev + 1 === filtriraniSastojci.length) {
+                    return 0
+                }
+                return prev < filtriraniSastojci.length - 1 ? prev + 1 : prev
+            }
+
+            )
+        } else if (e.key === 'ArrowUp') {
+            e.preventDefault()
+            setOdabraniIndex(prev => {
+                if (prev === 0) {
+                    return filtriraniSastojci.length - 1
+                }
+                return prev > 0 ? prev - 1 : 0
+            })
+        } else if (e.key === 'Enter' && odabraniIndex >= 0 && filtriraniSastojci.length > 0) {
+            e.preventDefault()
+            setTrenutniSastojak(filtriraniSastojci[odabraniIndex])
+            setPrikaziAutocomplete(false)
+            setPretragaSastojka('')
+            // staviti fokus na količinu
+        } else if (e.key === 'Escape') {
+            setPrikaziAutocomplete(false)
+            setOdabraniIndex(-1)
+        }
+    }
+
+    function ukloniSastojak(id) {
+        setOdabraniSastojci(odabraniSastojci.filter(st => st.sastojak.id !== id))
     }
 
     return (
@@ -171,63 +223,80 @@ export default function ReceptNovi() {
                                 </Col>
                                 {/* DESNA KOLONA */}
                                 <Col xs={12} md={6} className="d-flex flex-column">
-                                    <Form.Label>Sastojci</Form.Label>
-                                    {stavkeRecepta.map((stavka, index) => (
-                                        <div key={index} className="mb-3 mx-0">
 
-                                            <Form.Label>Sastojak {index + 1}</Form.Label>
-                                            <Form.Select value={stavka.sastojakId}
-                                                onChange={(e) => promijeniStavku(
-                                                    index, "sastojakId", e.target.value)
-                                                }
-                                                required>
-                                                <option value="">-- Odaberi sastojak --</option>
-                                                {sviSastojci.map((sastojak) => (
-                                                    <option key={sastojak.id}
-                                                        value={sastojak.id}>{sastojak.naziv}</option>
+
+
+                                    <Form.Group className="mb-3 position-relative">
+                                        <Form.Label className="fw-bold">Dodaj sastojak <span
+                                            style={{ color: 'red' }}>
+                                            {trenutniSastojak.naziv}
+                                        </span>
+                                        </Form.Label>
+                                        <Form.Control
+                                            type="text"
+                                            placeholder="Pretraži sastojke..."
+                                            value={pretragaSastojka}
+                                            onChange={(e) => {
+                                                setPretragaSastojka(e.target.value)
+                                                setPrikaziAutocomplete(e.target.value.length > 0)
+                                                setOdabraniIndex(-1)
+                                            }}
+                                            onFocus={() => setPrikaziAutocomplete(pretragaSastojka.length > 0)}
+                                            onKeyDown={handleKeyDown}
+                                        />
+                                        {prikaziAutocomplete && filtrirajSastojke().length > 0 && (
+                                            <div className="position-absolute w-100 bg-white border rounded shadow-sm" style={{ zIndex: 1000, maxHeight: '200px', overflowY: 'auto' }}>
+                                                {filtrirajSastojke().map((s, index) => (
+                                                    <div
+                                                        key={s.id}
+                                                        className="p-2 cursor-pointer"
+                                                        style={{
+                                                            cursor: 'pointer',
+                                                            backgroundColor: index === odabraniIndex ? '#007bff' : 'white',
+                                                            color: index === odabraniIndex ? 'white' : 'black'
+                                                        }}
+                                                        onClick={() => {
+                                                            setTrenutniSastojak(s)
+                                                            setPrikaziAutocomplete(false)
+                                                            setOdabraniIndex(0)
+                                                            setPretragaSastojka('')
+                                                        }}
+                                                        onMouseEnter={(e) => {
+                                                            setOdabraniIndex(index)
+                                                        }}
+                                                    >
+                                                        {s.naziv}
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        )}
+                                    </Form.Group>
+
+                                    <Row className="g-2 align-items-end">
+                                        <Col xs={4}>
+                                            <Form.Label>Količina</Form.Label>
+                                            <Form.Control
+                                                type="number" min="0.01"
+                                                step="any"
+                                                name="kolicina"
+                                                value={trenutnaKolicina}
+                                                onChange={(e) => { setTrenutnaKolicina(parseFloat(e.target.value)) }}
+                                                placeholder="Količina"  />
+                                        </Col>
+                                        <Col xs={4}>
+                                            <Form.Label>Jedinica</Form.Label>
+                                            <Form.Select name="jm" 
+                                                value={trenutnaJedinicaMjere}
+                                                onChange={(e) => { setTrenutnaJedinicaMjere(parseInt(e.target.value)) }}>
+                                                <option value="">Odaberite jedinu mjere</option>
+                                                {jediniceMjere && jediniceMjere.map((jm) => (
+                                                    <option key={jm.id} value={jm.id}>
+                                                        {jm.naziv}
+                                                    </option>
                                                 ))}
                                             </Form.Select>
-
-                                            <Row className="g-2 align-items-end">
-                                                <Col xs={5}>
-                                                    <Form.Label>Količina</Form.Label>
-                                                    <Form.Control
-                                                        type="number" min="0.01"
-                                                        step="any"
-                                                        value={stavka.kolicina}
-                                                        onChange={(e) =>
-                                                            promijeniStavku(index, "kolicina", e.target.value)
-                                                        }
-                                                        placeholder="Količina" required />
-                                                </Col>
-                                                <Col xs={4}>
-                                                    <Form.Label>Jedinica</Form.Label>
-                                                    <Form.Select value={stavka.jedinica}
-                                                        onChange={(e) => promijeniStavku(index, "jedinica", e.target.value)} required>
-                                                        <option value="g">g</option>
-                                                        <option value="kg">kg</option>
-                                                        <option value="ml">ml</option>
-                                                        <option value="l">l</option>
-                                                        <option value="kom">kom</option>
-                                                        <option value="žlica">žlica</option>
-                                                        <option value="žličica">žličica</option>
-                                                    </Form.Select>
-                                                </Col>
-
-                                                <Col xs={3}>
-                                                    <Button type="button"
-                                                        variant="outline-danger"
-                                                        className="w-100"
-                                                        onClick={() => obrisiStavku(index)}
-                                                        aria-label={`Obriši sastojak ${index + 1}`}>
-                                                        Obriši
-                                                    </Button>
-                                                </Col>
-                                            </Row>
-                                        </div>
-                                    ))}
-                                    <Row className="g-2 mb-4">
-                                        <Col xs={6}>
+                                        </Col>
+                                        <Col xs={4}>
                                             <Button type="button"
                                                 variant="outline-success"
                                                 onClick={dodajStavku}
@@ -235,7 +304,52 @@ export default function ReceptNovi() {
                                                 + Dodaj sastojak
                                             </Button>
                                         </Col>
+
+
                                     </Row>
+
+                                    {odabraniSastojci.length > 0 && (
+                                        <>
+                                            <hr />
+                                            <div style={{ overflow: 'auto', maxHeight: '250px' }}>
+                                                <Table striped bordered hover size="sm">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Naziv</th>
+                                                            <th>Količina</th>
+                                                            <th>Jedinica mjere</th>
+                                                            <th style={{ width: '80px' }}>Akcija</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        {odabraniSastojci.map(ts => (
+                                                            <tr key={ts.sastojak.id}>
+                                                                <td>{ts.sastojak.naziv}</td>
+                                                                <td>{ts.kolicina}</td>
+                                                                <td>{ts.jedinicaMjere.naziv} </td>
+                                                                <td>
+                                                                    <Button
+                                                                        variant="danger"
+                                                                        size="sm"
+                                                                        onClick={() => ukloniSastojak(ts.sastojak.id)}
+                                                                    >
+                                                                        Obriši
+                                                                    </Button>
+                                                                </td>
+                                                            </tr>
+                                                        ))}
+                                                    </tbody>
+                                                </Table>
+                                            </div>
+                                        </>
+                                    )}
+                                    {odabraniSastojci.length === 0 && (
+                                        <p className="text-muted">Nema odabranih sastojaka</p>
+                                    )}
+
+
+
+
                                     <Row className="g-2 mt-auto pt-3">
                                         <Col xs={12}>
                                             <Form.Group controlId="omiljen" className="mb-3">

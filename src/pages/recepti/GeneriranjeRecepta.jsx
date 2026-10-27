@@ -228,9 +228,9 @@ export default function GeneriranjeRecepata() {
                         if (!sastojak) return null;
 
                         return {
-                            sastojakId: sastojak.id,
+                            sastojak: sastojak.id,
                             kolicina,
-                            jedinica
+                            jedinicaMjere: jedinica
                         };
                     })
                     .filter(Boolean);
