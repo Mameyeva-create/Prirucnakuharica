@@ -121,7 +121,7 @@ export default function ReceptNovi() {
                 odabraniSastojci.map(s => ({
                     sastojak: s.sastojak.id,
                     jedinicaMjere: s.jedinicaMjere.id,
-                    kolicina: s.kolicina 
+                    kolicina: s.kolicina
                 })),
             omiljen: podaci.get('omiljen') === 'on',
             vegansko: podaci.get('vegansko') === 'on'
@@ -220,11 +220,26 @@ export default function ReceptNovi() {
                                             name="opis" rows={5}
                                             placeholder="Opiši pripremu i posebnosti recepta..." required />
                                     </Form.Group>
+
+                                    <Row className="g-2 mt-auto pt-3">
+                                        <Col xs={12}>
+                                            <Form.Group controlId="omiljen" className="mb-3">
+                                                <Form.Check label="Dodaj u omiljene ❤️"
+                                                    type="checkbox"
+                                                    name="omiljen" />
+                                            </Form.Group>
+
+                                            <Form.Group controlId="vegansko" className="mb-3">
+                                                <Form.Check label="Dodaj u vegansko 🌱"
+                                                    type="checkbox"
+                                                    name="vegansko" />
+                                            </Form.Group>
+                                        </Col>
+                                    </Row>
+
                                 </Col>
                                 {/* DESNA KOLONA */}
                                 <Col xs={12} md={6} className="d-flex flex-column">
-
-
 
                                     <Form.Group className="mb-3 position-relative">
                                         <Form.Label className="fw-bold">Dodaj sastojak <span
@@ -281,14 +296,14 @@ export default function ReceptNovi() {
                                                 name="kolicina"
                                                 value={trenutnaKolicina}
                                                 onChange={(e) => { setTrenutnaKolicina(parseFloat(e.target.value)) }}
-                                                placeholder="Količina"  />
+                                                placeholder="Količina" />
                                         </Col>
                                         <Col xs={4}>
                                             <Form.Label>Jedinica</Form.Label>
-                                            <Form.Select name="jm" 
+                                            <Form.Select name="jm"
                                                 value={trenutnaJedinicaMjere}
                                                 onChange={(e) => { setTrenutnaJedinicaMjere(parseInt(e.target.value)) }}>
-                                                <option value="">Odaberite jedinu mjere</option>
+                                                <option value="">Odaberite jedinicu mjere</option>
                                                 {jediniceMjere && jediniceMjere.map((jm) => (
                                                     <option key={jm.id} value={jm.id}>
                                                         {jm.naziv}
@@ -350,21 +365,7 @@ export default function ReceptNovi() {
 
 
 
-                                    <Row className="g-2 mt-auto pt-3">
-                                        <Col xs={12}>
-                                            <Form.Group controlId="omiljen" className="mb-3">
-                                                <Form.Check label="Dodaj u omiljene ❤️"
-                                                    type="checkbox"
-                                                    name="omiljen" />
-                                            </Form.Group>
 
-                                            <Form.Group controlId="vegansko" className="mb-3">
-                                                <Form.Check label="Dodaj u vegansko 🌱"
-                                                    type="checkbox"
-                                                    name="vegansko" />
-                                            </Form.Group>
-                                        </Col>
-                                    </Row>
                                 </Col>
                             </Row>
                             <Row className="mt-3 align-items-center">
