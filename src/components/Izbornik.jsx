@@ -80,13 +80,12 @@ export default function Izbornik() {
 
                             <NavDropdown.Item
                                 onClick={() => {
-                                    if (!prikaziKategorije) {
-                                        setPrikaziKategorije(true)
-                                    } else {
+                                    if (prikaziKategorije) {
                                         setPrikaziKategorije(false)
+
                                         setReceptiOtvoreni(false)
                                         navigate(RouteNames.KATEGORIJE)
-                                    }
+                                    } else { setPrikaziKategorije(true) }
                                 }} >
                                 📋 Sve kategorije  {prikaziKategorije ? '▵' : '▿'}
                             </NavDropdown.Item>
@@ -128,24 +127,35 @@ export default function Izbornik() {
 
                             <NavDropdown.Divider />
                             <NavDropdown.Item
-                                onClick={() => navigate(RouteNames.JEDINICE_MJERE)}>
+                                onClick={() => {
+                                    setPrikaziKategorije(false)
+                                    setReceptiOtvoreni(false)
+                                    navigate(RouteNames.JEDINICE_MJERE)
+                                }}
+                            >
                                 ⚖️ Sve jedinice mjera
                             </NavDropdown.Item>
                             <NavDropdown.Item
-                                onClick={() => navigate(RouteNames.SASTOJCI)}>
+                                onClick={() => {
+                                    setPrikaziKategorije(false)
+                                    setReceptiOtvoreni(false)
+                                    navigate(RouteNames.SASTOJCI)
+                                }}
+                            >
                                 🥕 Svi sastojci
                             </NavDropdown.Item>
 
                             <NavDropdown.Divider />
-
-
                             <NavDropdown.Item
-                                onClick={() => navigate(RouteNames.RECEPTI_GENERIRANJE)}>
+                                onClick={() => {
+                                    setPrikaziKategorije(false)
+                                    setReceptiOtvoreni(false)
+                                    navigate(RouteNames.RECEPTI_GENERIRANJE)
+                                }}
+                            >
                                 🎲 Generiranje podataka
                             </NavDropdown.Item>
-
                         </NavDropdown>
-
 
                         <NavDropdown title={
                             <>
@@ -177,11 +187,14 @@ export default function Izbornik() {
                             <NavDropdown.Divider />
                             <NavDropdown.Item onClick={() => navigate("/sastojci/novi")}
                             > 🥕 Dodaj sastojak</NavDropdown.Item>
+
+                            <NavDropdown.Item onClick={() => navigate(RouteNames.JEDINICE_MJERE_NOVI)}
+                            > ⚖️ Dodaj jedinicu mjere</NavDropdown.Item>
                         </NavDropdown>
 
                     </Nav>
-                </Navbar.Collapse>
-            </Container>
+                </Navbar.Collapse >
+            </Container >
         </Navbar >
 
 

@@ -27,7 +27,7 @@ export default function SastojakNovi() {
     return (
         <div className="container mt-4">
             <Card className="shadow-sm">
-                <Card.Header><h3 className="mb-0">Dodaj satojak 🌿</h3></Card.Header>
+                <Card.Header><h3 className="mb-0">Dodaj sastojak 🌿</h3></Card.Header>
                 <Card.Body>
                     {greska && (
                         <Alert variant="danger">{greska}</Alert>

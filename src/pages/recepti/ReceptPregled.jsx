@@ -275,8 +275,6 @@ export default function ReceptPregled() {
                             : 'Nema recepata u ovoj kategoriji'}</p>
                 )}
             </div>
-
-            {/* {JSON.stringify(recept,null,2)} */}
         </>
     )
 }
