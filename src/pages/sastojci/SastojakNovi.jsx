@@ -15,9 +15,14 @@ export default function SastojakNovi() {
         e.preventDefault()
         setGreska("")
 
+        const ocisceniNaziv = naziv.trim()
+        if (!ocisceniNaziv) {
+            setGreska('Unesite naziv sastojka')
+            return
+        }
         try {
             await SastojakService.dodaj({
-                naziv: naziv.trim()
+                naziv: ocisceniNaziv
             })
             navigate(RouteNames.SASTOJCI)
         } catch (error) {

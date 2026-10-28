@@ -1,7 +1,11 @@
 import { jediniceMjere } from "./JedinicaMjerePodaci"
 
+function sortirajJedinice(jedinice) {
+    return [...jedinice].sort((a, b) => a.naziv.localeCompare(b.naziv, 'hr'))
+}
+
 async function get() {
-    return { data: [...jediniceMjere] }
+    return { data: sortirajJedinice(jediniceMjere)}
 }
 
 async function getById(id) {
@@ -9,12 +13,13 @@ async function getById(id) {
 }
 
 async function dodaj(jedinicaMjere) {
-    const noviSastojak = {
+    const novaJedinica = {
         ...jedinicaMjere,
         id: jediniceMjere.length === 0
             ? 1 : Math.max(...jediniceMjere.map(i => i.id)) + 1
     }
-    jediniceMjere.push(noviSastojak)
+    jediniceMjere.push(novaJedinica)
+    jediniceMjere.sort((a, b) => a.naziv.localeCompare(b.naziv, 'hr'))
 }
 
 async function promijeni(id, jedinicaMjere) {
@@ -24,6 +29,7 @@ if (index === -1) {
 }
     jediniceMjere[index] = { ...jediniceMjere[index], ...jedinicaMjere }
 }
+jediniceMjere.sort((a, b) => a.naziv.localeCompare(b.naziv, 'hr'))
 
 function nadiIndex(id) {
     return jediniceMjere.findIndex(i => i.id === parseInt(id, 10))

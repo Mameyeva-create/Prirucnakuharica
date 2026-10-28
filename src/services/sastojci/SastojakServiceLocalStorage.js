@@ -2,6 +2,10 @@ import { sastojci as pocetniSastojci } from "./SastojakPodaci"
 
 const STORAGE_KEY = 'sastojci'
 
+function sortirajSastojke(sastojci) {
+    return [...sastojci].sort((a, b) => a.naziv.localeCompare(b.naziv, 'hr'))
+}
+
 function dohvatiSveIzStorage() {
     const podaci = localStorage.getItem(STORAGE_KEY)
     if (podaci) {
@@ -17,7 +21,7 @@ function spremiUStorage(podaci) {
 
 async function get() {
     const sastojci = dohvatiSveIzStorage()
-    return { data: [...sastojci] }
+    return { data: sortirajSastojke(sastojci)}
 }
 
 async function getById(id) {
@@ -39,7 +43,7 @@ async function dodaj(sastojak) {
     }
 
     sastojci.push(noviSastojak)
-    spremiUStorage(sastojci)
+    spremiUStorage(sortirajSastojke(sastojci))
 
 }
 
@@ -50,7 +54,7 @@ async function promijeni(id, sastojak) {
         return
     }
     sastojci[index] = { ...sastojci[index], ...sastojak }
-    spremiUStorage(sastojci)
+    spremiUStorage(sortirajSastojke(sastojci))
 }
 
 async function obrisi(id) {

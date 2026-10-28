@@ -1,7 +1,11 @@
 import { sastojci } from "./SastojakPodaci"
 
+function sortirajSastojke(sastojci) {
+    return [...sastojci].sort((a, b) => a.naziv.localeCompare(b.naziv, 'hr'))
+}
+
 async function get() {
-    return { data: [...sastojci] }
+    return { data: sortirajSastojke(sastojci)}
 }
 
 async function getById(id) {
@@ -15,6 +19,7 @@ async function dodaj(sastojak) {
             ? 1 : Math.max(...sastojci.map(i => i.id)) + 1
     }
     sastojci.push(noviSastojak)
+    sastojci.sort((a, b) => a.naziv.localeCompare(b.naziv, 'hr'))
 }
 
 async function promijeni(id, sastojak) {
@@ -23,6 +28,7 @@ if (index === -1) {
     return
 }
     sastojci[index] = { ...sastojci[index], ...sastojak }
+    sastojci.sort((a, b) => a.naziv.localeCompare(b.naziv, 'hr'))
 }
 
 function nadiIndex(id) {
