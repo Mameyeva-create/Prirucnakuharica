@@ -361,13 +361,10 @@ export default function ReceptNovi() {
                                     {odabraniSastojci.length === 0 && (
                                         <p className="text-muted">Nema odabranih sastojaka</p>
                                     )}
-
-
-
-
-
                                 </Col>
                             </Row>
+
+                            
                             <Row className="mt-3 align-items-center">
                                 <Col xs={6}>
                                     <Link to={RouteNames.RECEPTI} className="btn btn-danger">

@@ -7,6 +7,7 @@ import { useEffect } from "react";
 import KategorijaService from "../../services/kategorije/KategorijaService";
 import SastojakService from "../../services/sastojci/SastojakService";
 import { sastojci } from "../../services/sastojci/SastojakPodaci";
+import JedinicaMjereService from "../../services/jedinicaMjere/JedinicaMjereService";
 
 export default function ReceptPromjena() {
 
@@ -20,11 +21,31 @@ export default function ReceptPromjena() {
     const [stavkeRecepta, setStavkeRecepta] = useState([])
     const [osnovnePorcije, setOsnovnePorcije] = useState(2)
 
+    const [jediniceMjere, setJediniceMjere] = useState([])
+
+    const [trenutniSastojak, setTrenutniSastojak] = useState({})
+    const [pretragaSastojka, setPretragaSastojka] = useState('')
+    const [aktivniRed, setAktivniRed] = useState(null)
+    const [prikaziAutocomplete, setPrikaziAutokomplete] = useState(false)
+    const [odabraniIndex, setOdabraniIndex] = useState(-1)
+    const [trenutnaKolicina, setTrenutnaKolicina] = useState('')
+    const [trenutnaJedinicaMjere, setTrenutnaJedinicaMjere] = useState('')
+
     useEffect(() => {
         ucitajRecept()
         ucitajKategorije()
         ucitajSastojke()
+        ucitajJediniceMjere()
     }, [])
+
+    async function ucitajJediniceMjere() {
+        try {
+            const odgovor = await JedinicaMjereService.get()
+            setJediniceMjere(odgovor.data)
+        } catch (greska) {
+            console.error('Greška pri učitavanju jedinica mjere:', greska)
+        }
+    }
 
     function pretvoriStariSastojak(tekst) {
         const rezultat = tekst.match(
@@ -99,7 +120,10 @@ export default function ReceptPromjena() {
                         sastojakId: idSastojka === "" || idSastojka == null
                             ? "" : Number(idSastojka),
                         kolicina: stavka.kolicina ?? '',
-                        jedinica: stavka.jedinica || stavka.jedMjere || 'g'
+                        jedinica: stavka.jediniceMjereId != null
+                            ? jediniceMjere.find(jm => Number(jm.id) === Number(stavka.jediniceMjereId)
+                            )?.naziv ?? 'g'
+                            : stavka.jedinica || stavka.jedMjere || 'g'
                     })
                     continue
                 }
@@ -165,30 +189,71 @@ export default function ReceptPromjena() {
                 : stavka))
     }
 
+    function filtrirajSastojke() {
+        if (!pretragaSastojka.trim()) {
+            return []
+        }
+        return sviSastojci.filter(s => !stavkeRecepta.some(stavka => Number(stavka.sastojakId) === Number(s.id)) &&
+            s.naziv.toLowerCase().includes(
+                pretragaSastojka.toLowerCase()
+            ))
+    }
+
+    function handleKeyDown(e, rowIndex) {
+        const filtriraniSastojci = filtrirajSastojke()
+        if (e.key === 'ArrowDown' && filtriraniSastojci.length > 0) {
+            e.preventDefault()
+            setOdabraniIndex(prev => prev >= filtriraniSastojci.length - 1 ? 0 : prev + 1)
+        } else if (e.key === 'ArrowUp' && filtriraniSastojci.length > 0) {
+            e.preventDefault()
+            setOdabraniIndex(prev => prev <= 0 ? filtriraniSastojci.length - 1 : prev - 1)
+        } else if (
+            e.key === 'Enter' && prikaziAutocomplete &&
+            odabraniIndex >= 0 && filtriraniSastojci[odabraniIndex]
+        ) {
+            e.preventDefault()
+            promijeniStavku(rowIndex, 'sastojakId',
+                Number(filtriraniSastojci[odabraniIndex].id))
+
+            setPretragaSastojka('')
+            setPrikaziAutokomplete(false)
+            setOdabraniIndex(-1)
+            setAktivniRed(null)
+        } else if (e.key === 'Escape') {
+            setPrikaziAutokomplete(false)
+            setOdabraniIndex(-1)
+            setAktivniRed(null)
+        }
+    }
+
     function odradiSubmit(e) {
         e.preventDefault()
 
         const podaci = new FormData(e.target)
-
+        const sastojciZaSpremanje = stavkeRecepta.map((stavka) => {
+            const jedinica = jediniceMjere.find(
+                (jm) => jm.naziv === stavka.jedinica
+            )
+            return {
+                sastojakId: Number(stavka.sastojakId),
+                kolicina: Number(stavka.kolicina),
+                jediniceMjere: jedinica?.id ?? null
+            }
+        })
         promijeni({
             naziv: podaci.get('naziv'),
             kategorija: podaci.get('kategorija'),
             vrijeme: parseInt(podaci.get('vrijeme'), 10),
             opis: podaci.get('opis'),
             osnovnePorcije: Number(osnovnePorcije),
-            // Sastojci recepta
-            sastojci: stavkeRecepta.map((stavka) => ({
-                sastojakId: Number(stavka.sastojakId),
-                kolicina: Number(stavka.kolicina),
-                jedinica: stavka.jedinica
-            })),
+            sastojci: sastojciZaSpremanje,
             omiljen: omiljen,
             vegansko: vegansko
         })
     }
 
     return (
-         <div className="px-4 py-3">
+        <div className="px-4 py-3">
             <h3>
                 Promijeni recept
             </h3>
@@ -243,23 +308,59 @@ export default function ReceptPromjena() {
 
                 {stavkeRecepta.map((stavka, index) => (
                     <Row key={index} className="mb-3 align-items-end">
-                        <Col md={5}>
+
+
+
+                        <Col md={5} className="position-relative">
                             <Form.Label>Sastojak</Form.Label>
-                            <Form.Select value={stavka.sastojakId ?? ""}
-                                onChange={(e) => promijeniStavku(
-                                    index,
-                                    "sastojakId",
-                                    e.target.value === ""
-                                        ? "" : Number(e.target.value)
-                                )}
-                                required
-                            >
-                                <option value="">-- Odaberi sastojak --</option>
-                                {sviSastojci.map((sastojak) => (
-                                    <option key={sastojak.id} value={sastojak.id}>{sastojak.naziv}</option>
-                                ))}
-                            </Form.Select>
+                            <Form.Control type="text"
+                                placeholder="Pretraži sastojke..."
+                                autoComplete="off" value={
+                                    aktivniRed === index
+                                        ? pretragaSastojka : sviSastojci.find(s => Number(s.id) === Number(
+                                            stavka.sastojakId))?.naziv || ''}
+                                onFocus={() => {
+                                    setAktivniRed(index)
+                                    setPretragaSastojka('')
+                                    setPrikaziAutokomplete(true)
+                                    setOdabraniIndex(-1)
+                                }}
+                                onChange={(e) => {
+                                    setPretragaSastojka(e.target.value)
+                                    setPrikaziAutokomplete(true)
+                                    setOdabraniIndex(-1)
+                                }}
+                                onKeyDown={(e) => handleKeyDown(e, index)} required />
+                            {prikaziAutocomplete && aktivniRed === index && pretragaSastojka.trim() !== '' && (
+                                <div className="position-absolute bg-white border rounded w-100"
+                                    style={{
+                                        zIndex: 1000,
+                                        maxHeight: '200px',
+                                        overflowY: 'auto'
+                                    }}>
+                                    {filtrirajSastojke().map((sastojak, i) => (
+                                        <div key={sastojak.id}
+                                            className={`px-3 py-2 ${i === odabraniIndex
+                                                ? 'bg-success text-white' : ''}`}
+                                            style={{ cursor: 'pointer' }}
+                                            onMouseEnter={() => setOdabraniIndex(i)}
+                                            onMouseDown={(e) => {
+                                                e.preventDefault()
+                                                promijeniStavku(index, 'sastojakId', Number(sastojak.id))
+                                                setAktivniRed(null)
+                                                setPretragaSastojka('')
+                                                setPrikaziAutokomplete(false)
+                                                setOdabraniIndex(-1)
+                                            }}>{sastojak.naziv}</div>
+                                    ))}
+                                    {filtrirajSastojke().length === 0 && (
+                                        <div className="px-3 py-2 text-muted"> Nema pronađenih sastojaka</div>
+                                    )}
+                                </div>
+                            )}
                         </Col>
+
+
                         <Col md={3}>
                             <Form.Label>Količina</Form.Label>
                             <Form.Control type="number"
@@ -277,27 +378,19 @@ export default function ReceptPromjena() {
                             <Form.Label>Jedinica</Form.Label>
                             <Form.Select value={stavka.jedinica || "g"}
                                 onChange={(e) => promijeniStavku(
-                                    index,
-                                    "jedinica",
-                                    e.target.value
-                                )}
+                                    index, "jedinica", e.target.value)}
                             >
-                                <option value="g">g</option>
-                                <option value="kg">kg</option>
-                                <option value="ml">ml</option>
-                                <option value="l">l</option>
-                                <option value="kom">kom</option>
-                                <option value="žlica">žlica</option>
-                                <option value="žličica">žličica</option>
+                                {jediniceMjere.map((jm) => (
+                                    <option key={jm.id} value={jm.naziv}>{jm.naziv}</option>
+                                ))}
                             </Form.Select>
-                        </Col>
-                        <Col md={2}>
-                            <Button type="button"
-                                variant="danger"
-                                onClick={() => obrisiStavku(index)}>
-                                Obriši
-                            </Button>
-                        </Col>
+                          
+                                <Button type="button"
+                                    variant="danger"
+                                    onClick={() => obrisiStavku(index)}>
+                                    Obriši
+                                </Button>
+                            </Col>
                     </Row>
                 ))}
                 <Button type="button"
