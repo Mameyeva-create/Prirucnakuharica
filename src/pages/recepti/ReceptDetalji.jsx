@@ -84,7 +84,7 @@ ucitajSastojke()
             ? sastojak.sastojak.naziv : '') || podatakSastojka?.naziv ||
             "Sastojak nije pronađen"
 
-            const jedinica = sastojak.jedMjere || sastojak.jedinica || ""
+            const jedinica = sastojak.jedMjere || sastojak.jedinica || sastojak.jedinicaMjere?.naziv || ""
             
             return `${prikazKolicine} ${jedinica} ${nazivSastojka}`.trim()
         }

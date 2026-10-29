@@ -133,6 +133,7 @@ export default function ReceptPregled() {
 
         return true
     })
+    .sort((a, b) => a.naziv.localeCompare(b.naziv, 'hr', {sensitivity: 'base'}))
 
     return (
         <>

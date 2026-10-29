@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import KategorijaService from "../../services/kategorije/KategorijaService"
 import SastojakService from "../../services/sastojci/SastojakService";
 import JedinicaMjereService from "../../services/jedinicaMjere/JedinicaMjereService";
-import { hr } from "@faker-js/faker";
+
 
 export default function ReceptNovi() {
     const navigate = useNavigate()
@@ -120,8 +120,8 @@ export default function ReceptNovi() {
             sastojci:
                 odabraniSastojci.map(s => ({
                     sastojak: s.sastojak.id,
-                    jedinicaMjere: s.jedinicaMjere.id,
-                    kolicina: s.kolicina
+                    jedMjere: s.jedinicaMjere.naziv,
+                    kolicina: Number(s.kolicina)
                 })),
             omiljen: podaci.get('omiljen') === 'on',
             vegansko: podaci.get('vegansko') === 'on'

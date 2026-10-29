@@ -230,7 +230,7 @@ export default function GeneriranjeRecepata() {
                         return {
                             sastojak: sastojak.id,
                             kolicina,
-                            jedinicaMjere: jedinica
+                            jedMjere: jedinica
                         };
                     })
                     .filter(Boolean);
