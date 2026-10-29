@@ -31,9 +31,12 @@ export default function SastojakPregled() {
 
     return (
         <>
-            <div style={{ overflowX: 'auto' }}>
-                
-                    <Link to={RouteNames.KATEGORIJE_NOVI}
+            {/* <div style={{ overflowX: 'auto' }}> */}
+            <div className="naslov-recepti my-2 px-3 py-2">
+                <h2>Svi sastojci</h2>
+                <p>Ukupno pronađenih sastojaka: {sastojci.length}</p>
+            </div>
+            {/* <Link to={RouteNames.KATEGORIJE_NOVI}
                         className="btn btn-success w-100 my-3"
                         style={{
                             display: 'block',
@@ -42,48 +45,48 @@ export default function SastojakPregled() {
                             overflowWrap: 'break-word'
                         }}>
                         Dodavanje nove sastojci
-                    </Link>
-                    <div style={{ width: '100%' }}>
+                    </Link> */}
+            <div style={{ width: '100%' }}>
 
 
-                    <Table hover striped className="table-sastojci">
-                        <thead>
-                            <tr>
-                                <th>Naziv</th>
-                                <th className="text-end">Akcija</th>
-                            </tr>
-                        </thead>
+                <Table hover striped className="table-sastojci">
+                    <thead>
+                        <tr>
+                            <th>Naziv</th>
+                            <th className="text-end">Akcija</th>
+                        </tr>
+                    </thead>
 
-                        <tbody>
-                            {sastojci.map((sastojak) => (
-                                <tr key={sastojak.id}>
-                                    <td className="lead">
-                                        {sastojak.naziv}
-                                    </td>
+                    <tbody>
+                        {sastojci.map((sastojak) => (
+                            <tr key={sastojak.id}>
+                                <td className="lead">
+                                    {sastojak.naziv}
+                                </td>
 
-                                    <td className="text-end"
+                                <td className="text-end"
                                     style={{ minWidth: '190px', whiteSpace: 'nowrap' }}>
 
-                                        <Button className="btn-promijeni me-2"
-                                            onClick={(e) => {
-                                                navigate(`/sastojci/${sastojak.id}`)
-                                            }}>
-                                            Promjeni
-                                        </Button>
-                                        {/* &nbsp;&nbsp; */}
-                                        <Button variant="danger" onClick={(e) => {
-                                            obrisi(sastojak.id)
+                                    <Button className="btn-promijeni me-2"
+                                        onClick={(e) => {
+                                            navigate(`/sastojci/${sastojak.id}`)
                                         }}>
-                                            Obriši
-                                        </Button>
-                                    </td>
-                                </tr>
-                            ))}
-                           
-                        </tbody>
-                    </Table>
-                </div>
-           </div>
+                                        Promjeni
+                                    </Button>
+                                    {/* &nbsp;&nbsp; */}
+                                    <Button variant="danger" onClick={(e) => {
+                                        obrisi(sastojak.id)
+                                    }}>
+                                        Obriši
+                                    </Button>
+                                </td>
+                            </tr>
+                        ))}
+
+                    </tbody>
+                </Table>
+            </div>
+            {/* </div> */}
         </>
     )
 }

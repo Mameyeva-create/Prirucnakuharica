@@ -260,7 +260,7 @@ footer hr {
 }
 
 .naslov-recepti {
-    padding: 10px 20px;
+    padding: 5px 20px;
     background-color: #f7f5ef;
     border: 1px solid #d5d9d0;
     border-left: 5px solid #35483b;
@@ -269,7 +269,7 @@ footer hr {
 }
 
 .naslov-recepti h2 {
-    margin: 0 0 6px;
+    margin: 0 0 3px;
     color: #35483b;
     font-size: 1.7rem;
     font-weight: 600;

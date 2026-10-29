@@ -31,9 +31,14 @@ export default function KategorijaPregled() {
 
     return (
         <>
-            <div style={{ overflowX: 'auto' }}>
-                
-                    <Link to={RouteNames.KATEGORIJE_NOVI}
+            {/* <div style={{ overflowX: 'auto' }}> */}
+
+            <div className="naslov-recepti my-2 px-3 py-2">
+                <h2>Sve kategorije</h2>
+                <p>Ukupno kategorija: {kategorije.length}</p>
+            </div>
+
+            {/* <Link to={RouteNames.KATEGORIJE_NOVI}
                         className="btn btn-success w-100 my-3"
                         style={{
                             display: 'block',
@@ -42,48 +47,48 @@ export default function KategorijaPregled() {
                             overflowWrap: 'break-word'
                         }}>
                         Dodavanje nove kategorije
-                    </Link>
-                    <div style={{ width: '100%' }}>
+                    </Link> */}
+            <div style={{ width: '100%' }}>
 
 
-                    <Table hover striped className="table-kategorije">
-                        <thead>
-                            <tr>
-                                <th>Naziv</th>
-                                <th className="text-end">Akcija</th>
-                            </tr>
-                        </thead>
+                <Table hover striped className="table-kategorije">
+                    <thead>
+                        <tr>
+                            <th>Naziv</th>
+                            <th className="text-end">Akcija</th>
+                        </tr>
+                    </thead>
 
-                        <tbody>
-                            {kategorije.map((kategorija) => (
-                                <tr key={kategorija.id}>
-                                    <td className="lead">
-                                        {kategorija.naziv}
-                                    </td>
+                    <tbody>
+                        {kategorije.map((kategorija) => (
+                            <tr key={kategorija.id}>
+                                <td className="lead">
+                                    {kategorija.naziv}
+                                </td>
 
-                                    <td className="text-end"
+                                <td className="text-end"
                                     style={{ minWidth: '190px', whiteSpace: 'nowrap' }}>
 
-                                        <Button className="btn-promijeni me-2"
-                                            onClick={(e) => {
-                                                navigate(`/kategorije/${kategorija.id}`)
-                                            }}>
-                                            Promjeni
-                                        </Button>
-                                        {/* &nbsp;&nbsp; */}
-                                        <Button variant="danger" onClick={(e) => {
-                                            obrisi(kategorija.id)
+                                    <Button className="btn-promijeni me-2"
+                                        onClick={(e) => {
+                                            navigate(`/kategorije/${kategorija.id}`)
                                         }}>
-                                            Obriši
-                                        </Button>
-                                    </td>
-                                </tr>
-                            ))}
-                           
-                        </tbody>
-                    </Table>
-                </div>
-           </div>
+                                        Promjeni
+                                    </Button>
+                                    {/* &nbsp;&nbsp; */}
+                                    <Button variant="danger" onClick={(e) => {
+                                        obrisi(kategorija.id)
+                                    }}>
+                                        Obriši
+                                    </Button>
+                                </td>
+                            </tr>
+                        ))}
+
+                    </tbody>
+                </Table>
+            </div>
+            {/* </div> */}
         </>
     )
 }

@@ -31,9 +31,13 @@ export default function JedinicaMjerePregled() {
 
     return (
         <>
-            <div style={{ overflowX: 'auto' }}>
+            {/* <div style={{ overflowX: 'auto' }}> */}
                 
-                    <Link to={RouteNames.JEDINICE_MJERE_NOVI}
+                <div className="naslov-recepti my-2 px-3 py-2">
+                <h2>Sve jedinice mjera</h2>
+                <p>Ukupno pronađenih jedinica mjere: {jediniceMjere.length}</p>
+            </div>
+                    {/* <Link to={RouteNames.JEDINICE_MJERE_NOVI}
                         className="btn btn-success w-100 my-3"
                         style={{
                             display: 'block',
@@ -42,7 +46,7 @@ export default function JedinicaMjerePregled() {
                             overflowWrap: 'break-word'
                         }}>
                         Dodavanje nove jediniceMjere
-                    </Link>
+                    </Link> */}
                     <div style={{ width: '100%' }}>
 
 
@@ -83,7 +87,7 @@ export default function JedinicaMjerePregled() {
                         </tbody>
                     </Table>
                 </div>
-           </div>
+           {/* </div> */}
         </>
     )
 }

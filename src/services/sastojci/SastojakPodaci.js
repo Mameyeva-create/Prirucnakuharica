@@ -27,7 +27,8 @@ export const sastojci = [
     { id: 24, naziv: 'Maslac' },
     { id: 25, naziv: 'Prašak za pecivo' },
     { id: 26, naziv: 'Tikvica' },
-    { id: 27, naziv: 'Povrtni temeljac' }
+    { id: 27, naziv: 'Povrtni temeljac' },
+    { id: 28, naziv: 'Maslinovo ulje' }
 ].sort((a,b) => a.naziv.localeCompare(b.naziv, 'hr'))
 
 
