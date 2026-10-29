@@ -13,6 +13,7 @@ export const jediniceMjere = [
     { id: 10, naziv: 'glavica' },
     { id: 11, naziv: 'po ukusu' },
     { id: 12, naziv: 'nekoliko listova' },
+    { id: 13, naziv: 'po potrebi' },
 ]
 
 
