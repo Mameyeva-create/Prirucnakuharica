@@ -14,7 +14,7 @@ export default function ReceptPromjena() {
     const [kategorije, setKategorije] = useState([])
     const [sviSastojci, setSviSastojci] = useState([])
     const [jediniceMjere, setJediniceMjere] = useState([])
-    
+
     const [naziv, setNaziv] = useState('')
     const [kategorija, setKategorija] = useState('')
     const [vrijeme, setVrijeme] = useState('')
@@ -57,11 +57,15 @@ export default function ReceptPromjena() {
 
             if (r.sastojci && Array.isArray(r.sastojci)) {
                 const mapiraniSastojci = r.sastojci.map(s => {
-                    const pronadjeniSastojak = sastojciOdgovor.data.find(st => st.id === (s.sastojak?.id || s.sastojak))
-                    const pronadjenaJM = jmOdgovor.data.find(jm => jm.id === (s.jedinicaMjere?.id || s.jedinicaMjere))
+                    const sastojakId = s.sastojak?.id ?? s.sastojakId ?? s.sastojak
+                    const pronadjeniSastojak = sastojciOdgovor.data.find(st => Number(st.id) === Number(sastojakId))
+                    const jmVrijednost = s.jedMjere ?? s.jedinicaMjere?.naziv ?? s.jedinicaMjere?.id ??
+                        s.jedinicaMjere ?? s.jedinica
+                    const pronadjenaJM = jmOdgovor.data.find(jm => jm.naziv === jmVrijednost || String(jm.id) === String(jmVrijednost))
                     return {
-                        sastojak: pronadjeniSastojak || { id: s.sastojak, naziv: s.sastojakNaziv || 'Nepoznato' },
-                        jedinicaMjere: pronadjenaJM || { id: s.jedinicaMjere, naziv: s.jedinicaMjereNaziv || '' },
+                        sastojak: pronadjeniSastojak || { id: sastojakId, naziv: s.sastojakNaziv || 'Nepoznato' },
+                        jedinicaMjere: pronadjenaJM || { naziv: typeof jmVrijednost === 'string' 
+                        ? jmVrijednost : s.jedinicaMjereNaziv || '' },
                         kolicina: s.kolicina
                     }
                 })
@@ -124,8 +128,8 @@ export default function ReceptPromjena() {
             opis: opis.trim(),
             sastojci: odabraniSastojci.map(s => ({
                 sastojak: s.sastojak.id,
-                jedinicaMjere: s.jedinicaMjere.id,
-                kolicina: s.kolicina
+                jedMjere: s.jedinicaMjere?.naziv ?? s.jedMjere ?? '',
+                kolicina: Number(s.kolicina)
             })),
             omiljen,
             vegansko
@@ -194,19 +198,19 @@ export default function ReceptPromjena() {
                                 <Col xs={12} md={6} className="d-flex flex-column">
                                     <Form.Group controlId="naziv" className="mb-3">
                                         <Form.Label>Naziv recepta</Form.Label>
-                                        <Form.Control 
-                                            type="text" 
-                                            name="naziv" 
+                                        <Form.Control
+                                            type="text"
+                                            name="naziv"
                                             value={naziv}
                                             onChange={(e) => setNaziv(e.target.value)}
-                                            required 
+                                            required
                                         />
                                     </Form.Group>
 
                                     <Form.Group controlId="kategorija" className="mb-3">
                                         <Form.Label>Kategorija</Form.Label>
-                                        <Form.Select 
-                                            name="kategorija" 
+                                        <Form.Select
+                                            name="kategorija"
                                             value={kategorija}
                                             onChange={(e) => setKategorija(e.target.value)}
                                             required
@@ -358,7 +362,7 @@ export default function ReceptPromjena() {
                                                             <tr key={ts.sastojak.id}>
                                                                 <td>{ts.sastojak.naziv}</td>
                                                                 <td>{ts.kolicina}</td>
-                                                                <td>{ts.jedinicaMjere?.naziv} </td>
+                                                                <td>{ts.jedinicaMjere?.naziv || ts.jedMjere || ''} </td>
                                                                 <td>
                                                                     <Button
                                                                         variant="danger"

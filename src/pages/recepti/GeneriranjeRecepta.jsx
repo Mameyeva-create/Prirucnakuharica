@@ -213,7 +213,7 @@ export default function GeneriranjeRecepata() {
             const sastojci = odgovorSastojaka.data
 
             if (!kategorije?.length || !sastojci?.length) {
-                throw new Error("Nema kategorija ili sastojaka.");
+                throw new Error("Nema kategorija ili sastojaka.")
             }
             const dostupniPredlosci = predlosci.map(predlozak => {
                 const kategorija = kategorije.find(k => normalizirajNaziv(k.naziv) ===
@@ -227,11 +227,7 @@ export default function GeneriranjeRecepata() {
 
                         if (!sastojak) return null;
 
-                        return {
-                            sastojak: sastojak.id,
-                            kolicina,
-                            jedMjere: jedinica
-                        };
+                        return {sastojak: sastojak.id, kolicina, jedMjere: jedinica}
                     })
                     .filter(Boolean);
                 return { predlozak, kategorija, stavke }

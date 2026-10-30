@@ -117,8 +117,7 @@ export default function ReceptNovi() {
             kategorija,
             vrijeme,
             opis,
-            sastojci:
-                odabraniSastojci.map(s => ({
+            sastojci: odabraniSastojci.map(s => ({
                     sastojak: s.sastojak.id,
                     jedMjere: s.jedinicaMjere.naziv,
                     kolicina: Number(s.kolicina)
