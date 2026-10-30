@@ -1,5 +1,3 @@
-
-import { data } from "react-router-dom"
 import { recepti } from "./ReceptPodaci"
 
 async function get() {

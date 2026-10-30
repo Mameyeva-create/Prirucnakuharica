@@ -217,22 +217,21 @@ export default function GeneriranjeRecepata() {
             }
             const dostupniPredlosci = predlosci.map(predlozak => {
                 const kategorija = kategorije.find(k => normalizirajNaziv(k.naziv) ===
-                    normalizirajNaziv(predlozak.kategorija)) || kategorije[0]
-
+                    normalizirajNaziv(predlozak.kategorija))
+                if (!kategorija) return null
                 const stavke = predlozak.sastojci
                     .map(([naziv, kolicina, jedinica]) => {
                         const sastojak = sastojci.find(
                             s => s && normalizirajNaziv(s.naziv) === normalizirajNaziv(naziv)
-                        );
-
+                        )
                         if (!sastojak) return null;
-
-                        return {sastojak: sastojak.id, kolicina, jedMjere: jedinica}
+                        return { sastojak: sastojak.id, kolicina, jedMjere: jedinica }
                     })
-                    .filter(Boolean);
+                if (stavke.some(stavka => stavka === null)) {
+                    return null
+                }
                 return { predlozak, kategorija, stavke }
-            })
-                .filter(item => item.stavke.length > 0)
+            }).filter(Boolean)
             if (!dostupniPredlosci.length) {
                 throw new Error("Nijedan predložak nema sastojke koji postoje u bazi")
             }

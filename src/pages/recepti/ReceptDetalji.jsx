@@ -26,15 +26,15 @@ export default function ReceptDetalji() {
     }
 
     useEffect(() => {
-async function ucitajSastojke() {
-    try {
-        const odgovor = await SastojakService.get()
-        setSviSastojci(Array.isArray(odgovor.data) ? odgovor.data : [])
-    } catch (error) {
-        console.error("Greška pri učinavanju sastojka", error)
-    }
-}
-ucitajSastojke()
+        async function ucitajSastojke() {
+            try {
+                const odgovor = await SastojakService.get()
+                setSviSastojci(Array.isArray(odgovor.data) ? odgovor.data : [])
+            } catch (error) {
+                console.error("Greška pri učinavanju sastojka", error)
+            }
+        }
+        ucitajSastojke()
 
         async function ucitajRecept() {
             try {
@@ -51,57 +51,32 @@ ucitajSastojke()
 
 
     function prilagodiKolicinu(sastojak) {
-        // Stari format: "200 g brašna"
-        if (typeof sastojak === 'string') {
-            const rezultat = sastojak.match(/^(\d+(?:[.,]\d+)?)\s+(.+)$/)
+        const kolicina = Number(sastojak.kolicina)
+        const novaKolicina = Number.isFinite(kolicina) ? kolicina * porcije / 2 : 0
+        const prikazKolicine = Number(novaKolicina.toFixed(2)).toLocaleString("hr-HR")
 
-            if (!rezultat) {
-                return sastojak
-            }
+        const podatakSastojka = sviSastojci.find(
+            item => Number(item.id) === Number(sastojak.sastojak))
 
-            const kolicina = parseFloat(rezultat[1].replace(",", "."))
-            const novaKolicina = kolicina * porcije / 2
-            const prikazKolicine = Number(novaKolicina.toFixed(2)).toLocaleString("hr-HR")
+        const nazivSastojka = podatakSastojka?.naziv || 'Nepoznato'
+        const jedinica = sastojak.jedMjere || ""
 
-            return `${prikazKolicine} ${rezultat[2]}`
-        }
-        // Novi format: objekt sa sastojakId, kolicina i jedinica
-        if (sastojak && typeof sastojak === 'object') {
-            const kolicina = Number(sastojak.kolicina)
-            const novaKolicina = Number.isFinite(kolicina)
-                ? kolicina * porcije / 2
-                : 0
-            const prikazKolicine = Number(novaKolicina.toFixed(2)).toLocaleString("hr-HR")
-
-            const idSastojka = Number(sastojak.sastojakId 
-                ?? sastojak.sastojak?.id ?? sastojak.sastojak)
-
-            const podatakSastojka = sviSastojci.find(
-                (item) => Number(item.id) === idSastojka)
-
-            const nazivSastojka = sastojak.naziv || 
-           (typeof sastojak.sastojak === 'object' 
-            ? sastojak.sastojak.naziv : '') || podatakSastojka?.naziv ||
-            "Sastojak nije pronađen"
-
-            const jedinica = sastojak.jedMjere || sastojak.jedinica || sastojak.jedinicaMjere?.naziv || ""
-            
-            return `${prikazKolicine} ${jedinica} ${nazivSastojka}`.trim()
-        }
-        return ""
+        return [prikazKolicine, jedinica, nazivSastojka]
+            .filter(Boolean)
+            .join(' ')
     }
+
     if (!recept || !recept.id) {
         return (
             <p className="container mt-4">Recept nije pronađen</p>
         )
     }
     const sastojci = Array.isArray(recept.sastojci)
-        ? recept.sastojci : recept.sastojci
-            ? recept.sastojci.split(',').map(s => s.trim()) : []
+        ? recept.sastojci : []
 
     return (
         <div className="container mt-4 mb-5">
-            <div className="row align-items-center g-4 mb-4"  style={{marginRight: '0px', marginLeft: '0px'}}>
+            <div className="row align-items-center g-4 mb-4" style={{ marginRight: '0px', marginLeft: '0px' }}>
                 <div className="col-12 col-md-6">
                     <img
                         className="img-fluid rounded-4 shadow"

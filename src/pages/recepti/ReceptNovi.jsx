@@ -61,15 +61,19 @@ export default function ReceptNovi() {
         //console.log("sastojak",trenutniSastojak.id)
         //console.log("jm",trenutnaJedinicaMjere)
         //console.log("količina", trenutnaKolicina)
+        if (!trenutniSastojak.id || !trenutnaKolicina || !Number.isFinite(Number(trenutnaKolicina)) || !trenutnaJedinicaMjere) {
+            alert('Odaberite sastojak, unesite količinu i izaberite jedinicu mjere')
+            return
+        }
+        const jedinica = jediniceMjere.find(jm => Number(jm.id) === Number(trenutnaJedinicaMjere))
+        if (!jedinica) return
 
         const nova = {
-            sastojak: trenutniSastojak,
-            jedinicaMjere: jediniceMjere.find(jm => jm.id === parseInt(trenutnaJedinicaMjere)),
-            kolicina: trenutnaKolicina,
+            sastojak: trenutniSastojak.id,
+            kolicina: Number(trenutnaKolicina),
+            jedMjere: jedinica.naziv,
         }
-
-        console.log(JSON.stringify(nova))
-
+        // console.log(JSON.stringify(nova))
         setOdabraniSastojci([...odabraniSastojci, nova])
         setOdabraniIndex(-1)
         setPrikaziAutocomplete(false)
@@ -77,8 +81,6 @@ export default function ReceptNovi() {
         setTrenutnaKolicina('')
         setTrenutniSastojak({})
     }
-
-
 
     async function odradiSubmit(e) {
         e.preventDefault()
@@ -109,19 +111,12 @@ export default function ReceptNovi() {
             alert('Opis recepata mora imati najmanje 5 znakova')
             return
         }
-
-
-
         const recept = {
             naziv,
             kategorija,
             vrijeme,
             opis,
-            sastojci: odabraniSastojci.map(s => ({
-                    sastojak: s.sastojak.id,
-                    jedMjere: s.jedinicaMjere.naziv,
-                    kolicina: Number(s.kolicina)
-                })),
+            sastojci: odabraniSastojci,
             omiljen: podaci.get('omiljen') === 'on',
             vegansko: podaci.get('vegansko') === 'on'
         }
@@ -138,7 +133,7 @@ export default function ReceptNovi() {
     function filtrirajSastojke() {
         if (!pretragaSastojka) return []
         return sviSastojci.filter(p =>
-            !odabraniSastojci.find(op => op.id === p.id) &&
+            !odabraniSastojci.some(op => Number(op.sastojak) === Number(p.id)) &&
             (p.naziv.toLowerCase().includes(pretragaSastojka.toLowerCase()))
         )
     }
@@ -178,7 +173,7 @@ export default function ReceptNovi() {
     }
 
     function ukloniSastojak(id) {
-        setOdabraniSastojci(odabraniSastojci.filter(st => st.sastojak.id !== id))
+        setOdabraniSastojci(odabraniSastojci.filter(st => Number(st.sastojak) !== Number(id)))
     }
 
     return (
@@ -336,22 +331,25 @@ export default function ReceptNovi() {
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        {odabraniSastojci.map(ts => (
-                                                            <tr key={ts.sastojak.id}>
-                                                                <td>{ts.sastojak.naziv}</td>
+                                                        {odabraniSastojci.map(ts => {
+                                                            const sastojak = sviSastojci.find(
+                                                                s => Number(s.id) === Number(ts.sastojak))
+                                                                return(
+                                                            <tr key={ts.sastojak}>
+                                                                <td>{sastojak?.naziv || 'Nepoznato'}</td>
                                                                 <td>{ts.kolicina}</td>
-                                                                <td>{ts.jedinicaMjere.naziv} </td>
+                                                                <td>{ts.jedMjere}</td>
                                                                 <td>
                                                                     <Button
                                                                         variant="danger"
                                                                         size="sm"
-                                                                        onClick={() => ukloniSastojak(ts.sastojak.id)}
+                                                                        onClick={() => ukloniSastojak(ts.sastojak)}
                                                                     >
                                                                         Obriši
                                                                     </Button>
                                                                 </td>
                                                             </tr>
-                                                        ))}
+                                                        )})}
                                                     </tbody>
                                                 </Table>
                                             </div>
@@ -363,7 +361,7 @@ export default function ReceptNovi() {
                                 </Col>
                             </Row>
 
-                            
+
                             <Row className="mt-3 align-items-center">
                                 <Col xs={6}>
                                     <Link to={RouteNames.RECEPTI} className="btn btn-danger">

@@ -48,29 +48,17 @@ export default function ReceptPromjena() {
             const receptOdgovor = await ReceptService.getByIid ? await ReceptService.getByIid(id) : await ReceptService.getById(id)
             const r = receptOdgovor.data
 
+            // console.log('SASTOJCI RECEPTA:', r.sastojci)
+            // console.log('SVI SASTOJCI:', sastojciOdgovor.data)
+
             setNaziv(r.naziv || '')
             setKategorija(r.kategorija || '')
             setVrijeme(r.vrijeme || '')
             setOpis(r.opis || '')
             setOmiljen(r.omiljen || false)
             setVegansko(r.vegansko || false)
+            setOdabraniSastojci(Array.isArray(r.sastojci) ? r.sastojci : [])
 
-            if (r.sastojci && Array.isArray(r.sastojci)) {
-                const mapiraniSastojci = r.sastojci.map(s => {
-                    const sastojakId = s.sastojak?.id ?? s.sastojakId ?? s.sastojak
-                    const pronadjeniSastojak = sastojciOdgovor.data.find(st => Number(st.id) === Number(sastojakId))
-                    const jmVrijednost = s.jedMjere ?? s.jedinicaMjere?.naziv ?? s.jedinicaMjere?.id ??
-                        s.jedinicaMjere ?? s.jedinica
-                    const pronadjenaJM = jmOdgovor.data.find(jm => jm.naziv === jmVrijednost || String(jm.id) === String(jmVrijednost))
-                    return {
-                        sastojak: pronadjeniSastojak || { id: sastojakId, naziv: s.sastojakNaziv || 'Nepoznato' },
-                        jedinicaMjere: pronadjenaJM || { naziv: typeof jmVrijednost === 'string' 
-                        ? jmVrijednost : s.jedinicaMjereNaziv || '' },
-                        kolicina: s.kolicina
-                    }
-                })
-                setOdabraniSastojci(mapiraniSastojci)
-            }
         } catch (greska) {
             console.error('Greška pri dohvaćanju podataka za promjenu:', greska)
             alert('Ne mogu učitati podatke recepta.')
@@ -82,19 +70,26 @@ export default function ReceptPromjena() {
             alert('Molimo odaberite sastojak, unesite količinu i izaberite jedinicu mjere.')
             return
         }
+        const jedinica = jediniceMjere.find(jm => jm.id === Number(trenutnaJedinicaMjere))
+
+        // console.log('ODABRANI SASTOJAK:', trenutniSastojak)
+        // console.log('ODABRANA JEDINICA ID:', trenutnaJedinicaMjere)
+        // console.log('PRONAĐENA JEDINICA:', jedinica)
 
         const nova = {
-            sastojak: trenutniSastojak,
-            jedinicaMjere: jediniceMjere.find(jm => jm.id === parseInt(trenutnaJedinicaMjere)),
-            kolicina: trenutnaKolicina,
+            sastojak: trenutniSastojak.id,
+            kolicina: Number(trenutnaKolicina),
+            jedMjere: jedinica.naziv
         }
 
         setOdabraniSastojci([...odabraniSastojci, nova])
+        // console.log('DODANA STAVKA:', nova)
         setOdabraniIndex(-1)
         setPrikaziAutocomplete(false)
         setTrenutnaJedinicaMjere(0)
         setTrenutnaKolicina('')
         setTrenutniSastojak({})
+        // console.log('NOVA STAVKA:', nova)
     }
 
     async function odradiSubmit(e) {
@@ -126,15 +121,11 @@ export default function ReceptPromjena() {
             kategorija,
             vrijeme: parsedVrijeme,
             opis: opis.trim(),
-            sastojci: odabraniSastojci.map(s => ({
-                sastojak: s.sastojak.id,
-                jedMjere: s.jedinicaMjere?.naziv ?? s.jedMjere ?? '',
-                kolicina: Number(s.kolicina)
-            })),
+            sastojci: odabraniSastojci,
             omiljen,
             vegansko
         }
-
+        console.log('RECEPT ZA SPREMANJE:', recept)
         try {
             await ReceptService.promijeni(id, recept)
             navigate(RouteNames.RECEPTI)
@@ -147,7 +138,7 @@ export default function ReceptPromjena() {
     function filtrirajSastojke() {
         if (!pretragaSastojka) return []
         return sviSastojci.filter(p =>
-            !odabraniSastojci.find(op => op.sastojak.id === p.id) &&
+            !odabraniSastojci.some(op => Number(op.sastojak) === Number(p.id)) &&
             (p.naziv.toLowerCase().includes(pretragaSastojka.toLowerCase()))
         )
     }
@@ -183,7 +174,7 @@ export default function ReceptPromjena() {
     }
 
     function ukloniSastojak(idSastojka) {
-        setOdabraniSastojci(odabraniSastojci.filter(st => st.sastojak.id !== idSastojka))
+        setOdabraniSastojci(odabraniSastojci.filter(st => Number(st.sastojak) !== Number(idSastojka)))
     }
 
     return (
@@ -358,22 +349,26 @@ export default function ReceptPromjena() {
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        {odabraniSastojci.map(ts => (
-                                                            <tr key={ts.sastojak.id}>
-                                                                <td>{ts.sastojak.naziv}</td>
-                                                                <td>{ts.kolicina}</td>
-                                                                <td>{ts.jedinicaMjere?.naziv || ts.jedMjere || ''} </td>
-                                                                <td>
-                                                                    <Button
-                                                                        variant="danger"
-                                                                        size="sm"
-                                                                        onClick={() => ukloniSastojak(ts.sastojak.id)}
-                                                                    >
-                                                                        Obriši
-                                                                    </Button>
-                                                                </td>
-                                                            </tr>
-                                                        ))}
+                                                        {odabraniSastojci.map(ts => {
+                                                            const sastojak = sviSastojci.find(s => Number(s.id) ===
+                                                                Number(ts.sastojak))
+                                                            return (
+                                                                <tr key={ts.sastojak}>
+                                                                    <td>{sastojak.naziv}</td>
+                                                                    <td>{ts.kolicina}</td>
+                                                                    <td>{ts.jedMjere} </td>
+                                                                    <td>
+                                                                        <Button
+                                                                            variant="danger"
+                                                                            size="sm"
+                                                                            onClick={() => ukloniSastojak(ts.sastojak)}
+                                                                        >
+                                                                            Obriši
+                                                                        </Button>
+                                                                    </td>
+                                                                </tr>
+                                                            )
+                                                        })}
                                                     </tbody>
                                                 </Table>
                                             </div>

@@ -72,38 +72,10 @@ export default function ReceptPregled() {
             return false
         }
         const sastojciTekst = Array.isArray(recept.sastojci)
-            ? recept.sastojci.map((sastojak) => {
-                if (typeof sastojak === 'string') {
-                    return sastojak
-                }
-
-                if (typeof sastojak === 'number') {
-                    return sviSastojci.find(
-                        s => String(s.id) === String(sastojak)
-                    )?.naziv || ""
-                }
-
-                if (sastojak && typeof sastojak === 'object') {
-                    if (sastojak.naziv) {
-                        return sastojak.naziv
-                    }
-
-                    if (sastojak.sastojak &&
-                        typeof sastojak.sastojak === 'object'
-                    ) {
-                        return sastojak.sastojak.naziv || ""
-                    }
-                    const id = sastojak.sastojakId
-                        ?? sastojak.sastojak ?? sastojak.id
-
-                    return sviSastojci.find(
-                        s => String(s.id) === String(id)
-                    )?.naziv || ""
-                }
-                return ""
-            }).join(" ")
-            : recept.sastojci || ""
-
+            ? recept.sastojci.map(stavka => {
+                const podatakSastojka = sviSastojci.find(s => Number(s.id) === Number(stavka.sastojak))
+                return podatakSastojka?.naziv || ''
+            }).join(' ') : ''
 
         const tekstRecepta = [
             recept.naziv,
@@ -133,7 +105,7 @@ export default function ReceptPregled() {
 
         return true
     })
-    .sort((a, b) => a.naziv.localeCompare(b.naziv, 'hr', {sensitivity: 'base'}))
+        .sort((a, b) => a.naziv.localeCompare(b.naziv, 'hr', { sensitivity: 'base' }))
 
     return (
         <>
