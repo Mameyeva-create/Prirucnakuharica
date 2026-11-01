@@ -13,7 +13,6 @@ import KategorijaPregled from './pages/kategorije/KategorijaPregled'
 import KategorijaNovi from './pages/kategorije/KategorijaNovi'
 import KategorijaPromjena from './pages/kategorije/KategorijaPromjena'
 import SastojakNovi from './pages/sastojci/SastojakNovi'
-import GeneriranjeRecepta from './pages/recepti/GeneriranjeRecepta'
 import GeneriranjePodataka from './components/GeneriranjePodataka'
 import SastojakPregled from './pages/sastojci/SastojakPregled'
 import SastojakPromjena from './pages/sastojci/SastojakPromjena'
@@ -43,8 +42,6 @@ function App() {
 
             <Route path={RouteNames.RECEPTI_PROMJENA} element={<ReceptPromjena />} />
 
-            <Route path={RouteNames.RECEPTI_GENERIRANJE} element={<GeneriranjePodataka />} />
-
             <Route path="/recepti/:id/detalji" element={<ReceptDetalji />} />
 
             <Route path={RouteNames.KATEGORIJE} element={<KategorijaPregled />} />
@@ -61,9 +58,11 @@ function App() {
 
             <Route path={RouteNames.JEDINICE_MJERE} element={<JedinicaMjerePregled />} />
 
-            <Route path={RouteNames.JEDINICE_MJERE_NOVI} element={<JedinicaMjereNovi />} />,
+            <Route path={RouteNames.JEDINICE_MJERE_NOVI} element={<JedinicaMjereNovi />} />
 
             <Route path={RouteNames.JEDINICE_MJERE_PROMJENA} element={<JedinicaMjerePromjena />} />
+
+             <Route path={RouteNames.GENERIRANJE_PODATAKA} element={<GeneriranjePodataka />} />
 
           </Routes>
         </main>

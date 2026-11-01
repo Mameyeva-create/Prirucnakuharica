@@ -55,12 +55,12 @@ export default function ReceptNovi() {
         }
     }
 
-
-
     function dodajStavku() {
-        //console.log("sastojak",trenutniSastojak.id)
-        //console.log("jm",trenutnaJedinicaMjere)
-        //console.log("količina", trenutnaKolicina)
+
+        // console.log("sastojak",trenutniSastojak.id)
+        // console.log("jm",trenutnaJedinicaMjere)
+        // console.log("količina", trenutnaKolicina)
+
         if (!trenutniSastojak.id || !trenutnaKolicina || !Number.isFinite(Number(trenutnaKolicina)) || !trenutnaJedinicaMjere) {
             alert('Odaberite sastojak, unesite količinu i izaberite jedinicu mjere')
             return
@@ -74,6 +74,7 @@ export default function ReceptNovi() {
             jedMjere: jedinica.naziv,
         }
         // console.log(JSON.stringify(nova))
+
         setOdabraniSastojci([...odabraniSastojci, nova])
         setOdabraniIndex(-1)
         setPrikaziAutocomplete(false)
@@ -137,7 +138,6 @@ export default function ReceptNovi() {
             (p.naziv.toLowerCase().includes(pretragaSastojka.toLowerCase()))
         )
     }
-
 
     function handleKeyDown(e) {
         const filtriraniSastojci = filtrirajSastojke()
@@ -230,7 +230,6 @@ export default function ReceptNovi() {
                                             </Form.Group>
                                         </Col>
                                     </Row>
-
                                 </Col>
                                 {/* DESNA KOLONA */}
                                 <Col xs={12} md={6} className="d-flex flex-column">
@@ -313,8 +312,6 @@ export default function ReceptNovi() {
                                                 + Dodaj sastojak
                                             </Button>
                                         </Col>
-
-
                                     </Row>
 
                                     {odabraniSastojci.length > 0 && (
@@ -334,22 +331,23 @@ export default function ReceptNovi() {
                                                         {odabraniSastojci.map(ts => {
                                                             const sastojak = sviSastojci.find(
                                                                 s => Number(s.id) === Number(ts.sastojak))
-                                                                return(
-                                                            <tr key={ts.sastojak}>
-                                                                <td>{sastojak?.naziv || 'Nepoznato'}</td>
-                                                                <td>{ts.kolicina}</td>
-                                                                <td>{ts.jedMjere}</td>
-                                                                <td>
-                                                                    <Button
-                                                                        variant="danger"
-                                                                        size="sm"
-                                                                        onClick={() => ukloniSastojak(ts.sastojak)}
-                                                                    >
-                                                                        Obriši
-                                                                    </Button>
-                                                                </td>
-                                                            </tr>
-                                                        )})}
+                                                            return (
+                                                                <tr key={ts.sastojak}>
+                                                                    <td>{sastojak?.naziv || 'Nepoznato'}</td>
+                                                                    <td>{ts.kolicina}</td>
+                                                                    <td>{ts.jedMjere}</td>
+                                                                    <td>
+                                                                        <Button
+                                                                            variant="danger"
+                                                                            size="sm"
+                                                                            onClick={() => ukloniSastojak(ts.sastojak)}
+                                                                        >
+                                                                            Obriši
+                                                                        </Button>
+                                                                    </td>
+                                                                </tr>
+                                                            )
+                                                        })}
                                                     </tbody>
                                                 </Table>
                                             </div>

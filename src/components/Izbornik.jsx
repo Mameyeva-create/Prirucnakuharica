@@ -150,7 +150,7 @@ export default function Izbornik() {
                                 onClick={() => {
                                     setPrikaziKategorije(false)
                                     setReceptiOtvoreni(false)
-                                    navigate(RouteNames.RECEPTI_GENERIRANJE)
+                                    navigate(RouteNames.GENERIRANJE_PODATAKA)
                                 }}
                             >
                                 🎲 Generiranje podataka
