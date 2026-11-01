@@ -3,8 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { GiCookingPot } from 'react-icons/gi';
 import { MdKitchen } from 'react-icons/md';
-import ReceptService from '../../services/recepti/ReceptService';
-import KategorijaService from '../../services/kategorije/KategorijaService';
+import ReceptService from '../services/recepti/ReceptService';
+import KategorijaService from '../services/kategorije/KategorijaService';
 import { BiCategory } from 'react-icons/bi';
 
 
