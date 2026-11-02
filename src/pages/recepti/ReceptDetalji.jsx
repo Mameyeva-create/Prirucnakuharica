@@ -4,6 +4,7 @@ import ReceptService from "../../services/recepti/ReceptService"
 import { Button, Form } from "react-bootstrap"
 import { slikeRecepata } from "../../services/recepti/slikeRecepata"
 import SastojakService from "../../services/sastojci/SastojakService"
+import ReceptPDFGenerator from "../../components/ReceptPDFGenerator"
 
 export default function ReceptDetalji() {
     const { id } = useParams()
@@ -12,6 +13,7 @@ export default function ReceptDetalji() {
     const [recept, setRecept] = useState(null)
     const [porcije, setPorcije] = useState(2)
     const [sviSastojci, setSviSastojci] = useState([])
+    const generirajPDF = ReceptPDFGenerator({ recept, sviSastojci })
 
     async function promjeniOmiljen() {
         const azuriraniRecept = {
@@ -147,8 +149,10 @@ export default function ReceptDetalji() {
             <p style={{ whiteSpace: 'pre-line' }}>
                 {recept.priprema || recept.opis || 'Upute za pripremu još nisu unesene'}
             </p>
-
-            <Button variant="secondary" onClick={() => navigate(-1)}>Natrag</Button>
+            <div className="d-flex gap-2 flex-wrap mt-4">
+                <Button variant="secondary" onClick={() => navigate(-1)}>Natrag</Button>
+<Button variant="outline-success" onClick={generirajPDF}>📄 Izvezi recept u PDF</Button>
+            </div>
         </div>
     )
 }

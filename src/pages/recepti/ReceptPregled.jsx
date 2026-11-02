@@ -3,7 +3,8 @@ import ReceptService from "../../services/recepti/ReceptService"
 import { Button, Card, Table } from "react-bootstrap"
 import { Link, useNavigate, useSearchParams } from "react-router-dom"
 import SastojakService from "../../services/sastojci/SastojakService"
-
+import { FaFilePdf } from "react-icons/fa"
+import ReceptPDFGenerator from "../../components/ReceptPDFGenerator"
 
 function korijenRijeci(rijec) {
     let rezultat = rijec
@@ -59,6 +60,15 @@ export default function ReceptPregled() {
         }
         await ReceptService.obrisi(id)
         ucitajRecepti()
+    }
+
+    async function generirajPDFZaRecept(recept) {
+        const generiraj = ReceptPDFGenerator({
+            recept,
+            sviSastojci
+        })
+
+        await generiraj()
     }
 
     const prikazaniRecepti = recepti.filter((recept) => {
@@ -145,6 +155,16 @@ export default function ReceptPregled() {
                                         >
                                             {recept.naziv}
                                         </Link>
+
+                                        <FaFilePdf
+                                            color="#cb72dd"
+                                            style={{ cursor: 'pointer', marginLeft: '10px' }}
+                                            title="Generiraj PDF"
+                                            onClick={(e) => {
+                                                e.stopPropagation()
+                                                generirajPDFZaRecept(recept)
+                                            }}
+                                        />
                                     </td>
 
                                     <td>{recept.kategorija}</td>
@@ -201,14 +221,26 @@ export default function ReceptPregled() {
                         }}
                     >
                         <Card.Body>
-                            <Card.Title>
+                            <Card.Title className="d-flex align-items-center gap-2">
                                 <Link to={`/recepti/${recept.id}/detalji`}
                                     style={{
                                         color: '#35483b',
                                         textDecoration: 'none',
                                         fontWeight: 'bold'
                                     }}
-                                >{recept.naziv}</Link>
+                                >
+                                    {recept.naziv}
+                                </Link>
+
+                                <FaFilePdf
+                                    color="#cb72dd"
+                                    style={{ cursor: 'pointer' }}
+                                    title="Generiraj PDF"
+                                    onClick={(e) => {
+                                        e.stopPropagation()
+                                        generirajPDFZaRecept(recept)
+                                    }}
+                                />
                             </Card.Title>
 
                             <Card.Subtitle className="mb-2 text-muted">
