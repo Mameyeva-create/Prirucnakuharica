@@ -242,11 +242,18 @@ export default function ReceptNovi() {
 
                                     <Form.Group className="mb-3">
                                         <Form.Label>Fotografija recepta 📷</Form.Label>
-                                        <Form.Control type="file" accept="image/*" onChange={odaberiSliku} />
+                                        <Form.Control id="slikaRecepta" type="file" accept="image/*" onChange={odaberiSliku} />
                                         {slika && (
                                             <div className="mt-3">
                                                 <img src={slika} alt="Pregled fotografije recepta"
                                                     style={{ width: '100%', maxHeight: '220px', objectFit: 'cover', borderRadius: '8px' }} />
+                                                    <Button type="button" variant="outline-danger" size="sm"
+                                                    className="mt-2" 
+                                                    onClick={() => {
+                                                        setSlika('')
+                                                        document.getElementById
+                                                        ('slikaRecepta').value = ''}}
+                                                        >Ukloni fotografiju</Button>
                                             </div>
                                         )}
                                     </Form.Group>
