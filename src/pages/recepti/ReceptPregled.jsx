@@ -23,6 +23,8 @@ function korijenRijeci(rijec) {
 export default function ReceptPregled() {
     const [recepti, setRecepti] = useState([])
     const [sviSastojci, setSviSastojci] = useState([])
+    const [stranica, setStranica] = useState(1)
+    const velicinaStranice = 10
     const navigate = useNavigate()
     const [searchParams] = useSearchParams()
     const prikaziGenerirane = searchParams.get('generirani') === 'true'
@@ -37,6 +39,10 @@ export default function ReceptPregled() {
         ucitajRecepti()
         ucitajSastojke()
     }, [])
+
+    useEffect(() => {
+        setStranica(1)
+    }, [kategorija, samoVegansko, trazi, prikaziGenerirane])
 
 
     async function ucitajRecepti() {
@@ -117,6 +123,13 @@ export default function ReceptPregled() {
     })
         .sort((a, b) => a.naziv.localeCompare(b.naziv, 'hr', { sensitivity: 'base' }))
 
+    // Straničenje recepata
+    const ukupnoStranica = Math.ceil(
+        prikazaniRecepti.length / velicinaStranice
+    )
+    const receptiZaStranicu = prikazaniRecepti.slice(
+        (stranica - 1) * velicinaStranice, stranica * velicinaStranice
+    )
     return (
         <>
             <div className="naslov-recepti my-2 px-3 py-2">
@@ -140,7 +153,7 @@ export default function ReceptPregled() {
                         </thead>
 
                         <tbody>
-                            {prikazaniRecepti.map((recept) => (
+                            {receptiZaStranicu.map((recept) => (
                                 <tr key={recept.id}
                                     onClick={() => navigate(`/recepti/${recept.id}/detalji`)}
                                     style={{ cursor: 'pointer' }}
@@ -280,6 +293,23 @@ export default function ReceptPregled() {
                             : 'Nema recepata u ovoj kategoriji'}</p>
                 )}
             </div>
+
+            {/* PAGINACIJA */}
+            {ukupnoStranica > 1 && (
+                <div className="d-flex justify-content-center align-items-center flex-wrap gap-2 my-4">
+                    <Button variant="outline-success" disabled={stranica === 1}
+                        onClick={() => setStranica(stranica - 1)}>‹ Prethodna</Button>
+                    {Array.from({ length: ukupnoStranica }, (_, i) => i + 1).map((broj) => (
+                        <Button key={broj}
+                            variant={stranica === broj ? "success" : "outline-success"}
+                            onClick={() => setStranica(broj)}>{broj}</Button>
+                    ))}
+                    <Button variant="outline-success"
+                        disabled={stranica === ukupnoStranica}
+                        onClick={() => setStranica(stranica + 1)}>Sljedeća ›</Button>
+                </div>
+            )}
+
         </>
     )
 }
