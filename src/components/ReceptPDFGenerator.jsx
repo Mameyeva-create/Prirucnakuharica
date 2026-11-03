@@ -149,6 +149,10 @@ export default function ReceptPDFGenerator({ recept, sviSastojci }) {
         // PRIPREMA
         const priprema = recept?.priprema || recept?.opis
         if (priprema) {
+            if (sastojci.length > 6) {
+                doc.addPage()
+                currentY = 20
+            }
             doc.setFont('Roboto', 'bold')
             doc.setFontSize(13)
             doc.setTextColor(...textColor)
