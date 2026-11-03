@@ -4,7 +4,6 @@ import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import { IME_APLIKACIJE, RouteNames } from '../constants';
 import { useLocation, useNavigate } from 'react-router-dom';
-import chefHat from '../assets/slike/chef-hat.png'
 import { BiBookAdd, BiHeart, BiHomeAlt, BiRestaurant } from 'react-icons/bi';
 import { useEffect, useState } from 'react';
 import KategorijaService from '../services/kategorije/KategorijaService';
@@ -45,7 +44,7 @@ export default function Izbornik() {
                 <Navbar.Brand onClick={() => navigate(RouteNames.HOME)}
                     style={{ cursor: 'pointer' }}>
                     <img
-                        src={chefHat}
+                        src='/slike/chef-hat.png'
                         alt='Chef hat'
                         width='40'
                         height='40'

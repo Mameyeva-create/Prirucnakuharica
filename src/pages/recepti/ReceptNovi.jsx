@@ -22,7 +22,7 @@ export default function ReceptNovi() {
     const [odabraniIndex, setOdabraniIndex] = useState(-1)
     const [trenutnaJedinicaMjere, setTrenutnaJedinicaMjere] = useState(0)
     const [trenutnaKolicina, setTrenutnaKolicina] = useState('')
-
+    const [slika, setSlika] = useState('')
 
 
     useEffect(() => {
@@ -83,6 +83,30 @@ export default function ReceptNovi() {
         setTrenutniSastojak({})
     }
 
+    function odaberiSliku(e) {
+        const datoteka = e.target.files[0]
+        if (!datoteka) return
+        if (!datoteka.type.startsWith('image/')) {
+            alert('Odaberite datoteku slike')
+            e.target.value = ''
+            return
+        }
+        // Ograničenje veličine slike na 2 MB
+        if (datoteka.size > 2 * 1024 * 1024) {
+            alert('Slika ne smije biti veća od 2 MB')
+            e.target.value = ''
+            return
+        }
+        const citac = new FileReader()
+        citac.onloadend = () => {
+            setSlika(citac.result)
+        }
+        citac.onerror = () => {
+            alert('Greška pri učitavanju slike')
+        }
+        citac.readAsDataURL(datoteka)
+    }
+
     async function odradiSubmit(e) {
         e.preventDefault()
 
@@ -117,6 +141,7 @@ export default function ReceptNovi() {
             kategorija,
             vrijeme,
             opis,
+            slika,
             sastojci: odabraniSastojci,
             omiljen: podaci.get('omiljen') === 'on',
             vegansko: podaci.get('vegansko') === 'on'
@@ -213,6 +238,17 @@ export default function ReceptNovi() {
                                         <Form.Control as="textarea"
                                             name="opis" rows={5}
                                             placeholder="Opiši pripremu i posebnosti recepta..." required />
+                                    </Form.Group>
+
+                                    <Form.Group className="mb-3">
+                                        <Form.Label>Fotografija recepta 📷</Form.Label>
+                                        <Form.Control type="file" accept="image/*" onChange={odaberiSliku} />
+                                        {slika && (
+                                            <div className="mt-3">
+                                                <img src={slika} alt="Pregled fotografije recepta"
+                                                    style={{ width: '100%', maxHeight: '220px', objectFit: 'cover', borderRadius: '8px' }} />
+                                            </div>
+                                        )}
                                     </Form.Group>
 
                                     <Row className="g-2 mt-auto pt-3">

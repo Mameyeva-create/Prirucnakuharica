@@ -1,9 +1,3 @@
-import cezarSalata from '../../assets/slike/cezar-salata.jpg'
-import cokoladniKolac from '../../assets/slike/cokoladni-kolac.jpg'
-import palacinke from '../../assets/slike/palacinke.jpg'
-import piletina from '../../assets/slike/piletina.jpg'
-import pizza from '../../assets/slike/pizza.jpg'
-import povrtnaJuha from '../../assets/slike/povrtna-juha.jpg'
 
 // Svaki sastojak sadrži ID sastojka, količinu i jedinicu mjere.
 
@@ -13,7 +7,7 @@ export const recepti = [
         naziv: 'Tjestenina Carbonara',
         kategorija: 'Ručak',
         vrijeme: 20,
-        slikaPutanja: '/src/assets/slike/carbonara.jpg',
+        slikaPutanja: '/slike/carbonara.jpg',
         opis: 'Jednostavna i iskusna tjestenina s jajima,sirom i pancetom.',
         sastojci: [
             { sastojak: 1, kolicina: 200, jedMjere: 'g' },
@@ -32,8 +26,7 @@ export const recepti = [
         naziv: 'Palačinke',
         kategorija: 'Doručak',
         vrijeme: 15,
-        slika: palacinke,
-        slikaPutanja: '/src/assets/slike/palacinke.jpg',
+        slikaPutanja: '/slike/palacinke.jpg',
         opis: 'Brze i jednostavne palačinke koje možete poslužiti sa slatkim nadjevom.',
         sastojci: [
             { sastojak: 5, kolicina: 200, jedMjere: 'g' },
@@ -52,8 +45,7 @@ export const recepti = [
         naziv: 'Piletina s povrćem',
         kategorija: 'Ručak',
         vrijeme: 35,
-        slika: piletina,
-        slikaPutanja: '/src/assets/slike/piletina.jpg',
+        slikaPutanja: '/slike/piletina.jpg',
         opis: 'Ukusan i jednostavan obrok s pileetinom i svježim povrćem.',
         sastojci: [
             { sastojak: 11, kolicina: 300, jedMjere: 'g' },
@@ -74,8 +66,7 @@ export const recepti = [
         naziv: 'Pizza Margherita',
         kategorija: 'Večera',
         vrijeme: 30,
-        slika: pizza,
-        slikaPutanja: '/src/assets/slike/pizza.jpg',
+        slikaPutanja: '/slike/pizza.jpg',
         opis: 'Klasična talijanska pizza s rajčicom, mozzarellom i svježim bosiljkom.',
         sastojci: [
             { sastojak: 16, kolicina: 1, jedMjere: 'kom' },
@@ -95,8 +86,7 @@ export const recepti = [
         naziv: 'Cezar salata',
         kategorija: 'Ručak',
         vrijeme: 20,
-        slika: cezarSalata,
-        slikaPutanja: '/src/assets/slike/cezar-salata.jpg',
+        slikaPutanja: '/slike/cezar-salata.jpg',
         opis: 'Svježa salata s piletinom, hrskavim krutonima, parmezanom i Cezar umakom.',
         sastojci: [
             { sastojak: 20, kolicina: 200, jedMjere: 'g' },
@@ -116,8 +106,7 @@ export const recepti = [
         naziv: 'Čokoladni kolač',
         kategorija: 'Desert',
         vrijeme: 45,
-        slika: cokoladniKolac,
-        slikaPutanja: '/src/assets/slike/cokoladni-kolac.jpg',
+        slikaPutanja: '/slike/cokoladni-kolac.jpg',
         opis: 'Sočan i mekan čokoladni kolač bogatog okusa, idealan za sve ljubitelje čokolade.',
         sastojci: [
             { sastojak: 23, kolicina: 200, jedMjere: 'g' },
@@ -137,8 +126,7 @@ export const recepti = [
         naziv: 'Povrtna juha',
         kategorija: 'Ručak',
         vrijeme: 25,
-        slika: povrtnaJuha,
-        slikaPutanja: '/src/assets/slike/povrtna-juha.jpg',
+        slikaPutanja: '/slike/povrtna-juha.jpg',
         opis: 'Lagana i zdrava juha od svježeg povrća, savršena za svaki dan.',
         sastojci: [
             { sastojak: 12, kolicina: 2, jedMjere: 'kom' },

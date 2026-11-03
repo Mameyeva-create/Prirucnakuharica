@@ -22,13 +22,13 @@ async function getById(id) {
     const trazeniId = Number(id)
 
     const slikePoId = {
-        1: "/src/assets/slike/carbonara.jpg",
-        2: "/src/assets/slike/palacinke.jpg",
-        3: "/src/assets/slike/piletina.jpg",
-        4: "/src/assets/slike/pizza.jpg",
-        5: "/src/assets/slike/cezar-salata.jpg",
-        6: "/src/assets/slike/cokoladni-kolac.jpg",
-        7: "/src/assets/slike/povrtna-juha.jpg"
+        1: "/slike/carbonara.jpg",
+        2: "/slike/palacinke.jpg",
+        3: "/slike/piletina.jpg",
+        4: "/slike/pizza.jpg",
+        5: "/slike/cezar-salata.jpg",
+        6: "/slike/cokoladni-kolac.jpg",
+        7: "/slike/povrtna-juha.jpg"
     }
 
     const recept = recepti.find(r => r.id === trazeniId)

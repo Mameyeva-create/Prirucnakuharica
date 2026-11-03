@@ -82,7 +82,8 @@ export default function ReceptDetalji() {
                 <div className="col-12 col-md-6">
                     <img
                         className="img-fluid rounded-4 shadow"
-                        src={slikeRecepata[recept.naziv] || recept.slikaPutanja || recept.slika}
+                        src={recept.slika || recept.slikaPutanja || slikeRecepata[recept.naziv]}
+                        alt={recept.naziv}
                         style={{
                             width: '100%',
                             height: '350px',

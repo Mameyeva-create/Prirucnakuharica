@@ -4,7 +4,7 @@ import SastojakService from "../../services/sastojci/SastojakService";
 import { RouteNames } from "../../constants";
 import { Alert, Button, Card, Form } from "react-bootstrap";
 import { useState } from "react";
-import dodajSastojak from '../../assets/slike/dodajSastojak.png'
+
 
 export default function SastojakNovi() {
     const navigate = useNavigate()
@@ -56,8 +56,8 @@ export default function SastojakNovi() {
                 </Card.Body>
             </Card>
             <div className="ilustracija-dodaj-sastojak">
-                <img src={dodajSastojak}
-                    alt="Dodaj satojak" />
+                <img src='/slike/dodajSastojak.png'
+                    alt="Dodaj sastojak" />
             </div>
         </div>
     )

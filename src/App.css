@@ -294,7 +294,7 @@ footer hr {
 /* Glavna stranica - kartice */
 .pocetna-gore {
     min-height: 66vh;
-    background-image: url('./assets/slike/kuhinja.png');
+    background-image: url('/slike/kuhinja.png');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;

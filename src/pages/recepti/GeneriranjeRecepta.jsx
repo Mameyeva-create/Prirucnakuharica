@@ -5,13 +5,6 @@ import { Faker, hr } from "@faker-js/faker";
 import ReceptService from "../../services/recepti/ReceptService";
 import KategorijaService from "../../services/kategorije/KategorijaService";
 import SastojakService from "../../services/sastojci/SastojakService";
-import carbonara from "../../assets/slike/carbonara.jpg";
-import cezarSalata from "../../assets/slike/cezar-salata.jpg";
-import cokoladniKolac from "../../assets/slike/cokoladni-kolac.jpg";
-import palacinke from "../../assets/slike/palacinke.jpg";
-import piletina from "../../assets/slike/piletina.jpg";
-import pizza from "../../assets/slike/pizza.jpg";
-import povrtnaJuha from "../../assets/slike/povrtna-juha.jpg";
 import { useNavigate } from "react-router-dom";
 
 const faker = new Faker({ locale: [hr] });
@@ -21,8 +14,7 @@ const predlosci = [
         naziv: "Tjestenina Carbonara",
         kategorija: "Ručak",
         vrijeme: 20,
-        slika: carbonara,
-        slikaPutanja: "/src/assets/slike/carbonara.jpg",
+        slikaPutanja: "/slike/carbonara.jpg",
         opis: "Jednostavna tjestenina s jajima, sirom i pancetom.",
         sastojci: [
             ["Tjestenina", 200, "g"],
@@ -44,8 +36,7 @@ const predlosci = [
         naziv: "Palačinke",
         kategorija: "Doručak",
         vrijeme: 15,
-        slika: palacinke,
-        slikaPutanja: "/src/assets/slike/palacinke.jpg",
+        slikaPutanja: "/slike/palacinke.jpg",
         opis: "Brze palačinke koje možete poslužiti sa slatkim nadjevom.",
         sastojci: [
             ["Brašno", 200, "g"],
@@ -67,8 +58,7 @@ const predlosci = [
         naziv: "Piletina s povrćem",
         kategorija: "Ručak",
         vrijeme: 35,
-        slika: piletina,
-        slikaPutanja: "/src/assets/slike/piletina.jpg",
+        slikaPutanja: "/slike/piletina.jpg",
         opis: "Ukusan obrok s piletinom i svježim povrćem.",
         sastojci: [
             ["Pileća prsa", 400, "g"],
@@ -92,8 +82,7 @@ const predlosci = [
         naziv: "Pizza Margherita",
         kategorija: "Večera",
         vrijeme: 30,
-        slika: pizza,
-        slikaPutanja: "/src/assets/slike/pizza.jpg",
+        slikaPutanja: "/slike/pizza.jpg",
         opis: "Klasična pizza s rajčicom, mozzarellom i bosiljkom.",
         sastojci: [
             ["Tijesto za pizzu", 300, "g"],
@@ -114,8 +103,7 @@ const predlosci = [
         naziv: "Cezar salata",
         kategorija: "Ručak",
         vrijeme: 20,
-        slika: cezarSalata,
-        slikaPutanja: "/src/assets/slike/cezar-salata.jpg",
+        slikaPutanja: "/slike/cezar-salata.jpg",
         opis: "Svježa salata s piletinom, krutonima i Cezar umakom.",
         sastojci: [
             ["Pileća prsa", 300, "g"],
@@ -136,8 +124,7 @@ const predlosci = [
         naziv: "Čokoladni kolač",
         kategorija: "Desert",
         vrijeme: 45,
-        slika: cokoladniKolac,
-        slikaPutanja: "/src/assets/slike/cokoladni-kolac.jpg",
+        slikaPutanja: "/slike/cokoladni-kolac.jpg",
         opis: "Sočan čokoladni kolač bogatog okusa.",
         sastojci: [
             ["Čokolada za kuhanje", 200, "g"],
@@ -159,8 +146,7 @@ const predlosci = [
         naziv: "Povrtna juha",
         kategorija: "Ručak",
         vrijeme: 25,
-        slika: povrtnaJuha,
-        slikaPutanja: "/src/assets/slike/povrtna-juha.jpg",
+        slikaPutanja: "/slike/povrtna-juha.jpg",
         opis: "Lagana juha od svježeg povrća.",
         sastojci: [
             ["Mrkva", 2, "kom"],
