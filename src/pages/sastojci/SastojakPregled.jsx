@@ -6,8 +6,10 @@ import { RouteNames } from "../../constants"
 import ReceptService from "../../services/recepti/ReceptService"
 
 
+
 export default function SastojakPregled() {
     const [sastojci, setSastojci] = useState([])
+    const [trazeniPojam, setTrazeniPojam] = useState("")
     const navigate = useNavigate()
 
     useEffect(() => {
@@ -42,12 +44,47 @@ export default function SastojakPregled() {
         ucitajSastojci()
     }
 
+    useEffect(() => {
+
+        function pretraziTipkovnicom(e) {
+
+            // Ne pretražuj dok korisnik upisuje u neko polje
+            if (
+                e.target.matches('input, textarea, select, button, a') ||
+                e.target.isContentEditable ||
+                e.ctrlKey || e.altKey || e.metaKey
+            ) {
+                return
+            }
+            if (e.key === 'Escape') {
+                setTrazeniPojam("")
+                clearTimeout(timer.current)
+                return
+            }
+            if (e.key === 'Backspace') {
+                setTrazeniPojam(prethodni => prethodni.slice(0, -1))
+                return
+            }
+            if (e.key.length === 1) {
+                setTrazeniPojam(prethodni => prethodni + e.key)
+            }
+        }
+        window.addEventListener('keydown', pretraziTipkovnicom)
+        return () => {
+            window.removeEventListener('keydown', pretraziTipkovnicom)
+        }
+    }, [])
+    const filtriraniSastojci = sastojci.filter(s =>
+        s.naziv.toLocaleLowerCase('hr').includes(
+            trazeniPojam.toLocaleLowerCase('hr')
+        )
+    )
     return (
         <>
             {/* <div style={{ overflowX: 'auto' }}> */}
             <div className="naslov-recepti my-2 px-3 py-2">
                 <h2>Svi sastojci</h2>
-                <p>Ukupno pronađenih sastojaka: {sastojci.length}</p>
+                <p>Prikazano sastojaka: {filtriraniSastojci.length} / {sastojci.length}</p>
             </div>
             {/* <Link to={RouteNames.KATEGORIJE_NOVI}
                         className="btn btn-success w-100 my-3"
@@ -71,7 +108,7 @@ export default function SastojakPregled() {
                     </thead>
 
                     <tbody>
-                        {sastojci.map((sastojak) => (
+                        {filtriraniSastojci.map((sastojak) => (
                             <tr key={sastojak.id}>
                                 <td className="lead">
                                     {sastojak.naziv}
@@ -95,7 +132,11 @@ export default function SastojakPregled() {
                                 </td>
                             </tr>
                         ))}
-
+                        {filtriraniSastojci.length === 0 && (
+                            <tr>
+                                <td colSpan={2} className="text-center">Nema pronađenih sastojaka</td>
+                            </tr>
+                        )}
                     </tbody>
                 </Table>
             </div>

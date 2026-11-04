@@ -8,6 +8,7 @@ import ReceptService from "../../services/recepti/ReceptService"
 
 export default function JedinicaMjerePregled() {
     const [jediniceMjere, setJediniceMjere] = useState([])
+    const [trazeniPojam, setTrazeniPojam] = useState("")
     const navigate = useNavigate()
 
     useEffect(() => {
@@ -15,7 +16,32 @@ export default function JedinicaMjerePregled() {
         ucitajJediniceMjere()
     }, [])
 
-
+    useEffect(() => {
+        function pretraziTipkovnicom(e) {
+            if (
+                e.target.matches('input, textarea, select, button, a') ||
+                e.target.isContentEditable ||
+                e.ctrlKey || e.altKey || e.metaKey
+            ) {
+                return
+            }
+            if (e.key === 'Escape') {
+                setTrazeniPojam("")
+                return
+            }
+            if (e.key === 'Backspace') {
+                setTrazeniPojam(prethodni.slice(0, -1))
+                return
+            }
+            if (e.key.length === 1) {
+                setTrazeniPojam(prethodni => prethodni + e.key)
+            }
+        }
+        window.addEventListener('keydown', pretraziTipkovnicom)
+        return () => {
+            window.removeEventListener('keydown', pretraziTipkovnicom)
+        }
+    }, [])
     async function ucitajJediniceMjere() {
         const odgovor = await JedinicaMjereService.get()
         // console.table(odgovor.data)
@@ -46,12 +72,16 @@ export default function JedinicaMjerePregled() {
         await JedinicaMjereService.obrisi(id)
         ucitajJediniceMjere()
     }
-
+    const filtriraneJediniceMjere = jediniceMjere.filter(j =>
+        j.naziv.toLocaleLowerCase('hr').includes(
+            trazeniPojam.toLocaleLowerCase('hr')
+        )
+    )
     return (
         <>
             <div className="naslov-recepti my-2 px-3 py-2">
                 <h2>Sve jedinice mjera</h2>
-                <p>Ukupno pronađenih jedinica mjere: {jediniceMjere.length}</p>
+                <p>Prikazano jedinica mjere: {filtriraneJediniceMjere.length} / {jediniceMjere.length}</p>
             </div>
 
             <div style={{ width: '100%' }}>
@@ -64,7 +94,7 @@ export default function JedinicaMjerePregled() {
                     </thead>
 
                     <tbody>
-                        {jediniceMjere.map((jedinicaMjere) => (
+                        {filtriraneJediniceMjere.map((jedinicaMjere) => (
                             <tr key={jedinicaMjere.id}>
                                 <td className="lead">
                                     {jedinicaMjere.naziv}
@@ -88,7 +118,11 @@ export default function JedinicaMjerePregled() {
                                 </td>
                             </tr>
                         ))}
-
+                        {filtriraneJediniceMjere.length === 0 && (
+                            <tr>
+                                <td colSpan={2} className="text-center">Nema pronađenih jedinica mjere</td>
+                            </tr>
+                        )}
                     </tbody>
                 </Table>
             </div>
