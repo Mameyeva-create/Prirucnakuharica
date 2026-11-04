@@ -3,6 +3,7 @@ import JedinicaMjereService from "../../services/jedinicaMjere/JedinicaMjereServ
 import { Button, Table } from "react-bootstrap"
 import { Link, useNavigate } from "react-router-dom"
 import { RouteNames } from "../../constants"
+import ReceptService from "../../services/recepti/ReceptService"
 
 
 export default function JedinicaMjerePregled() {
@@ -22,6 +23,23 @@ export default function JedinicaMjerePregled() {
     }
 
     async function obrisi(id) {
+        // Dohvat svih recepata
+        const odgovor = await ReceptService.get()
+        const recepti = odgovor.data
+
+        // Dohvat naziva jedinice mjere
+        const jedinica = jediniceMjere.find(j => j.id === id)
+
+        // Provjera koristi li se jedinica mjere u nekom receptu
+        const koristiSe = recepti.some(recept =>
+            recept.sastojci?.some(s =>
+                s.jedMjere === jedinica?.naziv
+            )
+        )
+        if (koristiSe) {
+            alert('Jedinica mjere se koristi u receptima i ne može se obrisati!')
+            return
+        }
         if (!confirm('Sigurno obrisati?')) {
             return
         }
@@ -32,12 +50,12 @@ export default function JedinicaMjerePregled() {
     return (
         <>
             {/* <div style={{ overflowX: 'auto' }}> */}
-                
-                <div className="naslov-recepti my-2 px-3 py-2">
+
+            <div className="naslov-recepti my-2 px-3 py-2">
                 <h2>Sve jedinice mjera</h2>
                 <p>Ukupno pronađenih jedinica mjere: {jediniceMjere.length}</p>
             </div>
-                    {/* <Link to={RouteNames.JEDINICE_MJERE_NOVI}
+            {/* <Link to={RouteNames.JEDINICE_MJERE_NOVI}
                         className="btn btn-success w-100 my-3"
                         style={{
                             display: 'block',
@@ -47,47 +65,47 @@ export default function JedinicaMjerePregled() {
                         }}>
                         Dodavanje nove jediniceMjere
                     </Link> */}
-                    <div style={{ width: '100%' }}>
+            <div style={{ width: '100%' }}>
 
 
-                    <Table hover striped className="table-jediniceMjere">
-                        <thead>
-                            <tr>
-                                <th>Naziv</th>
-                                <th className="text-end">Akcija</th>
-                            </tr>
-                        </thead>
+                <Table hover striped className="table-jediniceMjere">
+                    <thead>
+                        <tr>
+                            <th>Naziv</th>
+                            <th className="text-end">Akcija</th>
+                        </tr>
+                    </thead>
 
-                        <tbody>
-                            {jediniceMjere.map((jedinicaMjere) => (
-                                <tr key={jedinicaMjere.id}>
-                                    <td className="lead">
-                                        {jedinicaMjere.naziv}
-                                    </td>
+                    <tbody>
+                        {jediniceMjere.map((jedinicaMjere) => (
+                            <tr key={jedinicaMjere.id}>
+                                <td className="lead">
+                                    {jedinicaMjere.naziv}
+                                </td>
 
-                                    <td className="text-end"
+                                <td className="text-end"
                                     style={{ minWidth: '190px', whiteSpace: 'nowrap' }}>
 
-                                        <Button className="btn-promijeni me-2"
-                                            onClick={(e) => {
-                                                navigate(`/jediniceMjere/${jedinicaMjere.id}`)
-                                            }}>
-                                            Promjeni
-                                        </Button>
-                                        {/* &nbsp;&nbsp; */}
-                                        <Button variant="danger" onClick={(e) => {
-                                            obrisi(jedinicaMjere.id)
+                                    <Button className="btn-promijeni me-2"
+                                        onClick={(e) => {
+                                            navigate(`/jediniceMjere/${jedinicaMjere.id}`)
                                         }}>
-                                            Obriši
-                                        </Button>
-                                    </td>
-                                </tr>
-                            ))}
-                           
-                        </tbody>
-                    </Table>
-                </div>
-           {/* </div> */}
+                                        Promjeni
+                                    </Button>
+                                    {/* &nbsp;&nbsp; */}
+                                    <Button variant="danger" onClick={(e) => {
+                                        obrisi(jedinicaMjere.id)
+                                    }}>
+                                        Obriši
+                                    </Button>
+                                </td>
+                            </tr>
+                        ))}
+
+                    </tbody>
+                </Table>
+            </div>
+            {/* </div> */}
         </>
     )
 }

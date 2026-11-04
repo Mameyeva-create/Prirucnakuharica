@@ -3,6 +3,7 @@ import SastojakService from "../../services/sastojci/SastojakService"
 import { Button, Table } from "react-bootstrap"
 import { Link, useNavigate } from "react-router-dom"
 import { RouteNames } from "../../constants"
+import ReceptService from "../../services/recepti/ReceptService"
 
 
 export default function SastojakPregled() {
@@ -22,6 +23,19 @@ export default function SastojakPregled() {
     }
 
     async function obrisi(id) {
+
+        // Dohvat svih recepata
+        const odgovor = await ReceptService.get()
+        const recepti = odgovor.data
+
+        // Provjera koristi li se sastojak u nekom receptu
+        const koristiSe = recepti.some(recept =>
+            recept.sastojci?.some(s => String(s.sastojak) === String(id))
+        )
+        if (koristiSe) {
+            alert('Sastojak se koristi u receptima i ne može se obrisati!')
+            return
+        }
         if (!confirm('Sigurno obrisati?')) {
             return
         }
