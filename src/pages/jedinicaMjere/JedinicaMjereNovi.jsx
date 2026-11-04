@@ -14,7 +14,27 @@ export default function JedinicaMjereNovi() {
         e.preventDefault()
         setGreska("")
 
+        const ocisceniNaziv = naziv.trim()
+
+        if (!ocisceniNaziv) {
+            setGreska('Unesite naziv jedinice mjere')
+            return
+        }
         try {
+            // Dohvat svih jedinica mjere
+            const odgovor = await JedinicaMjereService.get()
+            const jediniceMjere = odgovor.data
+
+            // Provjera duplikata
+            const postoji = jediniceMjere.some(j =>
+                j.naziv.trim().toLocaleLowerCase('hr') ===
+                ocisceniNaziv.toLocaleLowerCase('hr')
+            )
+            if (postoji) {
+                setGreska('Jedinica mjere s tim nazivom već postoji!')
+                return
+            }
+
             await JedinicaMjereService.dodaj({
                 naziv: naziv.trim()
             })

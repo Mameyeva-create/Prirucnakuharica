@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import JedinicaMjereService from "../../services/jedinicaMjere/JedinicaMjereService";
 import { RouteNames } from "../../constants";
-import { Button, Col, Form, Row } from "react-bootstrap";
+import { Alert, Button, Col, Form, Row } from "react-bootstrap";
 import { useEffect } from "react";
 
 
@@ -11,13 +11,14 @@ export default function JedinicaMjerePromjena() {
     const navigate = useNavigate()
     const params = useParams()
     const [jedinicaMjere, setJedinicaMjere] = useState({})
+    const [greska, setGreska] = useState("")
 
     useEffect(() => {
         ucitajJedinicaMjere()
     }, [])
 
     async function ucitajJedinicaMjere() {
-       // debugger
+        // debugger
         await JedinicaMjereService.getById(params.id).then((odgovor) => {
             const i = odgovor.data
             setJedinicaMjere(i)
@@ -26,19 +27,36 @@ export default function JedinicaMjerePromjena() {
     }
 
     async function promijeni(jedinicaMjere) {
-        await JedinicaMjereService.promijeni(params.id, jedinicaMjere).then(() => {
-            navigate(RouteNames.JEDINICE_MJERE)
+        const odgovor = await JedinicaMjereService.get()
+        const jediniceMjere = odgovor.data
+        const ocisceniNaziv = jedinicaMjere.naziv.trim()
+        const postoji = jediniceMjere.some(j =>
+            String(j.id) !== String(params.id) &&
+            j.naziv.trim().toLocaleLowerCase('hr') ===
+            ocisceniNaziv.toLocaleLowerCase('hr')
+        )
+        if (postoji) {
+            setGreska('Jedinica mjere s tim nazivom već postoji!')
+            return
+        }
+        await JedinicaMjereService.promijeni(params.id, {
+            naziv: ocisceniNaziv
         })
+        navigate(RouteNames.JEDINICE_MJERE)
+
     }
 
     function odradiSubmit(e) {
         e.preventDefault()
+        setGreska("")
 
         const podaci = new FormData(e.target)
-
-        promijeni({
-            naziv: podaci.get('naziv')
-        })
+        const naziv = podaci.get('naziv').trim()
+        if (!naziv) {
+            setGreska('Unesite naziv jedinice mjere')
+            return
+        }
+        promijeni({ naziv })
     }
 
     return (
@@ -47,15 +65,15 @@ export default function JedinicaMjerePromjena() {
                 Promijeni JM
             </h3>
             <Form onSubmit={odradiSubmit}>
-
+{greska && (<Alert variant="danger">{greska}</Alert>)}
                 <Form.Group controlId="naziv">
                     <Form.Label>Naziv JM</Form.Label>
                     <Form.Control type="text"
-                        name="naziv" required 
-                        defaultValue={jedinicaMjere?.naziv || ""}/>
+                        name="naziv" required
+                        defaultValue={jedinicaMjere?.naziv || ""} />
                 </Form.Group>
 
-               
+
 
                 <Row className="mt-4">
                     <Col>

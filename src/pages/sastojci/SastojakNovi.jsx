@@ -21,6 +21,21 @@ export default function SastojakNovi() {
             return
         }
         try {
+            // Dohvat svih sastojaka
+            const odgovor = await SastojakService.get()
+            const sastojci = odgovor.data
+
+            // Provjera duplikata
+            const postoji = sastojci.some(s =>
+                s.naziv.trim().toLocaleLowerCase('hr') ===
+                ocisceniNaziv.toLocaleLowerCase('hr')
+            )
+            if (postoji) {
+                setGreska('Sastojak s tim nazivom već postoji!')
+                return
+            }
+
+            // Dodavanje novog sastojka
             await SastojakService.dodaj({
                 naziv: ocisceniNaziv
             })

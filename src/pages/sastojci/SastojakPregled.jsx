@@ -15,7 +15,6 @@ export default function SastojakPregled() {
         ucitajSastojci()
     }, [])
 
-
     async function ucitajSastojci() {
         const odgovor = await SastojakService.get()
         // console.table(odgovor.data)
