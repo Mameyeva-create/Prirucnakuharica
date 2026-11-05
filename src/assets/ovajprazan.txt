@@ -1,0 +1,89 @@
+# Analiza aplikacije „Priručna kuharica" 📖
+
+## 1. Pregled — što je aplikacija
+
+**Priručna kuharica** je React SPA aplikacija za vođenje receptarnice (CRUD za recepte, kategorije, sastojke i jedinice mjere), s pretragom, stranicenjem, PDF izvozom recepata i generiranjem testnih podataka.
+
+**Tehnički stack:**
+
+| Kategorija | Tehnologija |
+|---|---|
+| Framework | React 19 + Vite 8 |
+| Routing | React Router 7 |
+| UI | Bootstrap 5 + react-bootstrap + react-icons |
+| PDF | jsPDF + jspdf-autotable (custom Roboto fontovi) |
+| Testni podaci | @faker-js/faker |
+| Animacije | @lottiefiles/dotlottie-react |
+| Linting | oxlint (27 warnings, 0 errors) |
+| Build | ✅ prolazi (2,2 s) |
+
+## 2. Arhitektura
+
+Aplikacija prati klasičnu trodijelu (vjerovatno studentski projekt):
+
+```
+pages/ (UI) → services/ (podaci) → Podaci.js / LocalStorage
+```
+
+- **4 entiteta**: recepti, kategorije, sastojci, jedinice mjere
+- **Strategy pattern za izvor podataka**: `DATA_SOURCE` u `constants.js` bira između `*ServiceMemorija.js` i `*ServiceLocalStorage.js` (trenutno `'memorija'`), uz `PrazanServis` fallback
+- **Rute**: početna, pregled/novi/promjena/detalji za svaku entitetu, omiljeni, vegansko (query param), generiranje podataka
+- **Snažne strane**: dosljedna imenovanja na hrvatskom, konzistentan oblik odgovora `{ data }`, responzivne verzije tabela/kartica (desktop/mobile), pristupačnost (tabIndex, onKeyDown, aria-labels), validacija unosa
+
+## 3. 🐛 Pronađeni bugovi (konkretni)
+
+1. **`src/components/ReceptPDFGenerator.jsx:73`** — `recept?.omiljeno` umjesto `recept?.omiljen` → u PDF-u uvijek piše „Omiljeni recept: Ne"
+2. **`src/pages/recepti/ReceptPregled.jsx:151`** — `style={{ width: '1$' }}` — nevažeća CSS vrijednost (vjerojatno umjesto `80px`)
+3. **`src/pages/kategorije/GeneriranjeKategorija.jsx`** — više problema:
+   - u funkciji **generiranja**, catch poruka glasi „Brisanje nije uspjelo" (copy-paste greška)
+   - neiskorišteni importovi: `tr` iz fakera i `kategorije` iz Podaca
+   - komponenta se zove `GeneriranjeRecepata` (pogrešno ime)
+   - `postojece` se učitava ali nikada ne koristi (nema provjere duplikata pri generiranju — s 1000 komadi dobivaš 66× svaku kategoriju)
+   - uspjeh: „Uspješno testnih kategorija" — nepotpuna rečenica
+4. **`src/pages/recepti/ReceptNovi.jsx`** — 
+   - `key={ts.sastojak}` u tabeli odabranih sastojaka: dodaješ li isti sastojak dvaput, React keyevi se dupliraju
+   - `dodajStavku()` ne sprječava dupliranje sastojka (iako commit „Kontrola duplikata" to sugerira)
+   - tipfeler: „Vrijeme **nora** biti između 1 i 300 minuta"
+5. **Inkonsistentne vraćene vrijednosti**: `getById` u Memorija servisu vraća `undefined`, u LocalStorageu `null`
+6. **`ReceptServiceLocalStorage.js`** — `JSON.parse` bez try/catch (korumpirani storage = crash) + hardkodirani `slikePoId` map koji **duplicira** `slikeRecepata.js` i podatke u `ReceptPodaci.js` (trostruka duplicacija putanja slika)
+
+## 4. 🗑 Mrtvi kod / nedosljednosti
+
+| Problem | Lokacija |
+|---|---|
+| `Vegansko.jsx` + `RouteNames.VEGANSKO` — stranica nije registrirana u `App.jsx` (filtriranje radi preko query parama) | `pages/recepti/Vegansko.jsx` |
+| `RecipeCard.jsx` — nikad ne koristi se, referencira `recept.slika` | `components/` |
+| `dohvatiStranicu()` u `ReceptService.js` — UI radi paginaciju sam; funkcija neiskorištena | `services/recepti/` |
+| Ruski komentar `// Справа: все пункты меню` | `Izbornik.jsx:57` |
+| `.DS_Store` fajlovi, `kasnije.txt`, `ovajprazan.txt` u repu | svugdje |
+
+## 5. ⚠️ Dizajnerske / arhitektonske primjedbe
+
+- **Recept → Kategorija veza je po *nazivu* (string), ne po ID-u**. Brisanje/renomiranje kategorije ostavlja „sirske" veze u receptima. Isto važi za `sastojci: [{sastojak: id}]` — ako obrišeš sastojak, recept pokazuje „Nepoznato".
+- **Seed podaci sadrže netočne oznake**: „Piletina s povrćem" i „Čokoladni kolač" (jaja, maslac) označeni su `vegansko: true` — pogrešno za filter „Vegansko"
+- **`DATA_SOURCE` usporedba je case-sensitive**: `'localstorage'` umjesto `'LocalStorage'` tišano pali na prazni servis (samo `console.error`) — lakše je pogriješiti nego očekuješ
+- **`npm run lint` radiće grešku**: `eslint.config.js` importira `@eslint/js`, `globals`, `eslint-plugin-react-hooks`, `eslint-plugin-react-refresh` — nijedan nije u `package.json` (u node_modulesu postoji samo `oxlint`)
+- **Nema 404 rute** (`<Route path="*">`), nema testova, README je default Vite template
+- **Bundle: 1,35 MB** (452 kB gzip) — jsPDF, faker, lottie i bootstrap ujedno; Vite upravo upozorava na to
+
+## 6. ✅ Preporučeni koraci (prioritetski)
+
+**Odmah (bugovi):**
+1. `omiljeno` → `omiljen` u PDF generatoru
+2. `width: '1$'` → `width: '80px'`
+3. Ispraviti poruke/ime komponente u `GeneriranjeKategorija.jsx` + dodati provjeru duplikata
+4. `key={ts.sastojak + '-' + index}` ili sprječavanje duplih sastojaka u `ReceptNovi`
+5. `DATA_SOURCE.trim().toLowerCase()` u svim 4 servisa + try/catch oko `JSON.parse`
+
+**Srednjeročno (kvaliteta):**
+6. Ukloniti mrtvi kod (Vegansko, RecipeCard, dohvatiStranicu, nepotrebne importove)
+7. Uskladiti `npm run lint` s onim što je instalirano (ili dodati eslint, ili mijenjat skript na `oxlint`)
+8. Recept→kategorija po ID-u + kaskadna provjera pri brisanju
+9. Splitanje bundle-a: `React.lazy` za `ReceptPDFGenerator` (jsPDF je najveći krivac)
+10. 404 ruta, loading stanja, ispravan README
+
+**Napomena o Gitu:** trenutno si na branchu `Testiranje` (syncan s `origin/main`), postoje još `mvp` i `Dobra`.
+
+---
+
+Ako želiš, mogu odmah ispraviti bugove iz točke 3 (1–5) — sve su male, precizne promjene. 🛠
