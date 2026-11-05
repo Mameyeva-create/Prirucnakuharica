@@ -189,14 +189,21 @@ export default function GeneriranjeRecepata() {
         setGreska(false)
 
         try {
-            const [odgovorKategorije, odgovorSastojaka] =
+            const [odgovorKategorije, odgovorSastojaka, odgovorRecepata] =
                 await Promise.all([
                     KategorijaService.get(),
-                    SastojakService.get()
-                ]);
+                    SastojakService.get(),
+                    ReceptService.get()
+                ])
 
             const kategorije = odgovorKategorije.data
             const sastojci = odgovorSastojaka.data
+
+            // Postojeći nazivi koriste se za izbjegavanje duplikata
+            const postojece = odgovorRecepata.data || []
+            const zauzetiNazivi = new Set(
+                postojece.map(recept => normalizirajNaziv(recept.naziv))
+            )
 
             if (!kategorije?.length || !sastojci?.length) {
                 throw new Error("Nema kategorija ili sastojaka.")
@@ -210,7 +217,7 @@ export default function GeneriranjeRecepata() {
                         const sastojak = sastojci.find(
                             s => s && normalizirajNaziv(s.naziv) === normalizirajNaziv(naziv)
                         )
-                        if (!sastojak) return null;
+                        if (!sastojak) return null
                         return { sastojak: sastojak.id, kolicina, jedMjere: jedinica }
                     })
                 if (stavke.some(stavka => stavka === null)) {
@@ -228,7 +235,9 @@ export default function GeneriranjeRecepata() {
                 const { predlozak, kategorija, stavke } = odabrani
 
                 const recept = {
-                    naziv: predlozak.naziv,
+                    naziv: generirajJedinstveniNaziv
+                        (predlozak.naziv,
+                            zauzetiNazivi),
                     kategorija: kategorija.naziv,
                     vrijeme: predlozak.vrijeme,
                     slika: predlozak.slika,
@@ -240,25 +249,25 @@ export default function GeneriranjeRecepata() {
                     omiljen: faker.datatype.boolean(),
                     vegansko: predlozak.vegansko,
                     generirano: true
-                };
+                }
 
-                await ReceptService.dodaj(recept);
-                dodano++;
+                await ReceptService.dodaj(recept)
+                dodano++
             }
-            setPoruka(`Uspješno dodano recepata: ${dodano}.`);
+            setPoruka(`Uspješno dodano recepata: ${dodano}.`)
         } catch (error) {
-            console.error("Greška pri generiranju recepata:", error);
-            setGreska(true);
-            setPoruka(error.message || "Generiranje nije uspjelo. Provjeri konzolu");
+            console.error("Greška pri generiranju recepata:", error)
+            setGreska(true)
+            setPoruka(error.message || "Generiranje nije uspjelo. Provjeri konzolu")
         } finally {
-            setUcitavanje(false);
+            setUcitavanje(false)
         }
     }
 
     async function obrisiGeneriraneRecepte() {
         const potvrda = window.confirm(
             "Želiš li obrisati sve recepte koje je stvorio generator?"
-        );
+        )
 
         if (!potvrda) return;
 
@@ -267,10 +276,10 @@ export default function GeneriranjeRecepata() {
         setGreska(false);
 
         try {
-            const odgovor = await ReceptService.get();
+            const odgovor = await ReceptService.get()
             const generirani = odgovor.data.filter(
                 recept => recept.generirano === true
-            );
+            )
 
             for (const recept of generirani) {
                 await ReceptService.obrisi(recept.id);
@@ -278,13 +287,13 @@ export default function GeneriranjeRecepata() {
 
             setPoruka(
                 `Obrisano generiranih recepata: ${generirani.length}.`
-            );
+            )
         } catch (error) {
             console.error("Greška pri brisanju recepata:", error);
             setGreska(true);
             setPoruka("Brisanje nije uspjelo. Provjeri konzolu.");
         } finally {
-            setUcitavanje(false);
+            setUcitavanje(false)
         }
     }
 
@@ -338,7 +347,7 @@ export default function GeneriranjeRecepata() {
                 </Alert>
             )}
         </div>
-    );
+    )
 }
 
 
@@ -351,4 +360,20 @@ function normalizirajNaziv(naziv) {
         .normalize('NFD')
         .replace(/[\u0300-\u036f]/g, '')
         .trim();
+}
+/**
+ * Vraća jedinstveni naziv recepta.
+ * Ako naziv već postoji, dodaje broj u zagradi: (2), (3), ...
+ * Set se odmah ažurira kako ni recepti iz iste generacije ne bi imali
+ * jednake nazive.
+ */
+function generirajJedinstveniNaziv(osnovniNaziv, zauzetiNazivi) {
+    let naziv = osnovniNaziv
+    let broj = 2
+    while (zauzetiNazivi.has(normalizirajNaziv(naziv))) {
+        naziv = `${osnovniNaziv} (${broj})`
+        broj++
+    }
+    zauzetiNazivi.add(normalizirajNaziv(naziv))
+    return naziv
 }

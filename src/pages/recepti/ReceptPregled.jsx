@@ -148,7 +148,7 @@ export default function ReceptPregled() {
                                 <th>Opis</th>
                                 <th>Omiljen</th>
                                 <th>Vegansko</th>
-                                <th className="text-end" style={{ width: '1$' }}>Akcija</th>
+                                <th className="text-end" style={{ width: '80px' }}>Akcija</th>
                             </tr>
                         </thead>
 

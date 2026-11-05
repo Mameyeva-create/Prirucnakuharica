@@ -128,7 +128,7 @@ export default function ReceptNovi() {
         }
 
         if (isNaN(vrijeme) || vrijeme < 1 || vrijeme > 300) {
-            alert('Vrijeme nora biti između 1 i 300 minuta')
+            alert('Vrijeme mora biti između 1 i 300 minuta')
             return
         }
 

@@ -3,8 +3,6 @@ import { useState } from "react";
 import { Button, Form, Alert } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import KategorijaService from "../../services/kategorije/KategorijaService";
-import { kategorije } from "../../services/kategorije/KategorijaPodaci";
-import { tr } from "@faker-js/faker";
 
 
 const nazivKategorija = [
@@ -49,24 +47,32 @@ export default function GeneriranjeRecepata() {
         try {
             const odgpvor = await KategorijaService.get()
             const postojece = odgpvor.data || []
+            const nazivi = new Set(postojece.map(k => k.naziv.trim().toLowerCase()))
 
             let dodano = 0
             for (let i = 0; i < broj; i++) {
-                const naziv = nazivKategorija[
-                    i % nazivKategorija.length
-                ]
+                const osnovniNaziv = nazivKategorija[
+                    i % nazivKategorija.length]
+                let naziv = osnovniNaziv
+                let sufiks = 2
+                // Traži slobodan, jedinstven naziv
+                while (nazivi.has(naziv.toLowerCase())) {
+                    naziv = `${osnovniNaziv} ${sufiks}`
+                    sufiks++
+                }
                 const kategorija = {
-                    naziv: naziv,
+                    naziv,
                     generirano: true
                 }
                 await KategorijaService.dodaj(kategorija)
+                nazivi.add(naziv.toLowerCase())
                 dodano++;
             }
-            setPoruka(`Uspješno testnih kategorija: ${dodano}.`)
+            setPoruka(`Uspješno generirano testnih kategorija: ${dodano}.`)
         } catch (error) {
-            console.error('Greška pri brisanju kategorija:', error)
+            console.error('Greška pri generiranju kategorija:', error)
             setGreska(true)
-            setPoruka(`Brisanje nije uspjelo: ${error.message || error}`)
+            setPoruka(`Generiranje kategorija nije uspjelo: ${error.message || error}`)
         } finally {
             setUcitavanje(false);
         }
@@ -88,17 +94,16 @@ export default function GeneriranjeRecepata() {
             const generirane = (odgovor.data || []).filter(
                 kategorija => kategorija.generirano === true
             )
-
             for (const kategorija of generirane) {
                 await KategorijaService.obrisi(kategorija.id);
             }
             const provjera = await KategorijaService.get()
-const preostale =(provjera.data || []).filter(
-    kategorija => kategorija.generirano === true)
+            const preostale = (provjera.data || []).filter(
+                kategorija => kategorija.generirano === true)
 
-    if (preostale.length > 0) {
-        throw new Error(`Preostalo je ${preostale.length} generiranih kategorija`)
-    }
+            if (preostale.length > 0) {
+                throw new Error(`Preostalo je ${preostale.length} generiranih kategorija`)
+            }
             setPoruka(
                 `Obrisano generiranih kategorija: ${generirane.length}.`)
         } catch (error) {
@@ -161,7 +166,7 @@ const preostale =(provjera.data || []).filter(
                 </Alert>
             )}
         </div>
-    );
+    )
 }
 
 

@@ -70,7 +70,7 @@ export default function ReceptPDFGenerator({ recept, sviSastojci }) {
                 [`Kategorija: ${recept?.kategorija || '-'}`],
                 [`Vrijeme pripreme: ${recept?.vrijeme || '-'}`],
                 [`Veganski recept: ${recept?.vegansko ? 'Da' : 'Ne'}`],
-                [`Omiljeni recept: ${recept?.omiljeno ? 'Da' : 'Ne'}`]
+                [`Omiljeni recept: ${recept?.omiljen ? 'Da' : 'Ne'}`]
             ],
             headStyles: {
                 fillColor: [241, 245, 249],
