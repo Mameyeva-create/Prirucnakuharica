@@ -5,7 +5,8 @@ async function get() {
 }
 
 async function getById(id) {
-    return { data: recepti.find(i => i.id === Number(id)) }
+    const recept = recepti.find(i => i.id === Number(id))
+    return { data: recept ?? null }
 }
 
 async function dodaj(recept) {

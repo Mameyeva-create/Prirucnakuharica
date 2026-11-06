@@ -56,7 +56,6 @@ export default function ReceptNovi() {
     }
 
     function dodajStavku() {
-
         // console.log("sastojak",trenutniSastojak.id)
         // console.log("jm",trenutnaJedinicaMjere)
         // console.log("količina", trenutnaKolicina)
@@ -65,10 +64,18 @@ export default function ReceptNovi() {
             alert('Odaberite sastojak, unesite količinu i izaberite jedinicu mjere')
             return
         }
+        const postoji = odabraniSastojci.some(
+            s => Number(s.sastojak) === Number(trenutniSastojak.id)
+        )
+        if (postoji) {
+            alert('Ovaj sastojak već je dodan u recept')
+            return
+        }
         const jedinica = jediniceMjere.find(jm => Number(jm.id) === Number(trenutnaJedinicaMjere))
         if (!jedinica) return
 
         const nova = {
+            id: Date.now(),
             sastojak: trenutniSastojak.id,
             kolicina: Number(trenutnaKolicina),
             jedMjere: jedinica.naziv,
@@ -198,7 +205,7 @@ export default function ReceptNovi() {
     }
 
     function ukloniSastojak(id) {
-        setOdabraniSastojci(odabraniSastojci.filter(st => Number(st.sastojak) !== Number(id)))
+        setOdabraniSastojci(odabraniSastojci.filter(st => (st.id) !== id))
     }
 
     return (
@@ -247,13 +254,14 @@ export default function ReceptNovi() {
                                             <div className="mt-3">
                                                 <img src={slika} alt="Pregled fotografije recepta"
                                                     style={{ width: '100%', maxHeight: '220px', objectFit: 'cover', borderRadius: '8px' }} />
-                                                    <Button type="button" variant="outline-danger" size="sm"
-                                                    className="mt-2" 
+                                                <Button type="button" variant="outline-danger" size="sm"
+                                                    className="mt-2"
                                                     onClick={() => {
                                                         setSlika('')
                                                         document.getElementById
-                                                        ('slikaRecepta').value = ''}}
-                                                        >Ukloni fotografiju</Button>
+                                                            ('slikaRecepta').value = ''
+                                                    }}
+                                                >Ukloni fotografiju</Button>
                                             </div>
                                         )}
                                     </Form.Group>
@@ -375,7 +383,7 @@ export default function ReceptNovi() {
                                                             const sastojak = sviSastojci.find(
                                                                 s => Number(s.id) === Number(ts.sastojak))
                                                             return (
-                                                                <tr key={ts.sastojak}>
+                                                                <tr key={ts.id}>
                                                                     <td>{sastojak?.naziv || 'Nepoznato'}</td>
                                                                     <td>{ts.kolicina}</td>
                                                                     <td>{ts.jedMjere}</td>
@@ -383,7 +391,7 @@ export default function ReceptNovi() {
                                                                         <Button
                                                                             variant="danger"
                                                                             size="sm"
-                                                                            onClick={() => ukloniSastojak(ts.sastojak)}
+                                                                            onClick={() => ukloniSastojak(ts.id)}
                                                                         >
                                                                             Obriši
                                                                         </Button>

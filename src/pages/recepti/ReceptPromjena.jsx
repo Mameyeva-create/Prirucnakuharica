@@ -66,8 +66,22 @@ export default function ReceptPromjena() {
     }
 
     function dodajStavku() {
-        if (!trenutniSastojak.id || !trenutnaKolicina || !trenutnaJedinicaMjere) {
-            alert('Molimo odaberite sastojak, unesite količinu i izaberite jedinicu mjere.')
+        const nazivUnesen = pretragaSastojka.trim().toLocaleLowerCase('hr')
+        const sastojakPoNazivu = sviSastojci.find(
+            s => s.naziv.trim().toLocaleLowerCase('hr') === nazivUnesen
+        )
+        const sastojakId = trenutniSastojak.id || sastojakPoNazivu?.id
+        const postoji = odabraniSastojci.some(
+            s => Number(s.sastojak) === Number(sastojakId)
+        )
+        if (sastojakId && postoji) {
+            alert('Ovaj sastojak već je dodan u recept')
+            return
+        }
+        if (!trenutniSastojak.id || !trenutnaKolicina || !trenutnaJedinicaMjere ||
+            !Number.isFinite(Number(trenutnaKolicina)) || 
+            Number(trenutnaKolicina) <= 0 || !trenutnaJedinicaMjere) {
+            alert('Molimo odaberite sastojak, unesite količinu i izaberite jedinicu mjere')
             return
         }
         const jedinica = jediniceMjere.find(jm => jm.id === Number(trenutnaJedinicaMjere))
@@ -75,7 +89,7 @@ export default function ReceptPromjena() {
         // console.log('ODABRANI SASTOJAK:', trenutniSastojak)
         // console.log('ODABRANA JEDINICA ID:', trenutnaJedinicaMjere)
         // console.log('PRONAĐENA JEDINICA:', jedinica)
-
+if (!jedinica) return
         const nova = {
             sastojak: trenutniSastojak.id,
             kolicina: Number(trenutnaKolicina),
