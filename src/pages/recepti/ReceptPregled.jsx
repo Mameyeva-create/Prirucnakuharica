@@ -69,6 +69,7 @@ export default function ReceptPregled() {
     }
 
     async function generirajPDFZaRecept(recept) {
+  
         const generiraj = ReceptPDFGenerator({
             recept,
             sviSastojci
@@ -176,6 +177,7 @@ export default function ReceptPregled() {
                                             onClick={(e) => {
                                                 e.stopPropagation()
                                                 generirajPDFZaRecept(recept)
+                                               
                                             }}
                                         />
                                     </td>

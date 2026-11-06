@@ -75,7 +75,7 @@ export default function SastojakPregled() {
         }
     }, [])
     const filtriraniSastojci = sastojci.filter(s =>
-        s.naziv.toLocaleLowerCase('hr').includes(
+        s.naziv?.toLocaleLowerCase('hr').includes(
             trazeniPojam.toLocaleLowerCase('hr')
         )
     )

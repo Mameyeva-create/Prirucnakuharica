@@ -17,11 +17,11 @@ export default function ReceptPDFGenerator({ recept, sviSastojci }) {
     }
 
     const generirajPDF = async () => {
-        const pdfWindow = window.open('', '_blank')
+       // const pdfWindow = window.open('', '_blank')
 
         const [regBase64, boldBase64] = await Promise.all([
-            fetchFontAsBase64(robotoRegular),
-            fetchFontAsBase64(robotoBold)
+            fetchFontAsBase64('/fonts/Roboto-Regular.ttf'),
+            fetchFontAsBase64('/fonts/Roboto-Bold.ttf')
         ])
 
         const doc = new jsPDF()
@@ -188,13 +188,11 @@ export default function ReceptPDFGenerator({ recept, sviSastojci }) {
             )
         }
         // OTVARANJE PDF-a
-      const pdfBlob = doc.output('blob')
-const pdfUrl = URL.createObjectURL(pdfBlob)
+  
+         const pdfBlob = doc.output('blob');
+        const pdfUrl = URL.createObjectURL(pdfBlob);
+        window.open(pdfUrl, '_blank');
 
-if (pdfWindow) {
-    pdfWindow.location.href = pdfUrl
-} else {
-    alert('Molimo dopustite otvaranje novih prozora za PDF')
-}}
+    }
     return generirajPDF
     }

@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import KategorijaService from "../../services/kategorije/KategorijaService"
 import SastojakService from "../../services/sastojci/SastojakService";
 import JedinicaMjereService from "../../services/jedinicaMjere/JedinicaMjereService";
+import { sastojci } from "../../services/sastojci/SastojakPodaci";
 
 
 export default function ReceptNovi() {
@@ -78,7 +79,7 @@ export default function ReceptNovi() {
             id: Date.now(),
             sastojak: trenutniSastojak.id,
             kolicina: Number(trenutnaKolicina),
-            jedMjere: jedinica.naziv,
+            jedMjere: jedinica.id,
         }
         // console.log(JSON.stringify(nova))
 
@@ -153,7 +154,7 @@ export default function ReceptNovi() {
             omiljen: podaci.get('omiljen') === 'on',
             vegansko: podaci.get('vegansko') === 'on'
         }
-        console.log(JSON.stringify(recept))
+       // console.log(JSON.stringify(recept))
         try {
             await ReceptService.dodaj(recept)
             navigate(RouteNames.RECEPTI)
@@ -206,6 +207,13 @@ export default function ReceptNovi() {
 
     function ukloniSastojak(id) {
         setOdabraniSastojci(odabraniSastojci.filter(st => (st.id) !== id))
+    }
+
+    function nazivJM(sifraJM){
+     //   console.log(jediniceMjere)
+       // console.log(sifraJM)
+        const jm = jediniceMjere.find(jm=>jm.id===sifraJM)
+        return jm.naziv
     }
 
     return (
@@ -386,7 +394,7 @@ export default function ReceptNovi() {
                                                                 <tr key={ts.id}>
                                                                     <td>{sastojak?.naziv || 'Nepoznato'}</td>
                                                                     <td>{ts.kolicina}</td>
-                                                                    <td>{ts.jedMjere}</td>
+                                                                    <td>{nazivJM(ts.jedMjere)}</td>
                                                                     <td>
                                                                         <Button
                                                                             variant="danger"

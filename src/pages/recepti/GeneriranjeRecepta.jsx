@@ -188,80 +188,33 @@ export default function GeneriranjeRecepata() {
         setPoruka("")
         setGreska(false)
 
-        try {
-            const [odgovorKategorije, odgovorSastojaka, odgovorRecepata] =
-                await Promise.all([
-                    KategorijaService.get(),
-                    SastojakService.get(),
-                    ReceptService.get()
-                ])
-
-            const kategorije = odgovorKategorije.data
-            const sastojci = odgovorSastojaka.data
-
-            // Postojeći nazivi koriste se za izbjegavanje duplikata
-            const postojece = odgovorRecepata.data || []
-            const zauzetiNazivi = new Set(
-                postojece.map(recept => normalizirajNaziv(recept.naziv))
-            )
-
-            if (!kategorije?.length || !sastojci?.length) {
-                throw new Error("Nema kategorija ili sastojaka.")
-            }
-            const dostupniPredlosci = predlosci.map(predlozak => {
-                const kategorija = kategorije.find(k => normalizirajNaziv(k.naziv) ===
-                    normalizirajNaziv(predlozak.kategorija))
-                if (!kategorija) return null
-                const stavke = predlozak.sastojci
-                    .map(([naziv, kolicina, jedinica]) => {
-                        const sastojak = sastojci.find(
-                            s => s && normalizirajNaziv(s.naziv) === normalizirajNaziv(naziv)
-                        )
-                        if (!sastojak) return null
-                        return { sastojak: sastojak.id, kolicina, jedMjere: jedinica }
-                    })
-                if (stavke.some(stavka => stavka === null)) {
-                    return null
-                }
-                return { predlozak, kategorija, stavke }
-            }).filter(Boolean)
-            if (!dostupniPredlosci.length) {
-                throw new Error("Nijedan predložak nema sastojke koji postoje u bazi")
-            }
-            let dodano = 0
+       
             for (let i = 0; i < broj; i++) {
-                const odabrani = faker.helpers.arrayElement(dostupniPredlosci)
+               
 
-                const { predlozak, kategorija, stavke } = odabrani
-
-                const recept = {
-                    naziv: generirajJedinstveniNaziv
-                        (predlozak.naziv,
-                            zauzetiNazivi),
-                    kategorija: kategorija.naziv,
-                    vrijeme: predlozak.vrijeme,
-                    slika: predlozak.slika,
-                    slikaPutanja: predlozak.slikaPutanja,
-                    opis: predlozak.opis,
-                    priprema: predlozak.priprema,
-                    osnovnePorcije: 2,
-                    sastojci: stavke,
-                    omiljen: faker.datatype.boolean(),
-                    vegansko: predlozak.vegansko,
-                    generirano: true
-                }
-
-                await ReceptService.dodaj(recept)
-                dodano++
+                await ReceptService.dodaj({
+                     id: 1,
+        naziv: 'čšćđž ČŠĆĐŽ ' + i,
+        kategorija: 'Ručak',
+        vrijeme: 20,
+        slikaPutanja: '/slike/carbonara.jpg',
+        opis: 'Jednostavna i iskusna tjestenina s jajima,sirom i pancetom.',
+        sastojci: [
+            { sastojak: 1, kolicina: 200, jedMjere: 'g' },
+            { sastojak: 2, kolicina: 100, jedMjere: 'g' },
+            { sastojak: 3, kolicina: 2, jedMjere: 'kom' },
+            { sastojak: 4, kolicina: 50, jedMjere: 'g' },
+            { sastojak: 9, kolicina: 1, jedMjere: 'prstohvat' },
+            { sastojak: 10, kolicina: 1, jedMjere: 'po ukusu' }
+        ],
+        priprema: '1. Skuhajte tjesteninu prema uputama na pakiranju.\n2. Narežite pancetu i popržite je na tavi.\n3. Umutite jaja i naribani sir.\n4. Pomiješajte vruću tjesteninu s pancetom i smjesom jaja i sira.\n5. Poslužite odmah.',
+        omiljen: true,
+        vegansko: false
+                })
+               
             }
-            setPoruka(`Uspješno dodano recepata: ${dodano}.`)
-        } catch (error) {
-            console.error("Greška pri generiranju recepata:", error)
-            setGreska(true)
-            setPoruka(error.message || "Generiranje nije uspjelo. Provjeri konzolu")
-        } finally {
-            setUcitavanje(false)
-        }
+            setPoruka(`Uspješno dodano recepata: ${broj}.`)
+       setUcitavanje(false)
     }
 
     async function obrisiGeneriraneRecepte() {

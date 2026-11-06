@@ -93,7 +93,7 @@ if (!jedinica) return
         const nova = {
             sastojak: trenutniSastojak.id,
             kolicina: Number(trenutnaKolicina),
-            jedMjere: jedinica.naziv
+            jedMjere: jedinica.id
         }
 
         setOdabraniSastojci([...odabraniSastojci, nova])
@@ -189,6 +189,13 @@ if (!jedinica) return
 
     function ukloniSastojak(idSastojka) {
         setOdabraniSastojci(odabraniSastojci.filter(st => Number(st.sastojak) !== Number(idSastojka)))
+    }
+
+     function nazivJM(sifraJM){
+     //   console.log(jediniceMjere)
+       // console.log(sifraJM)
+        const jm = jediniceMjere.find(jm=>jm.id===sifraJM)
+        return jm.naziv
     }
 
     return (
@@ -370,7 +377,8 @@ if (!jedinica) return
                                                                 <tr key={ts.sastojak}>
                                                                     <td>{sastojak.naziv}</td>
                                                                     <td>{ts.kolicina}</td>
-                                                                    <td>{ts.jedMjere} </td>
+                                                                    <td>{
+                                                                    nazivJM(ts.jedMjere)} </td>
                                                                     <td>
                                                                         <Button
                                                                             variant="danger"

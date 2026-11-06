@@ -12,6 +12,7 @@ export default function SastojakNovi() {
     const [greska, setGreska] = useState("")
 
     async function odradiSubmit(e) {
+
         e.preventDefault()
         setGreska("")
 
@@ -26,8 +27,8 @@ export default function SastojakNovi() {
             const sastojci = odgovor.data
 
             // Provjera duplikata
-            const postoji = sastojci.some(s =>
-                s.naziv.trim().toLocaleLowerCase('hr') ===
+            const postoji = sastojci?.some(s =>
+                s.naziv?.trim().toLocaleLowerCase('hr') ===
                 ocisceniNaziv.toLocaleLowerCase('hr')
             )
             if (postoji) {
@@ -35,7 +36,8 @@ export default function SastojakNovi() {
                 return
             }
 
-            // Dodavanje novog sastojka
+           // Dodavanje novog sastojka
+           console.log('Dodajem sastojak: ' + ocisceniNaziv)
             await SastojakService.dodaj({
                 naziv: ocisceniNaziv
             })
