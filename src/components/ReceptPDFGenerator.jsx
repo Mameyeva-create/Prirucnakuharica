@@ -1,7 +1,6 @@
 import { jsPDF } from 'jspdf';
 import { autoTable } from 'jspdf-autotable';
-import robotoRegular from '../assets/fonts/Roboto-Regular.ttf'
-import robotoBold from '../assets/fonts/Roboto-Bold.ttf'
+
 
 export default function ReceptPDFGenerator({ recept, sviSastojci }) {
 
