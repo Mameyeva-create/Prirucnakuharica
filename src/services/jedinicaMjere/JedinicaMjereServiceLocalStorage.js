@@ -1,20 +1,14 @@
-import { jediniceMjere as pocetniSastojci } from './JedinicaMjerePodaci'
-
 
 const STORAGE_KEY = 'jediniceMjere'
 
 function sortirajJedinice(jedinice) {
     return [...jedinice].sort((a, b) =>
-        a.naziv.localeCompare(b.naziv, 'hr'))
+        a.naziv?.localeCompare(b.naziv, 'hr'))
 }
 
 function dohvatiSveIzStorage() {
     const podaci = localStorage.getItem(STORAGE_KEY)
-    if (podaci) {
-        return JSON.parse(podaci)
-    }
-    spremiUStorage(pocetniSastojci)
-    return [...pocetniSastojci]
+    return podaci ? JSON.parse(podaci) : []
 }
 
 function spremiUStorage(podaci) {
@@ -39,13 +33,13 @@ async function dodaj(sastojak) {
 
     const noviJedinicaMjere = {
         ...sastojak,
-        id: jedinicaMjere.length === 0
+        id: !jedinicaMjere || jedinicaMjere.length === 0
             ? 1
-            : Math.max(...jedinicaMjere.map(i => i.id)) + 1
+            : Math.max(...jedinicaMjere?.map(i => i.id)) + 1
     }
 
     jedinicaMjere.push(noviJedinicaMjere)
-    spremiUStorage(sortirajJedinice(jedinicaMjere))
+    spremiUStorage(jedinicaMjere)
 
 }
 

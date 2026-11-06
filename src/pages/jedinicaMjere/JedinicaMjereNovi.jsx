@@ -27,7 +27,7 @@ export default function JedinicaMjereNovi() {
 
             // Provjera duplikata
             const postoji = jediniceMjere.some(j =>
-                j.naziv.trim().toLocaleLowerCase('hr') ===
+                j.naziv?.trim().toLocaleLowerCase('hr') ===
                 ocisceniNaziv.toLocaleLowerCase('hr')
             )
             if (postoji) {

@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import KategorijaService from "../../services/kategorije/KategorijaService"
 import SastojakService from "../../services/sastojci/SastojakService";
 import JedinicaMjereService from "../../services/jedinicaMjere/JedinicaMjereService";
-import { sastojci } from "../../services/sastojci/SastojakPodaci";
+
 
 
 export default function ReceptNovi() {

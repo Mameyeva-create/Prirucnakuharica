@@ -44,7 +44,7 @@ export default function JedinicaMjerePregled() {
     }, [])
     async function ucitajJediniceMjere() {
         const odgovor = await JedinicaMjereService.get()
-        // console.table(odgovor.data)
+         console.table(odgovor.data)
         setJediniceMjere(odgovor.data)
     }
 
@@ -73,7 +73,7 @@ export default function JedinicaMjerePregled() {
         ucitajJediniceMjere()
     }
     const filtriraneJediniceMjere = jediniceMjere.filter(j =>
-        j.naziv.toLocaleLowerCase('hr').includes(
+        j.naziv?.toLocaleLowerCase('hr').includes(
             trazeniPojam.toLocaleLowerCase('hr')
         )
     )
