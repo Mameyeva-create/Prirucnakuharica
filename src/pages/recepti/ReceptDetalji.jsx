@@ -5,6 +5,7 @@ import { Button, Form } from "react-bootstrap"
 import { slikeRecepata } from "../../services/recepti/slikeRecepata"
 import SastojakService from "../../services/sastojci/SastojakService"
 import ReceptPDFGenerator from "../../components/ReceptPDFGenerator"
+import JedinicaMjereService from "../../services/jedinicaMjere/JedinicaMjereService"
 
 export default function ReceptDetalji() {
     const { id } = useParams()
@@ -13,7 +14,9 @@ export default function ReceptDetalji() {
     const [recept, setRecept] = useState(null)
     const [porcije, setPorcije] = useState(2)
     const [sviSastojci, setSviSastojci] = useState([])
-    const generirajPDF = ReceptPDFGenerator({ recept, sviSastojci })
+    const [jediniceMjere, setJediniceMjere] = useState([])
+    const generirajPDF = ReceptPDFGenerator({ recept, sviSastojci, jediniceMjere })
+
 
     async function promjeniOmiljen() {
         const azuriraniRecept = {
@@ -30,10 +33,14 @@ export default function ReceptDetalji() {
     useEffect(() => {
         async function ucitajSastojke() {
             try {
-                const odgovor = await SastojakService.get()
-                setSviSastojci(Array.isArray(odgovor.data) ? odgovor.data : [])
+                const [odgovorSastojci, odgovorJedinice] = await Promise.all([
+                    SastojakService.get(),
+                    JedinicaMjereService.get()
+                ])
+                setSviSastojci(odgovorSastojci.data || [])
+                setJediniceMjere(odgovorJedinice.data || [])
             } catch (error) {
-                console.error("Greška pri učinavanju sastojka", error)
+                console.error("Greška pri učitavanju podataka", error)
             }
         }
         ucitajSastojke()
@@ -56,16 +63,13 @@ export default function ReceptDetalji() {
         const kolicina = Number(sastojak.kolicina)
         const novaKolicina = Number.isFinite(kolicina) ? kolicina * porcije / 2 : 0
         const prikazKolicine = Number(novaKolicina.toFixed(2)).toLocaleString("hr-HR")
-
         const podatakSastojka = sviSastojci.find(
             item => Number(item.id) === Number(sastojak.sastojak))
-
+        const jedinica = jediniceMjere.find(
+            jm => Number(jm.id) === Number(sastojak.jedMjere))
         const nazivSastojka = podatakSastojka?.naziv || 'Nepoznato'
-        const jedinica = sastojak.jedMjere || ""
-
-        return [prikazKolicine, jedinica, nazivSastojka]
-            .filter(Boolean)
-            .join(' ')
+        const nazivJedinice = jedinica?.naziv || 'Nepoznato'
+        return `${prikazKolicine} ${nazivJedinice} ${nazivSastojka}`
     }
 
     if (!recept || !recept.id) {
@@ -152,7 +156,7 @@ export default function ReceptDetalji() {
             </p>
             <div className="d-flex gap-2 flex-wrap mt-4">
                 <Button variant="secondary" onClick={() => navigate(-1)}>Natrag</Button>
-<Button variant="outline-success" onClick={generirajPDF}>📄 Izvezi recept u PDF</Button>
+                <Button variant="outline-success" onClick={generirajPDF}>📄 Izvezi recept u PDF</Button>
             </div>
         </div>
     )

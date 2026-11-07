@@ -5,6 +5,7 @@ import { Link, useNavigate, useSearchParams } from "react-router-dom"
 import SastojakService from "../../services/sastojci/SastojakService"
 import { FaFilePdf } from "react-icons/fa"
 import ReceptPDFGenerator from "../../components/ReceptPDFGenerator"
+import JedinicaMjereService from "../../services/jedinicaMjere/JedinicaMjereService"
 
 function korijenRijeci(rijec) {
     let rezultat = rijec
@@ -23,6 +24,7 @@ function korijenRijeci(rijec) {
 export default function ReceptPregled() {
     const [recepti, setRecepti] = useState([])
     const [sviSastojci, setSviSastojci] = useState([])
+    const [jediniceMjere, setJediniceMjere] = useState([])
     const [stranica, setStranica] = useState(1)
     const velicinaStranice = 10
     const navigate = useNavigate()
@@ -38,6 +40,7 @@ export default function ReceptPregled() {
     useEffect(() => {
         ucitajRecepti()
         ucitajSastojke()
+        ucitajJediniceMjere()
     }, [])
 
     useEffect(() => {
@@ -59,6 +62,14 @@ export default function ReceptPregled() {
             console.error('Greška pri učitavanju sastojaka:', greska)
         }
     }
+    async function ucitajJediniceMjere() {
+        try {
+            const odgovor = await JedinicaMjereService.get()
+            setJediniceMjere(odgovor.data)
+        } catch (greska) {
+            console.error('Greška pri učitavanju jedinica mjere:', greska)
+        }
+    }
 
     async function obrisi(id) {
         if (!confirm('Sigurno obrisati?')) {
@@ -69,12 +80,11 @@ export default function ReceptPregled() {
     }
 
     async function generirajPDFZaRecept(recept) {
-  
         const generiraj = ReceptPDFGenerator({
             recept,
-            sviSastojci
+            sviSastojci,
+            jediniceMjere
         })
-
         await generiraj()
     }
 
@@ -177,7 +187,7 @@ export default function ReceptPregled() {
                                             onClick={(e) => {
                                                 e.stopPropagation()
                                                 generirajPDFZaRecept(recept)
-                                               
+
                                             }}
                                         />
                                     </td>

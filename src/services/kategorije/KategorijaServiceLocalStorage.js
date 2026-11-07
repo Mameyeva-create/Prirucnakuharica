@@ -1,8 +1,16 @@
+import { kategorije } from "./KategorijaPodaci"
+
+
 const STORAGE_KEY = 'kategorije'
 
 function dohvatiSveIzStorage() {
     const podaci = localStorage.getItem(STORAGE_KEY)
-    return podaci ? JSON.parse(podaci) : []
+
+    if (podaci === null) {
+        spremiUStorage(kategorije)
+        return [...kategorije]
+    }
+    return JSON.parse(podaci)
 }
 
 function spremiUStorage(podaci) {
@@ -16,38 +24,35 @@ async function get() {
 
 async function getById(id) {
     const kategorije = dohvatiSveIzStorage()
-
     const kategorija = kategorije.find(i => i.id === parseInt(id, 10))
-
-
     return { data: kategorija }
 }
 
 async function dodaj(kategorija) {
     const kategorije = dohvatiSveIzStorage()
-
-    const novikategorija = {
+    const novaKategorija = {
         ...kategorija, slikaPutanja: kategorija.slikaPutanja || "",
         id: kategorije.length === 0
             ? 1
             : Math.max(...kategorije.map(i => i.id)) + 1
     }
 
-    kategorije.push(novikategorija)
+    kategorije.push(novaKategorija)
     spremiUStorage(kategorije)
 
 }
 
 async function promijeni(id, kategorija) {
     const kategorije = dohvatiSveIzStorage()
-    const index = kategorije.findIndex(i => i.id === parseInt(id))
+    const index = kategorije.findIndex(i => i.id === parseInt(id, 10))
+    if (index === -1) return
     kategorije[index] = { ...kategorije[index], ...kategorija }
     spremiUStorage(kategorije)
 }
 
 async function obrisi(id) {
     let kategorije = dohvatiSveIzStorage()
-    kategorije = kategorije.filter(i => i.id !== parseInt(id))
+    kategorije = kategorije.filter(i => i.id !== parseInt(id, 10))
     spremiUStorage(kategorije)
 }
 

@@ -154,7 +154,7 @@ export default function ReceptNovi() {
             omiljen: podaci.get('omiljen') === 'on',
             vegansko: podaci.get('vegansko') === 'on'
         }
-       // console.log(JSON.stringify(recept))
+        // console.log(JSON.stringify(recept))
         try {
             await ReceptService.dodaj(recept)
             navigate(RouteNames.RECEPTI)
@@ -209,11 +209,12 @@ export default function ReceptNovi() {
         setOdabraniSastojci(odabraniSastojci.filter(st => (st.id) !== id))
     }
 
-    function nazivJM(sifraJM){
-     //   console.log(jediniceMjere)
-       // console.log(sifraJM)
-        const jm = jediniceMjere.find(jm=>jm.id===sifraJM)
-        return jm.naziv
+    function nazivJM(sifraJM) {
+        //   console.log(jediniceMjere)
+        // console.log(sifraJM)
+        const jm = jediniceMjere.find(
+            jm => Number(jm.id) === Number(sifraJM))
+        return jm?.naziv || 'Nepoznato'
     }
 
     return (
@@ -347,7 +348,7 @@ export default function ReceptNovi() {
                                                 step="any"
                                                 name="kolicina"
                                                 value={trenutnaKolicina}
-                                                onChange={(e) => { setTrenutnaKolicina(parseFloat(e.target.value)) }}
+                                                onChange={(e) => setTrenutnaKolicina(e.target.value)}
                                                 placeholder="Količina" />
                                         </Col>
                                         <Col xs={4}>

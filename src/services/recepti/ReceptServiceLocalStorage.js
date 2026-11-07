@@ -1,3 +1,4 @@
+import { data } from "react-router-dom"
 
 
 const STORAGE_KEY = 'recepti'
@@ -26,29 +27,10 @@ async function get() {
 // Dohvaća jedan recept prema ID-u
 async function getById(id) {
     const recepti = dohvatiSveIzStorage()
-    const trazeniId = Number(id)
-
-    const slikePoId = {
-        1: "/slike/carbonara.jpg",
-        2: "/slike/palacinke.jpg",
-        3: "/slike/piletina.jpg",
-        4: "/slike/pizza.jpg",
-        5: "/slike/cezar-salata.jpg",
-        6: "/slike/cokoladni-kolac.jpg",
-        7: "/slike/povrtna-juha.jpg"
-    }
-
-    const recept = recepti.find(r => r.id === trazeniId)
-
-    if (!recept) {
-        return { data: null }
-    }
-    return {
-        data: {
-            ...recept, slikaPutanja: recept.slikaPutanja || slikePoId[recept.id] || ''
-        }
-    }
+    const recept = recepti.find(r => r.id === Number(id))
+    return { data: recept || null }
 }
+
 // Dodaje novi recept
 async function dodaj(recept) {
     const recepti = dohvatiSveIzStorage()

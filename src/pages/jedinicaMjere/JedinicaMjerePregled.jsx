@@ -59,7 +59,7 @@ export default function JedinicaMjerePregled() {
         // Provjera koristi li se jedinica mjere u nekom receptu
         const koristiSe = recepti.some(recept =>
             recept.sastojci?.some(s =>
-                s.jedMjere === jedinica?.naziv
+               String(s.jedMjere) === String(id)
             )
         )
         if (koristiSe) {

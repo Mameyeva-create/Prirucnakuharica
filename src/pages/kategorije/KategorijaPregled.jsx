@@ -3,6 +3,7 @@ import KategorijaService from "../../services/kategorije/KategorijaService"
 import { Button, Table } from "react-bootstrap"
 import { Link, useNavigate, useSearchParams } from "react-router-dom"
 import { RouteNames } from "../../constants"
+import ReceptService from "../../services/recepti/ReceptService"
 
 
 export default function KategorijaPregled() {
@@ -22,6 +23,14 @@ export default function KategorijaPregled() {
     }
 
     async function obrisi(id) {
+        const odgovor  = await ReceptService.get()
+        const recepti = odgovor.data || []
+        const kategorija = kategorije.find(k => String(k.id) === String(id))
+        const koristiSe = recepti.some(recept => recept.kategorija === kategorija?.naziv)
+        if (koristiSe) {
+           alert('Kategorija se koristi u receptima i ne može se obrisati!')  
+           return
+        }
         if (!confirm('Sigurno obrisati?')) {
             return
         }

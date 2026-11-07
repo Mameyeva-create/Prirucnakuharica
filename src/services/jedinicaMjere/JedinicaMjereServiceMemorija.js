@@ -28,8 +28,8 @@ if (index === -1) {
     return
 }
     jediniceMjere[index] = { ...jediniceMjere[index], ...jedinicaMjere }
-}
 jediniceMjere.sort((a, b) => a.naziv.localeCompare(b.naziv, 'hr'))
+}
 
 function nadiIndex(id) {
     return jediniceMjere.findIndex(i => i.id === parseInt(id, 10))

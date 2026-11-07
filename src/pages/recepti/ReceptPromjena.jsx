@@ -45,7 +45,7 @@ export default function ReceptPromjena() {
             const sastojciOdgovor = await SastojakService.get()
             setSviSastojci(sastojciOdgovor.data)
 
-            const receptOdgovor = await ReceptService.getByIid ? await ReceptService.getByIid(id) : await ReceptService.getById(id)
+            const receptOdgovor = await ReceptService.getById(id)
             const r = receptOdgovor.data
 
             // console.log('SASTOJCI RECEPTA:', r.sastojci)
@@ -79,17 +79,17 @@ export default function ReceptPromjena() {
             return
         }
         if (!trenutniSastojak.id || !trenutnaKolicina || !trenutnaJedinicaMjere ||
-            !Number.isFinite(Number(trenutnaKolicina)) || 
+            !Number.isFinite(Number(trenutnaKolicina)) ||
             Number(trenutnaKolicina) <= 0 || !trenutnaJedinicaMjere) {
             alert('Molimo odaberite sastojak, unesite količinu i izaberite jedinicu mjere')
             return
         }
-        const jedinica = jediniceMjere.find(jm => jm.id === Number(trenutnaJedinicaMjere))
+        const jedinica = jediniceMjere.find(jm => Number(jm.id) === Number(trenutnaJedinicaMjere))
 
         // console.log('ODABRANI SASTOJAK:', trenutniSastojak)
         // console.log('ODABRANA JEDINICA ID:', trenutnaJedinicaMjere)
         // console.log('PRONAĐENA JEDINICA:', jedinica)
-if (!jedinica) return
+        if (!jedinica) return
         const nova = {
             sastojak: trenutniSastojak.id,
             kolicina: Number(trenutnaKolicina),
@@ -190,12 +190,30 @@ if (!jedinica) return
     function ukloniSastojak(idSastojka) {
         setOdabraniSastojci(odabraniSastojci.filter(st => Number(st.sastojak) !== Number(idSastojka)))
     }
+    function promijeniKolicinu(idSastojka, novaKolicina) {
+        setOdabraniSastojci(
+            odabraniSastojci.map(st => Number(st.sastojak) === Number(idSastojka)
+                ? { ...st, kolicina: Number(novaKolicina) }
+                : st
+            )
+        )
+    }
 
-     function nazivJM(sifraJM){
-     //   console.log(jediniceMjere)
-       // console.log(sifraJM)
-        const jm = jediniceMjere.find(jm=>jm.id===sifraJM)
-        return jm.naziv
+    function promijeniJedinicu(idSastojka, novaJedinica) {
+        setOdabraniSastojci(
+            odabraniSastojci.map(st =>
+                Number(st.sastojak) === Number(idSastojka)
+                    ? { ...st, jedMjere: Number(novaJedinica) }
+                    : st
+            )
+        )
+    }
+    function nazivJM(sifraJM) {
+        //   console.log(jediniceMjere)
+        // console.log(sifraJM)
+        const jm = jediniceMjere.find(
+            jm => Number(jm.id) === Number(sifraJM))
+        return jm?.naziv || 'Nepoznato'
     }
 
     return (
@@ -375,12 +393,23 @@ if (!jedinica) return
                                                                 Number(ts.sastojak))
                                                             return (
                                                                 <tr key={ts.sastojak}>
-                                                                    <td>{sastojak.naziv}</td>
-                                                                    <td>{ts.kolicina}</td>
-                                                                    <td>{
-                                                                    nazivJM(ts.jedMjere)} </td>
+                                                                    <td>{sastojak?.naziv || 'Nepoznato'}</td>
                                                                     <td>
-                                                                        <Button
+                                                                        <Form.Control type="number" min={0.01}
+                                                                            step="any" value={ts.kolicina}
+                                                                            onChange={(e) => promijeniKolicinu(ts.sastojak, e.target.value)} size="sm"
+                                                                        />
+                                                                    </td>
+                                                                    <td>
+                                                                        <Form.Select size="sm" value={ts.jedMjere}
+                                                                            onChange={(e) => promijeniJedinicu(ts.sastojak, e.target.value)}>
+                                                                            {jediniceMjere.map(jm => (
+                                                                                <option key={jm.id} value={jm.id}>{jm.naziv}</option>
+                                                                            ))}
+                                                                        </Form.Select>
+                                                                    </td>
+                                                                    <td>
+                                                                        <Button type="button"
                                                                             variant="danger"
                                                                             size="sm"
                                                                             onClick={() => ukloniSastojak(ts.sastojak)}

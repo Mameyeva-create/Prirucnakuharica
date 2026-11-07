@@ -1,7 +1,8 @@
 import { Card, Col, Row } from "react-bootstrap"
 import GeneriranjeRecepta from "../pages/recepti/GeneriranjeRecepta"
 import GeneriranjeKategorija from '../pages/kategorije/GeneriranjeKategorija'
-
+import GeneriranjeSastojaka from "../pages/sastojci/GeneriranjeSastojaka"
+import GeneriranjeJedinicaMjere from "../pages/jedinicaMjere/GeneriranjeJedinicaMjere"
 
 export default function GeneriranjePodataka() {
     return (
@@ -21,6 +22,20 @@ export default function GeneriranjePodataka() {
                     <Card className="h-100 shadow-sm border-0">
                         <Card.Body>
                             <GeneriranjeRecepta />
+                        </Card.Body>
+                    </Card>
+                </Col>
+                <Col xs={12} md={6}>
+                    <Card className="h-100 shadow-sm border-0">
+                        <Card.Body>
+                            <GeneriranjeSastojaka />
+                        </Card.Body>
+                    </Card>
+                </Col>
+                <Col xs={12} md={6}>
+                    <Card className="h-100 shadow-sm border-0">
+                        <Card.Body>
+                            <GeneriranjeJedinicaMjere />
                         </Card.Body>
                     </Card>
                 </Col>
