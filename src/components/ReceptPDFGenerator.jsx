@@ -2,7 +2,7 @@ import { jsPDF } from 'jspdf';
 import { autoTable } from 'jspdf-autotable';
 
 
-export default function ReceptPDFGenerator({ recept, sviSastojci }) {
+export default function ReceptPDFGenerator({ recept, sviSastojci, jediniceMjere }) {
 
     const fetchFontAsBase64 = async (url) => {
         const response = await fetch(url)
@@ -110,8 +110,12 @@ export default function ReceptPDFGenerator({ recept, sviSastojci }) {
             const podatakSastojka = sviSastojci?.find(
                 item => Number(item.id) === Number(s.sastojak)
             )
+            const jedinica = jediniceMjere?.find(
+                jm => Number(jm.id) === Number(s.jedMjere)
+            )
             return [index + 1, podatakSastojka?.naziv || 'Nepoznato',
-            s.kolicina ?? '-', s.jedMjere || '-']
+            s.kolicina ?? '-', 
+            jedinica?.naziv || '-']
         })
 
         if (tableData.length > 0) {
