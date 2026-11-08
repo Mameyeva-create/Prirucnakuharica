@@ -257,6 +257,28 @@ export default function GeneriranjeRecepata() {
         }
         return jedinica
     }
+        // Pronalaženje ili automatsko dodavanje kategorije
+    async function osigurajKategoriju(naziv, kategorije) {
+        let kategorija = kategorije.find(
+            k => normalizirajNaziv(k.naziv) === normalizirajNaziv(naziv)
+        )
+        if (kategorija) {
+            return kategorija;
+        }
+        await KategorijaService.dodaj({
+            naziv,
+            generirano: true
+        })
+        const odgovor = await KategorijaService.get();
+        kategorije.splice(0, kategorije.length, ...(odgovor.data || []))
+        kategorija = kategorije.find(
+            k => normalizirajNaziv(k.naziv) === normalizirajNaziv(naziv)
+        )
+        if (!kategorija || !Number.isInteger(Number(kategorija.id))) {
+            throw new Error(`Kategorija "${naziv}" nije uspješno dodana`)
+        }
+        return kategorija
+    }
     async function generirajRecepte() {
         const broj = Number(kolicina)
 
@@ -282,11 +304,9 @@ export default function GeneriranjeRecepata() {
             ))
             for (let i = 0; i < broj; i++) {
                 const predlozak = predlosci[i % predlosci.length]
-                const kategorija = podaci.kategorije.find(k => normalizirajNaziv(k.naziv) ===
-                    normalizirajNaziv(predlozak.kategorija))
-                if (!kategorija) {
-                    throw new Error(`Kategorija "${predlozak.kategorija}" nije pronađena`)
-                }
+                const kategorija = await osigurajKategoriju(predlozak.kategorija,
+                    podaci.kategorije
+                )
                 const sastojci = []
                 for (const [
                     nazivSastojka,
@@ -308,7 +328,7 @@ export default function GeneriranjeRecepata() {
                 }
                 const noviRecept = {
                     naziv: generirajJedinstveniNaziv(predlozak.naziv, zauzetiNazivi),
-                    kategorija: kategorija.naziv,
+                    kategorija: kategorija.id,
                     vrijeme: predlozak.vrijeme,
                     slikaPutanja: predlozak.slikaPutanja,
                     opis: predlozak.opis,

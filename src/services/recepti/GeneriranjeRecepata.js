@@ -65,7 +65,7 @@ const pravilaSastojaka = {
     "Prašak za pecivo": { min: 5, max: 15, mjera: "g" },
     "Tikvica": { min: 100, max: 200, mjera: "g" },
     "Povrtni temeljac": { min: 100, max: 250, mjera: "ml" }
-};
+}
 
 
 const opisiRecepata = [
@@ -74,7 +74,7 @@ const opisiRecepata = [
     "Odličan izbor za svakodnevni ručak.",
     "Brz i praktičan recept za cijelu obitelj.",
     "Ukusna kombinacija sastojaka za svaki dan."
-];
+]
 
 
 export async function generirajRecept() {
@@ -85,7 +85,7 @@ export async function generirajRecept() {
             SastojakService.get(),
             JedinicaMjereService.get(),
             KategorijaService.get()
-        ]);
+        ])
 
     const sastojci = rezultatSastojci.data;
     const jedinice = rezultatJedinice.data;
