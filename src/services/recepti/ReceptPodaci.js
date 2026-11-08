@@ -10,12 +10,12 @@ export const recepti = [
         slikaPutanja: '/slike/carbonara.jpg',
         opis: 'Jednostavna i iskusna tjestenina s jajima,sirom i pancetom.',
         sastojci: [
-            { sastojak: 1, kolicina: 200, jedMjere: 'g' },
-            { sastojak: 2, kolicina: 100, jedMjere: 'g' },
-            { sastojak: 3, kolicina: 2, jedMjere: 'kom' },
-            { sastojak: 4, kolicina: 50, jedMjere: 'g' },
-            { sastojak: 9, kolicina: 1, jedMjere: 'prstohvat' },
-            { sastojak: 10, kolicina: 1, jedMjere: 'po ukusu' }
+            { sastojak: 1, kolicina: 200, jedMjere: 1 },
+            { sastojak: 2, kolicina: 100, jedMjere: 1 },
+            { sastojak: 3, kolicina: 2, jedMjere: 7 },
+            { sastojak: 4, kolicina: 50, jedMjere: 1 },
+            { sastojak: 9, kolicina: 1, jedMjere: 6 },
+            { sastojak: 10, kolicina: 1, jedMjere: 11 }
         ],
         priprema: '1. Skuhajte tjesteninu prema uputama na pakiranju.\n2. Narežite pancetu i popržite je na tavi.\n3. Umutite jaja i naribani sir.\n4. Pomiješajte vruću tjesteninu s pancetom i smjesom jaja i sira.\n5. Poslužite odmah.',
         omiljen: true,
