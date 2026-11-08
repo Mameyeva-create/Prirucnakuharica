@@ -5,7 +5,7 @@ import { GiCookingPot } from 'react-icons/gi';
 import { MdKitchen, MdScale } from 'react-icons/md';
 import ReceptService from '../services/recepti/ReceptService';
 import KategorijaService from '../services/kategorije/KategorijaService';
-import { BiCategory, BiLeaf} from 'react-icons/bi';
+import { BiCategory, BiLeaf } from 'react-icons/bi';
 import SastojakService from '../services/sastojci/SastojakService'
 import JedinicaMjereService from '../services/jedinicaMjere/JedinicaMjereService'
 
@@ -63,7 +63,7 @@ export default function Pocetna() {
 
 
   return (
-    <>
+    <div className="pocetna">
       <div className='pocetna-gore' >
         <span className='hero-ime hero-red'>Priručna</span> {' '}
         <span className='hero-ime hero-green'>kuharica</span>
@@ -87,20 +87,20 @@ export default function Pocetna() {
         <Row className="g-3">
 
           <Col xs={12} md={6}>
-            <Card className='pocetna-kartica h-100' style={{ minHeight: 'auto' }}>
-              <Card.Body className='d-flex flex-column py-3'>
-                <div className='pocetna-kartica-naslov'>
-                  <MdKitchen size={36} />
+            <Card className='pocetna-kartica h-100'>
+              <Card.Body className='d-flex flex-column justify-content-center text-start  py-2 px-3'>
+                <div className='pocetna-kartica-naslov align-items-center'>
+                  <MdKitchen size={36} className='text-success' />
                   <h2>Namirnice koje imaš</h2>
                 </div>
-                <p>Unesi namirnice koje imaš kod kuće</p>
-                <Form onSubmit={pretrazi} className='mt-auto'>
-                  <Form.Control type='text' placeholder='jaja, brašno, mlijeko'
+                <p className='pocetna-podnaslov'>Unesi namirnice koje imaš kod kuće</p>
+                <Form onSubmit={pretrazi} className='d-flex flex-column gap-2'>
+                  <Form.Control size='sm' type='text' placeholder='jaja, brašno, mlijeko'
                     value={namirnice} onChange={(e) =>
                       setNamirnice(e.target.value)}
                   />
                   <Button
-                    type='submit' className='pocetna-gumb w-100 mt-3'>
+                    type='submit' className='pocetna-gumb w-100'>
                     Pronađi recept
                   </Button>
                 </Form>
@@ -108,53 +108,53 @@ export default function Pocetna() {
             </Card>
           </Col>
 
-        <Col xs={12} md={6}>
-  <Card className="pocetna-kartica pocetna-statistika h-100">
-    <Card.Body className="p-3">
-      <Row className="g-0 text-center h-100">
+          <Col xs={12} md={6}>
+            <Card className="pocetna-kartica pocetna-statistika h-100">
+              <Card.Body className="p-2 d-flex align-items-center">
+                <Row className="g-0 text-center w-100">
 
-        {/* Recepti */}
-        <Col xs={6} className="py-3 px-2 border-end border-bottom">
-          <div className="d-flex flex-column align-items-center justify-content-center h-100">
-            <GiCookingPot size={32} className="mb-2 text-success" />
-            <div className="fs-2 fw-bold lh-1">{brojGeneriranih}</div>
-            <div className="small text-muted mt-1">Generirani recepti</div>
-          </div>
-        </Col>
+                  {/* Recepti */}
+                  <Col xs={6} md={3} className="stat-celija py-1 px-2">
+                    <div className="d-flex flex-column align-items-center justify-content-center">
+                      <GiCookingPot size={40} className="mb-1 text-success" />
+                      <div className="fs-5 fw-bold 1h-1">{brojGeneriranih}</div>
+                      <div className="pocetna-statistika-tekst-mali">Generirani recepti</div>
+                    </div>
+                  </Col>
 
-        {/* Kategorije */}
-        <Col xs={6} className="py-3 px-2 border-bottom">
-          <div className="d-flex flex-column align-items-center justify-content-center h-100">
-            <BiCategory size={32} className="mb-2 text-success" />
-            <div className="fs-2 fw-bold lh-1">{brojGeneriranihKategorija}</div>
-            <div className="small text-muted mt-1">Generirane kategorije</div>
-          </div>
-        </Col>
+                  {/* Kategorije */}
+                  <Col xs={6} md={3} className="stat-celija py-1 px-2">
+                    <div className="d-flex flex-column align-items-center justify-content-center">
+                      <BiCategory size={36} className="mb-1 text-success" />
+                      <div className="fs-5 fw-bold 1h-1">{brojGeneriranihKategorija}</div>
+                      <div className="pocetna-statistika-tekst-mali">Generirane kategorije</div>
+                    </div>
+                  </Col>
 
-        {/* Sastojci */}
-        <Col xs={6} className="py-3 px-2 border-end">
-          <div className="d-flex flex-column align-items-center justify-content-center h-100">
-            <BiLeaf size={32} className="mb-2 text-success" />
-            <div className="fs-2 fw-bold lh-1">{brojGeneriranihSastojaka}</div>
-            <div className="small text-muted mt-1">Generirani sastojci</div>
-          </div>
-        </Col>
+                  {/* Sastojci */}
+                  <Col xs={6} md={3} className="stat-celija py-1 px-2">
+                    <div className="d-flex flex-column align-items-center justify-content-center">
+                      <BiLeaf size={36} className="mb-1 text-success" />
+                      <div className="fs-5 fw-bold 1h-1">{brojGeneriranihSastojaka}</div>
+                      <div className="pocetna-statistika-tekst-mali">Generirani sastojci</div>
+                    </div>
+                  </Col>
 
-        {/* Jedinice */}
-        <Col xs={6} className="py-3 px-2">
-          <div className="d-flex flex-column align-items-center justify-content-center h-100">
-            <MdScale size={32} className="mb-2 text-success" />
-            <div className="fs-2 fw-bold lh-1">{brojGeneriranihJedinica}</div>
-            <div className="small text-muted mt-1">Generirane jedinice</div>
-          </div>
-        </Col>
+                  {/* Jedinice */}
+                  <Col xs={6} md={3} className="stat-celija py-1 px-2">
+                    <div className="d-flex flex-column align-items-center justify-content-center">
+                      <MdScale size={36} className="mb-1 text-success" />
+                      <div className="fs-5 fw-bold 1h-1">{brojGeneriranihJedinica}</div>
+                      <div className="pocetna-statistika-tekst-mali">Generirane jedinice</div>
+                    </div>
+                  </Col>
                 </Row>
               </Card.Body>
             </Card>
           </Col>
-        </Row >
+        </Row>
       </div>
-    </>
+    </div>
   );
 
 }
