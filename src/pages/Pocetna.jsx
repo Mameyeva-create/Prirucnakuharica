@@ -2,11 +2,12 @@ import { Button, Card, Col, Form, Row } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { GiCookingPot } from 'react-icons/gi';
-import { MdKitchen } from 'react-icons/md';
+import { MdKitchen, MdScale } from 'react-icons/md';
 import ReceptService from '../services/recepti/ReceptService';
 import KategorijaService from '../services/kategorije/KategorijaService';
-import { BiCategory } from 'react-icons/bi';
-
+import { BiCategory, BiLeaf} from 'react-icons/bi';
+import SastojakService from '../services/sastojci/SastojakService'
+import JedinicaMjereService from '../services/jedinicaMjere/JedinicaMjereService'
 
 
 export default function Pocetna() {
@@ -15,20 +16,30 @@ export default function Pocetna() {
   const [namirnice, setNamirnice] = useState('')
   const [brojGeneriranih, setBrojGeneriranih] = useState(0)
   const [brojGeneriranihKategorija, setBrojGeneriranihKategorija] = useState(0)
+  const [brojGeneriranihSastojaka, setBrojGeneriranihSastojaka] = useState(0)
+  const [brojGeneriranihJedinica, setBrojGeneriranihJedinica] = useState(0)
 
 
   useEffect(() => {
     async function ucitajStatistiku() {
       try {
-        const [odgovorRecepata, odgovorKategorija] = await Promise.all([
+        const [odgovorRecepata, odgovorKategorija,
+          odgovorSastojaka, odgovorJedinica
+        ] = await Promise.all([
           ReceptService.get(),
-          KategorijaService.get()
+          KategorijaService.get(),
+          SastojakService.get(),
+          JedinicaMjereService.get()
         ])
         const recepti = odgovorRecepata.data || []
         const kategorije = odgovorKategorija.data || []
+        const sastojci = odgovorSastojaka.data || []
+        const jedinice = odgovorJedinica.data || []
 
         setBrojGeneriranih(recepti.filter(recept => recept.generirano === true).length)
         setBrojGeneriranihKategorija(kategorije.filter(kategorija => kategorija.generirano === true).length)
+        setBrojGeneriranihSastojaka(sastojci.filter(s => s.generirano === true).length)
+        setBrojGeneriranihJedinica(jedinice.filter(j => j.generirano === true).length)
       } catch (error) {
         console.error('Greška pri učitavanju statistike:', error)
       }
@@ -74,9 +85,10 @@ export default function Pocetna() {
 
       <div className="pocetna-kartice">
         <Row className="g-3">
+
           <Col xs={12} md={6}>
-            <Card className='pocetna-kartica h-100'>
-              <Card.Body className='d-flex flex-column'>
+            <Card className='pocetna-kartica h-100' style={{ minHeight: 'auto' }}>
+              <Card.Body className='d-flex flex-column py-3'>
                 <div className='pocetna-kartica-naslov'>
                   <MdKitchen size={36} />
                   <h2>Namirnice koje imaš</h2>
@@ -96,23 +108,46 @@ export default function Pocetna() {
             </Card>
           </Col>
 
-          <Col xs={12} md={6}>
-            <Card className='pocetna-kartica pocetna-statistika h-100'>
-              <Card.Body className='pocetna-statistika-sadrzaj'>
-                <Row className='g-0 w-100 h-100'>
-                  <Col xs={6} className='p-2'>
-                    <GiCookingPot size={50} />
-                    <h2 className='fs-6 mb-2'>Statistika recepata</h2>
-                    <span className='d-block fs-3 fw-bold'>{brojGeneriranih}</span>
-                    <p className='mb-0'>Generirani recepti</p>
-                  </Col>
+        <Col xs={12} md={6}>
+  <Card className="pocetna-kartica pocetna-statistika h-100">
+    <Card.Body className="p-3">
+      <Row className="g-0 text-center h-100">
 
-                  <Col xs={6} className='p-2 border-start'>
-                    <BiCategory size={50} />
-                    <h2 className='fs-6 mb-2'>Statistika kategorija</h2>
-                    <span className='d-block fs-3 fw-bold'>{brojGeneriranihKategorija}</span>
-                    <p className='mb-0'>Generirane kategorije</p>
-                  </Col>
+        {/* Recepti */}
+        <Col xs={6} className="py-3 px-2 border-end border-bottom">
+          <div className="d-flex flex-column align-items-center justify-content-center h-100">
+            <GiCookingPot size={32} className="mb-2 text-success" />
+            <div className="fs-2 fw-bold lh-1">{brojGeneriranih}</div>
+            <div className="small text-muted mt-1">Generirani recepti</div>
+          </div>
+        </Col>
+
+        {/* Kategorije */}
+        <Col xs={6} className="py-3 px-2 border-bottom">
+          <div className="d-flex flex-column align-items-center justify-content-center h-100">
+            <BiCategory size={32} className="mb-2 text-success" />
+            <div className="fs-2 fw-bold lh-1">{brojGeneriranihKategorija}</div>
+            <div className="small text-muted mt-1">Generirane kategorije</div>
+          </div>
+        </Col>
+
+        {/* Sastojci */}
+        <Col xs={6} className="py-3 px-2 border-end">
+          <div className="d-flex flex-column align-items-center justify-content-center h-100">
+            <BiLeaf size={32} className="mb-2 text-success" />
+            <div className="fs-2 fw-bold lh-1">{brojGeneriranihSastojaka}</div>
+            <div className="small text-muted mt-1">Generirani sastojci</div>
+          </div>
+        </Col>
+
+        {/* Jedinice */}
+        <Col xs={6} className="py-3 px-2">
+          <div className="d-flex flex-column align-items-center justify-content-center h-100">
+            <MdScale size={32} className="mb-2 text-success" />
+            <div className="fs-2 fw-bold lh-1">{brojGeneriranihJedinica}</div>
+            <div className="small text-muted mt-1">Generirane jedinice</div>
+          </div>
+        </Col>
                 </Row>
               </Card.Body>
             </Card>
