@@ -39,7 +39,8 @@ export default function SastojakNovi() {
            // Dodavanje novog sastojka
            console.log('Dodajem sastojak: ' + ocisceniNaziv)
             await SastojakService.dodaj({
-                naziv: ocisceniNaziv
+                naziv: ocisceniNaziv,
+                generirano: false
             })
             navigate(RouteNames.SASTOJCI)
         } catch (error) {

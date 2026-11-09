@@ -58,7 +58,8 @@ export default function SastojakPromjena() {
         }
 
         promijeni({
-            naziv: podaci.get('naziv')
+            naziv: podaci.get('naziv'),
+            generirano: sastojak.generirano
         })
     }
 
