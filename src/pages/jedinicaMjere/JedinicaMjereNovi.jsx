@@ -36,7 +36,8 @@ export default function JedinicaMjereNovi() {
             }
 
             await JedinicaMjereService.dodaj({
-                naziv: naziv.trim()
+                naziv: naziv.trim(),
+                generirano: false
             })
             navigate(RouteNames.JEDINICE_MJERE)
         } catch (error) {

@@ -5,12 +5,7 @@ const STORAGE_KEY = 'kategorije'
 
 function dohvatiSveIzStorage() {
     const podaci = localStorage.getItem(STORAGE_KEY)
-
-    if (podaci === null) {
-        spremiUStorage(kategorije)
-        return [...kategorije]
-    }
-    return JSON.parse(podaci)
+    return podaci ? JSON.parse(podaci) : []
 }
 
 function spremiUStorage(podaci) {

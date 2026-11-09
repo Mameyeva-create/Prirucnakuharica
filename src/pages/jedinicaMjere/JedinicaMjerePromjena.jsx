@@ -21,6 +21,7 @@ export default function JedinicaMjerePromjena() {
         // debugger
         await JedinicaMjereService.getById(params.id).then((odgovor) => {
             const i = odgovor.data
+            console.log("Što si vratio: ", i)
             setJedinicaMjere(i)
 
         })
@@ -40,7 +41,8 @@ export default function JedinicaMjerePromjena() {
             return
         }
         await JedinicaMjereService.promijeni(params.id, {
-            naziv: ocisceniNaziv
+            naziv: ocisceniNaziv,
+            generirano: jedinicaMjere.generirano
         })
         navigate(RouteNames.JEDINICE_MJERE)
 
@@ -56,7 +58,7 @@ export default function JedinicaMjerePromjena() {
             setGreska('Unesite naziv jedinice mjere')
             return
         }
-        promijeni({ naziv })
+        promijeni({ naziv, generirano: jedinicaMjere.generirano })
     }
 
     return (

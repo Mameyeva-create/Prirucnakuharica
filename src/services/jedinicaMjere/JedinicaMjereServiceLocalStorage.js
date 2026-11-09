@@ -21,36 +21,37 @@ async function get() {
 }
 
 async function getById(id) {
-    const jedinicaMjere = dohvatiSveIzStorage()
+    const jediniceMjera = dohvatiSveIzStorage()
 
-    const sastojak = jedinicaMjere.find(i => i.id === parseInt(id, 10))
+    const jedinicaMjere = jediniceMjera.find(i => i.id === parseInt(id, 10))
 
-    return { data: sastojak }
+    return { data: jedinicaMjere }
 }
 
-async function dodaj(sastojak) {
-    const jedinicaMjere = dohvatiSveIzStorage()
+async function dodaj(jedinicaMjere) {
+    const jediniceMjera = dohvatiSveIzStorage()
 
     const noviJedinicaMjere = {
-        ...sastojak,
-        id: !jedinicaMjere || jedinicaMjere.length === 0
+        ...jedinicaMjere,
+        id: !jedinicaMjere || jediniceMjera.length === 0
             ? 1
-            : Math.max(...jedinicaMjere?.map(i => i.id)) + 1
+            : Math.max(...jediniceMjera?.map(i => i.id)) + 1
     }
 
-    jedinicaMjere.push(noviJedinicaMjere)
-    spremiUStorage(jedinicaMjere)
+    jediniceMjera.push(noviJedinicaMjere)
+    spremiUStorage(jediniceMjera)
 
 }
 
-async function promijeni(id, sastojak) {
-    const jedinicaMjere = dohvatiSveIzStorage()
-    const index = jedinicaMjere.findIndex(i => i.id === parseInt(id, 10))
+async function promijeni(id, jedinicaMjere) {
+    console.log(jedinicaMjere)
+    const jedinicaMjera = dohvatiSveIzStorage()
+    const index = jedinicaMjera.findIndex(i => i.id === parseInt(id, 10))
     if (index === -1) {
         return
     }
-    jedinicaMjere[index] = { ...jedinicaMjere[index], ...sastojak }
-    spremiUStorage(sortirajJedinice(jedinicaMjere))
+    jedinicaMjera[index] = { ...jedinicaMjera[index], ...jedinicaMjere }
+    spremiUStorage(sortirajJedinice(jedinicaMjera))
 }
 
 async function obrisi(id) {
