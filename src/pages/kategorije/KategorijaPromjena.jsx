@@ -37,7 +37,8 @@ export default function KategorijaPromjena() {
         const podaci = new FormData(e.target)
 
         promijeni({
-            naziv: podaci.get('naziv')
+            naziv: podaci.get('naziv'),
+            generirano: kategorija.generirano
         })
     }
 

@@ -22,7 +22,8 @@ export default function KategorijaNovi() {
         }
 
         const kategorija = {
-            naziv
+            naziv,
+            generirano: false
         }
         try {
             await KategorijaService.dodaj(kategorija)

@@ -2,19 +2,23 @@
 export const kategorije = [
     {
         id: 1,
-        naziv: 'Doručak'
+        naziv: 'Doručak',
+        generirano: true
     },
     {
         id: 2,
-        naziv: 'Ručak'
+        naziv: 'Ručak',
+        generirano: true
     },
     {
         id: 3,
-        naziv: 'Večera'
+        naziv: 'Večera',
+        generirano: true
     },
     {
         id: 4,
-        naziv: 'Desert'
+        naziv: 'Desert',
+        generirano: true
     }
 
 ]
