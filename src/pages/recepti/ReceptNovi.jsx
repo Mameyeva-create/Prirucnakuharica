@@ -168,7 +168,8 @@ export default function ReceptNovi() {
             slika,
             sastojci: odabraniSastojci,
             omiljen: podaci.get('omiljen') === 'on',
-            vegansko: podaci.get('vegansko') === 'on'
+            vegansko: podaci.get('vegansko') === 'on',
+            generirano: false
         }
         // console.log(JSON.stringify(recept))
         try {

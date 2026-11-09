@@ -21,6 +21,7 @@ export default function ReceptPromjena() {
     const [opis, setOpis] = useState('')
     const [omiljen, setOmiljen] = useState(false)
     const [vegansko, setVegansko] = useState(false)
+    const [generirano, setGenerirano] = useState(false)
 
     const [trenutniSastojak, setTrenutniSastojak] = useState({})
     const [odabraniSastojci, setOdabraniSastojci] = useState([])
@@ -62,6 +63,7 @@ export default function ReceptPromjena() {
             setSlika(r.slika || '')
             setSlikaPutanja(r.slikaPutanja || '')
             setOdabraniSastojci(Array.isArray(r.sastojci) ? r.sastojci : [])
+            setGenerirano(r.generirano)
 
         } catch (greska) {
             console.error('Greška pri dohvaćanju podataka za promjenu:', greska)
@@ -180,7 +182,8 @@ export default function ReceptPromjena() {
             slikaPutanja,
             sastojci: odabraniSastojci,
             omiljen,
-            vegansko
+            vegansko,
+            generirano
         }
         console.log('RECEPT ZA SPREMANJE:', recept)
         try {
