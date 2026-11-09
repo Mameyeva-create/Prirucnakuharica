@@ -1,32 +1,26 @@
 import GeneratorKartica from '../../components/GeneratorKartica'
 import JedinicaMjereService from '../../services/jedinicaMjere/JedinicaMjereService'
 import {
-    normalizirajNaziv,
+    normalizirajNaziv, jedinstvenNaziv,
     dohvatiKoristene, obrisiGenerirane, porukaBrisanja,
 } from '../../Generiranje'
 
 const NAZIVI = [
-    'g', 'dk', 'kg', 'l', 'ml', 'kom', 'žlica', 'žličica', 'prstohvat',
+     'g', 'dk', 'kg', 'l', 'ml', 'kom', 'žlica', 'žličica', 'prstohvat',
     'glavica', 'po ukusu', 'nekoliko listova', 'po potrebi',
+    'mg', 'dag', 'dl', 'cl', 'šalica', 'čaša', 'češanj', 'kriška',
+    'grančica', 'šaka', 'vrećica', 'konzerva', 'kockica', 'režanj',
+    'štapić', 'list', 'paketić',
 ]
 
 async function generiraj(broj) {
     const postojece = (await JedinicaMjereService.get()).data || []
     const zauzeti = new Set(postojece.map(j => normalizirajNaziv(j.naziv)))
-    const slobodne = NAZIVI.filter(n => !zauzeti.has(normalizirajNaziv(n)))
-
-    if (slobodne.length === 0) {
-        return 'Sve jedinice mjere s popisa već postoje.'
-    }
-
-    const odabrane = slobodne.slice(0, broj)
-    for (const naziv of odabrane) {
+    for (let i = 0; i < broj; i++) {
+        const naziv = jedinstvenNaziv(NAZIVI[i % NAZIVI.length], zauzeti)
         await JedinicaMjereService.dodaj({ naziv, generirano: true })
     }
-
-    return odabrane.length < broj
-        ? `Generirano: ${odabrane.length}. Više nema slobodnih naziva na popisu.`
-        : `Uspješno generirano testnih jedinica mjere: ${odabrane.length}.`
+    return `Uspješno generirano testnih jedinica mjere: ${broj}.`
 }
 
 async function obrisi() {
@@ -41,7 +35,6 @@ export default function GeneriranjeJedinicaMjere() {
             naslov="Generiranje testnih jedinica mjere"
             labelBroj="Broj jedinica mjere za generiranje"
             pocetniBroj={5}
-            max={NAZIVI.length}
             putanjaPrikaza="/jediniceMjere"
             tekstGeneriraj="Generiraj jedinice mjere"
             tekstPrikaza="Prikaži jedinice mjere"
