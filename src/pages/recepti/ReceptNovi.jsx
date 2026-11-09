@@ -86,6 +86,7 @@ export default function ReceptNovi() {
         setOdabraniSastojci([...odabraniSastojci, nova])
         setOdabraniIndex(-1)
         setPrikaziAutocomplete(false)
+        setPretragaSastojka('')
         setTrenutnaJedinicaMjere(0)
         setTrenutnaKolicina('')
         setTrenutniSastojak({})
@@ -144,6 +145,21 @@ export default function ReceptNovi() {
             alert('Opis recepata mora imati najmanje 5 znakova')
             return
         }
+         if (opis.length < 5) {
+            alert('Opis recepata mora imati najmanje 5 znakova')
+            return
+        }
+
+        // novo: recept mora imati barem jedan sastojak
+        if (odabraniSastojci.length === 0) {
+             if (trenutniSastojak.id || trenutnaKolicina) {
+                alert('Klikni "+ Dodaj sastojak" prije spremanja recepta')
+            } else {
+                alert('Dodaj barem jedan sastojak u recept')
+            }
+            return
+        }
+
         const recept = {
             naziv,
             kategorija,

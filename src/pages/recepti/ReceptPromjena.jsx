@@ -29,6 +29,8 @@ export default function ReceptPromjena() {
     const [odabraniIndex, setOdabraniIndex] = useState(-1)
     const [trenutnaJedinicaMjere, setTrenutnaJedinicaMjere] = useState(0)
     const [trenutnaKolicina, setTrenutnaKolicina] = useState('')
+    const [slika, setSlika] = useState('')
+    const [slikaPutanja, setSlikaPutanja] = useState('')
 
     useEffect(() => {
         dohvatiPodatke()
@@ -57,6 +59,8 @@ export default function ReceptPromjena() {
             setOpis(r.opis || '')
             setOmiljen(r.omiljen || false)
             setVegansko(r.vegansko || false)
+            setSlika(r.slika || '')
+            setSlikaPutanja(r.slikaPutanja || '')
             setOdabraniSastojci(Array.isArray(r.sastojci) ? r.sastojci : [])
 
         } catch (greska) {
@@ -66,46 +70,70 @@ export default function ReceptPromjena() {
     }
 
     function dodajStavku() {
-        const nazivUnesen = pretragaSastojka.trim().toLocaleLowerCase('hr')
-        const sastojakPoNazivu = sviSastojci.find(
-            s => s.naziv.trim().toLocaleLowerCase('hr') === nazivUnesen
+        const sastojakId = trenutniSastojak.id
+        const kolicina = Number(trenutnaKolicina)
+
+        // 1. sastojak mora biti odabran iz popisa
+        if (!sastojakId) {
+            alert('Odaberite sastojak iz popisa')
+            return
+        }
+        // 2. količina mora biti pozitivan broj
+        if (!trenutnaKolicina || !Number.isFinite(kolicina) || kolicina <= 0) {
+            alert('Unesite ispravnu količinu')
+            return
+        }
+        // 3. jedinica mjere mora biti odabrana
+        const jedinica = jediniceMjere.find(
+            jm => Number(jm.id) === Number(trenutnaJedinicaMjere)
         )
-        const sastojakId = trenutniSastojak.id || sastojakPoNazivu?.id
+        if (!jedinica) {
+            alert('Odaberite jedinicu mjere')
+            return
+        }
+        // 4. sastojak ne smije već biti u receptu
         const postoji = odabraniSastojci.some(
             s => Number(s.sastojak) === Number(sastojakId)
         )
-        if (sastojakId && postoji) {
+        if (postoji) {
             alert('Ovaj sastojak već je dodan u recept')
             return
         }
-        if (!trenutniSastojak.id || !trenutnaKolicina || !trenutnaJedinicaMjere ||
-            !Number.isFinite(Number(trenutnaKolicina)) ||
-            Number(trenutnaKolicina) <= 0 || !trenutnaJedinicaMjere) {
-            alert('Molimo odaberite sastojak, unesite količinu i izaberite jedinicu mjere')
-            return
-        }
-        const jedinica = jediniceMjere.find(jm => Number(jm.id) === Number(trenutnaJedinicaMjere))
-
-        // console.log('ODABRANI SASTOJAK:', trenutniSastojak)
-        // console.log('ODABRANA JEDINICA ID:', trenutnaJedinicaMjere)
-        // console.log('PRONAĐENA JEDINICA:', jedinica)
-        if (!jedinica) return
-        const nova = {
-            sastojak: trenutniSastojak.id,
-            kolicina: Number(trenutnaKolicina),
-            jedMjere: jedinica.id
-        }
-
-        setOdabraniSastojci([...odabraniSastojci, nova])
-        // console.log('DODANA STAVKA:', nova)
+        setOdabraniSastojci([
+            ...odabraniSastojci,
+            { sastojak: sastojakId, kolicina, jedMjere: jedinica.id },
+        ])
         setOdabraniIndex(-1)
         setPrikaziAutocomplete(false)
+        setPretragaSastojka('')
         setTrenutnaJedinicaMjere(0)
         setTrenutnaKolicina('')
         setTrenutniSastojak({})
-        // console.log('NOVA STAVKA:', nova)
     }
-
+    function odaberiSliku(e) {
+        const datoteka = e.target.files[0]
+        if (!datoteka) return
+        if (!datoteka.type.startsWith('image/')) {
+            alert('Odaberite datoteku slike')
+            e.target.value = ''
+            return
+        }
+        // Ograničenje veličine slike na 2 MB
+        if (datoteka.size > 2 * 1024 * 1024) {
+            alert('Slika ne smije biti veća od 2 MB')
+            e.target.value = ''
+            return
+        }
+        const citac = new FileReader()
+        citac.onloadend = () => {
+            setSlika(citac.result)
+            setSlikaPutanja('')   // nova slika zamjenjuje staru putanju
+        }
+        citac.onerror = () => {
+            alert('Greška pri učitavanju slike')
+        }
+        citac.readAsDataURL(datoteka)
+    }
     async function odradiSubmit(e) {
         e.preventDefault()
 
@@ -129,12 +157,27 @@ export default function ReceptPromjena() {
             alert('Opis recepta mora imati najmanje 5 znakova')
             return
         }
+        if (opis.trim().length < 5) {
+            alert('Opis recepta mora imati najmanje 5 znakova')
+            return
+        }
 
+        // novo: recept mora imati barem jedan sastojak
+        if (odabraniSastojci.length === 0) {
+            if (trenutniSastojak.id || trenutnaKolicina) {
+                alert('Klikni "+ Dodaj sastojak" prije spremanja recepta')
+            } else {
+                alert('Dodaj barem jedan sastojak u recept')
+            }
+            return
+        }
         const recept = {
             naziv: naziv.trim(),
             kategorija,
             vrijeme: parsedVrijeme,
             opis: opis.trim(),
+            slika,
+            slikaPutanja,
             sastojci: odabraniSastojci,
             omiljen,
             vegansko
@@ -268,6 +311,24 @@ export default function ReceptPromjena() {
                                             value={opis}
                                             onChange={(e) => setOpis(e.target.value)}
                                             placeholder="Opiši pripremu i posebnosti recepta..." required />
+                                    </Form.Group>
+                                    <Form.Group className="mb-3">
+                                        <Form.Label>Fotografija recepta 📷</Form.Label>
+                                        <Form.Control id="slikaRecepta" type="file" accept="image/*" onChange={odaberiSliku} />
+                                        {(slika || slikaPutanja) && (
+                                            <div className="mt-3">
+                                                <img src={slika || slikaPutanja} alt="Pregled fotografije recepta"
+                                                    style={{ width: '100%', maxHeight: '220px', objectFit: 'cover', borderRadius: '8px' }} />
+                                                <Button type="button" variant="outline-danger" size="sm"
+                                                    className="mt-2"
+                                                    onClick={() => {
+                                                        setSlika('')
+                                                        setSlikaPutanja('')
+                                                        document.getElementById('slikaRecepta').value = ''
+                                                    }}
+                                                >Ukloni fotografiju</Button>
+                                            </div>
+                                        )}
                                     </Form.Group>
 
                                     <Row className="g-2 mt-auto pt-3">
