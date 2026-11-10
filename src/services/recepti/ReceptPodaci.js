@@ -21,7 +21,7 @@ export const recepti = [
         priprema: '1. Skuhajte tjesteninu prema uputama na pakiranju.\n2. Narežite pancetu i popržite je na tavi.\n3. Umutite jaja i naribani sir.\n4. Pomiješajte vruću tjesteninu s pancetom i smjesom jaja i sira.\n5. Poslužite odmah.',
         omiljen: true,
         vegansko: false,
-        generirano: true
+        generirano: false
     },
     {
         id: 2,
@@ -42,7 +42,7 @@ export const recepti = [
         priprema: '1. Pomiješajte brašno, mlijeko, jaja i malo šećera.\n2. Miješajte dok ne dobijete glatku smjesu.\n3. Zagrijte tavu i lagano je nauljite.\n4. Ulijte malo smjese i pecite palačinku s obje strane.\n5. Poslužite s omiljenim nadjevom.',
         omiljen: false,
         vegansko: true,
-        generirano: true
+        generirano: false
     },
     {
         id: 3,
@@ -63,7 +63,7 @@ export const recepti = [
         priprema: '1. Narežite piletinu i povrće na manje komade.\n2. Začinite solju, paprom i omiljenim začinima.\n3. Stavite sve u posudu za pečenje i dodajte malo ulja.\n4. Pecite na 200 °C oko 25–30 minuta, dok piletina nije potpuno pečena.\n5. Poslužite toplo.',
         omiljen: true,
         vegansko: true,
-        generirano: true
+        generirano: false
     },
     {
         id: 4,
@@ -84,7 +84,7 @@ export const recepti = [
         priprema: '1. Razvaljajte tijesto za pizzu.\n2. Premažite tijesto umakom od rajčice.\n3. Dodajte narezanu mozzarellu.\n4. Pecite u prethodno zagrijanoj pećnici na 220 °C oko 10–15 minuta, ovisno o tijestu.\n5. Dodajte svježi bosiljak i poslužite.',
         omiljen: false,
         vegansko: true,
-        generirano: true
+        generirano: false
 
     },
     {
@@ -106,7 +106,7 @@ export const recepti = [
         priprema: '1. Operite i narežite salatu.\n2. Začinite piletinu i ispecite je u tavi.\n3. Narežite pečenu piletinu na komade.\n4. Pomiješajte salatu, piletinu, krutone i Cezar umak.\n5. Pospite parmezanom i poslužite.',
         omiljen: true,
         vegansko: false,
-        generirano: true
+        generirano: false
     },
     {
         id: 6,
@@ -127,7 +127,7 @@ export const recepti = [
         priprema: '1. Zagrijte pećnicu na 180 °C.\n2. Otopite čokoladu.\n3. Umutite jaja i šećer, zatim dodajte otopljenu čokoladu i brašno.\n4. Izlijte smjesu u namašćen kalup.\n5. Pecite oko 25–30 minuta i ostavite da se ohladi.',
         omiljen: false,
         vegansko: true,
-        generirano: true
+        generirano: false
     },
     {
         id: 7,
@@ -148,7 +148,7 @@ export const recepti = [
         priprema: '1. Operite i narežite povrće na kockice.\n2. Nasjeckajte luk i kratko ga popržite u loncu.\n3. Dodajte ostalo povrće i vodu.\n4. Kuhajte oko 20 minuta, dok povrće ne omekša.\n5. Začinite po želji i poslužite toplo.',
         omiljen: false,
         vegansko: true,
-        generirano: true
+        generirano: false
 
     }
 

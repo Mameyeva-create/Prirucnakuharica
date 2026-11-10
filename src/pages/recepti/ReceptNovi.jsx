@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import KategorijaService from "../../services/kategorije/KategorijaService"
 import SastojakService from "../../services/sastojci/SastojakService";
 import JedinicaMjereService from "../../services/jedinicaMjere/JedinicaMjereService";
-
+import SlikaCropper from "../../components/SlikaCropper";
 
 
 export default function ReceptNovi() {
@@ -90,30 +90,6 @@ export default function ReceptNovi() {
         setTrenutnaJedinicaMjere(0)
         setTrenutnaKolicina('')
         setTrenutniSastojak({})
-    }
-
-    function odaberiSliku(e) {
-        const datoteka = e.target.files[0]
-        if (!datoteka) return
-        if (!datoteka.type.startsWith('image/')) {
-            alert('Odaberite datoteku slike')
-            e.target.value = ''
-            return
-        }
-        // Ograničenje veličine slike na 2 MB
-        if (datoteka.size > 2 * 1024 * 1024) {
-            alert('Slika ne smije biti veća od 2 MB')
-            e.target.value = ''
-            return
-        }
-        const citac = new FileReader()
-        citac.onloadend = () => {
-            setSlika(citac.result)
-        }
-        citac.onerror = () => {
-            alert('Greška pri učitavanju slike')
-        }
-        citac.readAsDataURL(datoteka)
     }
 
     async function odradiSubmit(e) {
@@ -273,24 +249,7 @@ export default function ReceptNovi() {
                                             placeholder="Opiši pripremu i posebnosti recepta..." required />
                                     </Form.Group>
 
-                                    <Form.Group className="mb-3">
-                                        <Form.Label>Fotografija recepta 📷</Form.Label>
-                                        <Form.Control id="slikaRecepta" type="file" accept="image/*" onChange={odaberiSliku} />
-                                        {slika && (
-                                            <div className="mt-3">
-                                                <img src={slika} alt="Pregled fotografije recepta"
-                                                    style={{ width: '100%', maxHeight: '220px', objectFit: 'cover', borderRadius: '8px' }} />
-                                                <Button type="button" variant="outline-danger" size="sm"
-                                                    className="mt-2"
-                                                    onClick={() => {
-                                                        setSlika('')
-                                                        document.getElementById
-                                                            ('slikaRecepta').value = ''
-                                                    }}
-                                                >Ukloni fotografiju</Button>
-                                            </div>
-                                        )}
-                                    </Form.Group>
+                                    <SlikaCropper slika={slika} onPromjena={setSlika} />
 
                                     <Row className="g-2 mt-auto pt-3">
                                         <Col xs={12}>
