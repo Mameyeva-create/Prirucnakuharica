@@ -1,6 +1,6 @@
 import { Button, Card, Col, Form, Row } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { GiCookingPot } from 'react-icons/gi';
 import { MdKitchen, MdScale } from 'react-icons/md';
 import ReceptService from '../services/recepti/ReceptService';
@@ -18,6 +18,8 @@ export default function Pocetna() {
   const [brojGeneriranihKategorija, setBrojGeneriranihKategorija] = useState(0)
   const [brojGeneriranihSastojaka, setBrojGeneriranihSastojaka] = useState(0)
   const [brojGeneriranihJedinica, setBrojGeneriranihJedinica] = useState(0)
+  const [recepti, setRecepti] = useState([])
+  const galerijaRef = useRef(null)
 
 
   useEffect(() => {
@@ -32,6 +34,7 @@ export default function Pocetna() {
           JedinicaMjereService.get()
         ])
         const recepti = odgovorRecepata.data || []
+        setRecepti(recepti)
         const kategorije = odgovorKategorija.data || []
         const sastojci = odgovorSastojaka.data || []
         const jedinice = odgovorJedinica.data || []
@@ -61,7 +64,34 @@ export default function Pocetna() {
     navigate(`/recepti?trazi=${encodeURIComponent(unos)}`)
   }
 
+function pomakniGaleriju(smjer) {
+  const traka = galerijaRef.current
 
+  if (!traka) return
+
+  const stavka = traka.querySelector('.galerija-stavka')
+
+  if (!stavka) return
+
+  const sirina = stavka.offsetWidth + 16
+
+  if (smjer === 1) {
+    if (traka.scrollLeft + traka.clientWidth >= traka.scrollWidth - 5) {
+      traka.scrollTo({ left: 0, behavior: 'smooth' })
+    } else {
+      traka.scrollBy({ left: sirina, behavior: 'smooth' })
+    }
+  } else {
+    if (traka.scrollLeft <= 5) {
+      traka.scrollTo({
+        left: traka.scrollWidth,
+        behavior: 'smooth'
+      })
+    } else {
+      traka.scrollBy({ left: -sirina, behavior: 'smooth' })
+    }
+  }
+}
   return (
     <div className="pocetna">
       <div className='pocetna-gore' >
@@ -83,8 +113,10 @@ export default function Pocetna() {
         <p className='hero-slogan'>za svaki dan.</p>
       </div>
 
+     
+
       <div className="pocetna-kartice">
-        <Row className="g-3">
+        <Row className="g-3 mt-2">
 
           <Col xs={12} md={6}>
             <Card className='pocetna-kartica h-100'>
@@ -154,7 +186,53 @@ export default function Pocetna() {
           </Col>
         </Row>
       </div>
-      Ovdje staviti galeriju slika recepata (samo oni recepti koji imaju sliku)
+
+      
+<div className="pocetna-galerija mt-4 px-3">
+  <div className="d-flex justify-content-end gap-2 mb-3">
+    <Button
+      variant="outline-success"
+      onClick={() => pomakniGaleriju(-1)}
+      aria-label="Prethodne slike"
+    >
+      &#10094;
+    </Button>
+
+    <Button
+      variant="outline-success"
+      onClick={() => pomakniGaleriju(1)}
+      aria-label="Sljedeće slike"
+    >
+      &#10095;
+    </Button>
+  </div>
+
+  <div className="galerija-traka" ref={galerijaRef}>
+    {recepti
+      .filter(recept => recept.slikaBase64 || recept.slikaPutanja || recept.slika)
+      .map(recept => (
+        <div className="galerija-stavka" key={recept.id}>
+          <Card
+            className="h-100"
+            onClick={() => navigate(`/recepti/${recept.id}/detalji`)}
+            style={{ cursor: 'pointer' }}
+          >
+            <Card.Img
+              variant="top"
+              src={recept.slikaBase64 || recept.slikaPutanja || recept.slika}
+              alt={recept.naziv}
+              className="galerija-slika"
+            />
+            <Card.Body className="text-center galerija-opis">
+              <Card.Title>{recept.naziv}</Card.Title>
+            </Card.Body>
+          </Card>
+        </div>
+      ))}
+  </div>
+</div>
+
+
     </div>
   );
 

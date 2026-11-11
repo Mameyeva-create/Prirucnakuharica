@@ -328,7 +328,7 @@ footer hr {
 .pocetna-kartice {
     width: 100%;
     padding: 0 1rem 0.75rem;
-    margin: 0;
+    margin: 10px 0 0;
     background-color: transparent;
 }
 
@@ -336,7 +336,7 @@ footer hr {
     border: 1px solid #e7dccc;
     border-radius: 10px;
     box-shadow: 0 4px 14px rgba(37, 52, 45, 0.10);
-    background-color: #F7F3EB;
+    background-color: transparent;
     color: #35483b;
     margin: 0;
 }
@@ -735,4 +735,60 @@ footer hr {
     max-width: 100%;
     height: 40vh;
     object-fit: contain;
+}
+
+
+.galerija-traka {
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+
+.galerija-traka::-webkit-scrollbar {
+  display: none;
+}
+.pocetna-galerija {
+    margin-bottom: 20px;
+}
+.galerija-stavka {
+  flex: 0 0 calc(20% - 13px);
+  scroll-snap-align: start;
+}
+.galerija-stavka .card {
+  border-radius: 10px;
+  overflow: hidden;
+  background-color: transparent;
+}
+
+.galerija-slika {
+  height: 120px;
+  object-fit: cover;
+}
+
+.galerija-opis {
+    border: 1px solid #e7dccc;
+  background-color: transparent;
+  padding: 10px 5px;
+}
+
+.galerija-opis .card-title {
+  color: #35483b;
+  font-size: 0.9rem;
+  margin-bottom: 0;
+  background-color: transparent;
+}
+
+@media (max-width: 768px) {
+  .galerija-stavka {
+    flex-basis: calc(50% - 8px);
+  }
+}
+
+@media (max-width: 480px) {
+  .galerija-stavka {
+    flex-basis: 85%;
+  }
 }

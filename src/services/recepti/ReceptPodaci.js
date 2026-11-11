@@ -160,6 +160,6 @@ export const recepti = [
         omiljen: false,
         vegansko: true,
         generirano: false
-    }
+    },
 
 ]
