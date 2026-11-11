@@ -154,6 +154,7 @@ export default function Pocetna() {
           </Col>
         </Row>
       </div>
+      Ovdje staviti galeriju slika recepata (samo oni recepti koji imaju sliku)
     </div>
   );
 
