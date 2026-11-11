@@ -353,7 +353,7 @@ footer hr {
 
 .pocetna-podnaslov {
     font-size: 0.85rem;
-    color: #68766b;
+    color: #25342d;
     margin: 0 0 8px;
 }
 
@@ -385,9 +385,9 @@ footer hr {
     min-height: 30px;
     padding-top: 4px;
     padding-bottom: 4px;
-    border: none;
-    background-color: #3c8453;
-    color: #fff8ed;
+    border: 1px solid #e7dccc;
+    background-color: transparent;
+    color: #35483b;
 }
 
 .pocetna-gumb:hover,
@@ -739,56 +739,59 @@ footer hr {
 
 
 .galerija-traka {
-  display: flex;
-  gap: 16px;
-  overflow-x: auto;
-  scroll-behavior: smooth;
-  scroll-snap-type: x mandatory;
-  scrollbar-width: none;
+    display: flex;
+    gap: 16px;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
 }
 
 .galerija-traka::-webkit-scrollbar {
-  display: none;
+    display: none;
 }
+
 .pocetna-galerija {
     margin-bottom: 20px;
 }
+
 .galerija-stavka {
-  flex: 0 0 calc(20% - 13px);
-  scroll-snap-align: start;
+    flex: 0 0 calc(20% - 13px);
+    scroll-snap-align: start;
 }
+
 .galerija-stavka .card {
-  border-radius: 10px;
-  overflow: hidden;
-  background-color: transparent;
+    border-radius: 10px;
+    overflow: hidden;
+    background-color: transparent;
 }
 
 .galerija-slika {
-  height: 120px;
-  object-fit: cover;
+    height: 120px;
+    object-fit: cover;
 }
 
 .galerija-opis {
     border: 1px solid #e7dccc;
-  background-color: transparent;
-  padding: 10px 5px;
+    background-color: transparent;
+    padding: 10px 5px;
 }
 
 .galerija-opis .card-title {
-  color: #35483b;
-  font-size: 0.9rem;
-  margin-bottom: 0;
-  background-color: transparent;
+    color: #35483b;
+    font-size: 0.9rem;
+    margin-bottom: 0;
+    background-color: transparent;
 }
 
 @media (max-width: 768px) {
-  .galerija-stavka {
-    flex-basis: calc(50% - 8px);
-  }
+    .galerija-stavka {
+        flex-basis: calc(50% - 8px);
+    }
 }
 
 @media (max-width: 480px) {
-  .galerija-stavka {
-    flex-basis: 85%;
-  }
+    .galerija-stavka {
+        flex-basis: 85%;
+    }
 }
