@@ -328,7 +328,7 @@ footer hr {
 .pocetna-kartice {
     width: 100%;
     padding: 0 1rem 0.75rem;
-    margin: 10px 0 0;
+    margin: 2px 0 0;
     background-color: transparent;
 }
 
@@ -363,13 +363,13 @@ footer hr {
 }
 
 .pocetna-kartica p {
-    margin-bottom: 6px;
+    margin-bottom: 0;
     font-size: 0.9rem;
 }
 
 .pocetna-statistika-tekst-mali {
     font-size: 1.15rem;
-    color: #35483b;
+    color: #25342d;
     margin-top: 2px;
     line-height: 1.1;
 }
@@ -404,7 +404,7 @@ footer hr {
 }
 
 .pocetna-statistika svg {
-    margin-bottom: 5px;
+    margin-bottom: 3px;
 }
 
 .pocetna-statistika .stat-celija {
@@ -430,7 +430,7 @@ footer hr {
 }
 
 .pocetna-statistika-tekst h2 {
-    margin: 10px 0;
+    margin:5px 0;
 }
 
 .recepti-naslov {
@@ -752,7 +752,7 @@ footer hr {
 }
 
 .pocetna-galerija {
-    margin-bottom: 20px;
+    margin-bottom: 15px;
 }
 
 .galerija-stavka {
