@@ -795,14 +795,16 @@ footer hr {
 }
 
 
-@media (max-width: 768px) {
+/* Tablet */
+@media (max-width: 991px) {
     .galerija-stavka {
-        flex-basis: calc(50% - 8px);
+        flex: 0 0 calc((100% - 48px) / 4);
     }
 }
 
-@media (max-width: 480px) {
+/* Mobile */
+@media (max-width: 576px) {
     .galerija-stavka {
-        flex-basis: 85%;
+        flex: 0 0 calc((100% - 16px) / 2);
     }
 }
