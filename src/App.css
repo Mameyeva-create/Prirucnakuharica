@@ -764,11 +764,20 @@ footer hr {
     border-radius: 10px;
     overflow: hidden;
     background-color: transparent;
+    
 }
 
 .galerija-slika {
     height: 120px;
     object-fit: cover;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  border-radius: 12px;
+  cursor: pointer;
+}
+.galerija-slika:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
 }
 
 .galerija-opis {
@@ -783,6 +792,7 @@ footer hr {
     margin-bottom: 0;
     background-color: transparent;
 }
+
 
 @media (max-width: 768px) {
     .galerija-stavka {
