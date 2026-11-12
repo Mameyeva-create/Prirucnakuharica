@@ -756,7 +756,8 @@ footer hr {
 }
 
 .galerija-stavka {
-    flex: 0 0 calc(20% - 13px);
+    /* flex: 0 0 calc(20% - 13px); */
+    flex: 0 0 calc((100% - 80px) / 6);
     scroll-snap-align: start;
 }
 
