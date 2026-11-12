@@ -98,7 +98,7 @@ export default function ReceptNovi() {
         const podaci = new FormData(e.target)
 
         const naziv = podaci.get('naziv').trim()
-        const kategorija = podaci.get('kategorija')
+        const kategorija = parseInt(podaci.get('kategorija'))
         const vrijeme = parseInt(podaci.get('vrijeme'), 10)
         const opis = podaci.get('opis').trim()
 
@@ -106,9 +106,10 @@ export default function ReceptNovi() {
             alert('Naziv recepta mora imati najmanje 2 znaka')
             return
         }
+        console.log(kategorija)
 
-        if (!kategorija || kategorija.trim().length < 2) {
-            alert('Unesi kategoriju s najmanje 2 znaka')
+        if (!kategorija || kategorija==0) {
+            alert('Unesi kategoriju ')
             return
         }
 
@@ -230,7 +231,7 @@ export default function ReceptNovi() {
                                         <Form.Select name="kategorija" required>
                                             <option value="">-- Odaberi kategoriju --</option>
                                             {kategorije.map((kategorija) => (
-                                                <option key={kategorija.id} value={kategorija.naziv}>{kategorija.naziv}</option>
+                                                <option key={kategorija.id} value={kategorija.id}>{kategorija.naziv}</option>
                                             ))}
                                         </Form.Select>
                                     </Form.Group>

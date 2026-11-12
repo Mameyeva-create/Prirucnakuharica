@@ -11,7 +11,7 @@ export const recepti = [
     {
         id: 1,
         naziv: 'Tjestenina Carbonara',
-        kategorija: 'Ručak',
+        kategorija: 2,
         vrijeme: 20,
         slikaPutanja: '/slike/carbonara.jpg',
         slikaBase64: slikaTjesteninaCarbonara,
@@ -32,7 +32,7 @@ export const recepti = [
     {
         id: 2,
         naziv: 'Palačinke',
-        kategorija: 'Doručak',
+        kategorija: 1,
         vrijeme: 15,
         slikaPutanja: '/slike/palacinke.jpg',
         slikaBase64: slikaPalacinke,
@@ -53,7 +53,7 @@ export const recepti = [
     {
         id: 3,
         naziv: 'Piletina s povrćem',
-        kategorija: 'Ručak',
+        kategorija: 2,
         vrijeme: 35,
         slikaPutanja: '/slike/piletina.jpg',
         slikaBase64: slikaPiletinaSPovrcem,
@@ -76,7 +76,7 @@ export const recepti = [
     {
         id: 4,
         naziv: 'Pizza Margherita',
-        kategorija: 'Večera',
+        kategorija: 3,
         vrijeme: 30,
         slikaPutanja: '/slike/pizza.jpg',
         slikaBase64: slikaPizzaMargherita,
@@ -98,7 +98,7 @@ export const recepti = [
     {
         id: 5,
         naziv: 'Cezar salata',
-        kategorija: 'Ručak',
+        kategorija: 2,
         vrijeme: 20,
         slikaPutanja: '/slike/cezar-salata.jpg',
         slikaBase64: slikaCezarSalata,
@@ -120,7 +120,7 @@ export const recepti = [
     {
         id: 6,
         naziv: 'Čokoladni kolač',
-        kategorija: 'Desert',
+        kategorija: 4,
         vrijeme: 45,
         slikaPutanja: '/slike/cokoladni-kolac.jpg',
         slikaBase64: slikaCokoladniKolac,
@@ -141,7 +141,7 @@ export const recepti = [
     {
         id: 7,
         naziv: 'Povrtna juha',
-        kategorija: 'Ručak',
+        kategorija: 2,
         vrijeme: 25,
         slikaPutanja: '/slike/povrtna-juha.jpg',
         slikaBase64: slikaPovrtnaJuha,

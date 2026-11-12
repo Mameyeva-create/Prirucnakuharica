@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react"
 import ReceptService from "../../services/recepti/ReceptService"
 import { Button, Card, Table } from "react-bootstrap"
-import { Link, useNavigate, useSearchParams } from "react-router-dom"
+import { Await, Link, useNavigate, useSearchParams } from "react-router-dom"
 import SastojakService from "../../services/sastojci/SastojakService"
 import { FaFilePdf } from "react-icons/fa"
 import ReceptPDFGenerator from "../../components/ReceptPDFGenerator"
 import JedinicaMjereService from "../../services/jedinicaMjere/JedinicaMjereService"
+import KategorijaService from "../../services/kategorije/KategorijaService"
 
 function korijenRijeci(rijec) {
     let rezultat = rijec
@@ -31,6 +32,8 @@ export default function ReceptPregled() {
     const [searchParams] = useSearchParams()
     const prikaziGenerirane = searchParams.get('generirani') === 'true'
 
+    const [kategorije, setKategorije] = useState([])
+
     const kategorija = searchParams.get('kategorija')
     const samoVegansko = searchParams.get('vegansko') === 'true'
     const trazi = (searchParams.get('trazi') || '')
@@ -38,10 +41,17 @@ export default function ReceptPregled() {
         .toLocaleLowerCase('hr')
 
     useEffect(() => {
+        ucitajKategorije()
         ucitajRecepti()
         ucitajSastojke()
         ucitajJediniceMjere()
     }, [])
+
+    async function ucitajKategorije() {
+            const odgovor = await KategorijaService.get()
+            // console.table(odgovor.data)
+            setKategorije(odgovor.data)
+        }
 
     useEffect(() => {
         setStranica(1)
@@ -95,7 +105,7 @@ export default function ReceptPregled() {
         if (samoVegansko && recept.vegansko !== true) {
             return false
         }
-        if (kategorija && recept.kategorija !== kategorija) {
+        if (kategorija && recept.kategorija != kategorija) {
             return false
         }
         const sastojciTekst = Array.isArray(recept.sastojci)
@@ -141,6 +151,12 @@ export default function ReceptPregled() {
     const receptiZaStranicu = prikazaniRecepti.slice(
         (stranica - 1) * velicinaStranice, stranica * velicinaStranice
     )
+
+
+    function nazivKategorija(idKategorije){
+        return kategorije.find(k => k.id == idKategorije).naziv
+    }
+
     return (
         <>
             <div className="naslov-recepti my-2 px-3 py-2">
@@ -192,7 +208,7 @@ export default function ReceptPregled() {
                                         />
                                     </td>
 
-                                    <td>{recept.kategorija}</td>
+                                    <td>{nazivKategorija(recept.kategorija)}</td>
                                     {/* <td className="text-end">{recept.vrijeme} min</td> */}
                                     <td>{recept.vrijeme} min</td>
                                     <td>{recept.opis}</td>

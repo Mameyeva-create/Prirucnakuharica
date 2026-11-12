@@ -97,7 +97,7 @@ export default function Izbornik() {
                                                 setPrikaziKategorije(false)
                                                 setReceptiOtvoreni(false)
                                                 navigate(RouteNames.RECEPTI + '?kategorija='
-                                                    + encodeURIComponent(kategorija.naziv))
+                                                    + kategorija.id)
                                             }}
                                         >
                                             {kategorija.naziv === 'Doručak' && '🥪'}
