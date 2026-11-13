@@ -6,6 +6,7 @@ import { slikeRecepata } from "../../services/recepti/slikeRecepata"
 import SastojakService from "../../services/sastojci/SastojakService"
 import ReceptPDFGenerator from "../../components/ReceptPDFGenerator"
 import JedinicaMjereService from "../../services/jedinicaMjere/JedinicaMjereService"
+import KategorijaService from "../../services/kategorije/KategorijaService"
 
 export default function ReceptDetalji() {
     const { id } = useParams()
@@ -15,7 +16,8 @@ export default function ReceptDetalji() {
     const [porcije, setPorcije] = useState(2)
     const [sviSastojci, setSviSastojci] = useState([])
     const [jediniceMjere, setJediniceMjere] = useState([])
-    const generirajPDF = ReceptPDFGenerator({ recept, sviSastojci, jediniceMjere })
+    const [sveKategorije, setSveKategorije] = useState([])
+
 
 
     async function promjeniOmiljen() {
@@ -31,19 +33,20 @@ export default function ReceptDetalji() {
     }
 
     useEffect(() => {
-        async function ucitajSastojke() {
+        async function ucitajPodatke() {
             try {
-                const [odgovorSastojci, odgovorJedinice] = await Promise.all([
+                const [odgovorSastojci, odgovorJedinice, odgovorKategorije] = await Promise.all([
                     SastojakService.get(),
-                    JedinicaMjereService.get()
+                    JedinicaMjereService.get(),
+                    KategorijaService.get()
                 ])
                 setSviSastojci(odgovorSastojci.data || [])
                 setJediniceMjere(odgovorJedinice.data || [])
+                setSveKategorije(odgovorKategorije.data || [])
             } catch (error) {
                 console.error("Greška pri učitavanju podataka", error)
             }
         }
-        ucitajSastojke()
 
         async function ucitajRecept() {
             try {
@@ -54,10 +57,25 @@ export default function ReceptDetalji() {
                 setRecept(null)
             }
         }
-
+        ucitajPodatke()
         ucitajRecept()
     }, [id])
 
+    function nazivKategorije(kategorijaId) {
+        const kat = sveKategorije.find(k => Number(k.id) === Number(kategorijaId))
+        return kat?.naziv || 'Nepoznata kategorija'
+    }
+    function handleGenerirajPDF() {
+        if (!recept) return
+        const generiraj = ReceptPDFGenerator({ recept, sviSastojci, jediniceMjere, kategorije: sveKategorije })
+        generiraj() 
+    }
+    // === Проверка после всех хуков ===
+    if (!recept || !recept.id) {
+        return (
+            <p className="container mt-4">Recept nije pronađen</p>
+        )
+    }
 
     function prilagodiKolicinu(sastojak) {
         const kolicina = Number(sastojak.kolicina)
@@ -119,7 +137,7 @@ export default function ReceptDetalji() {
                             {recept.omiljen ? "♥" : "♡"}
                         </Button>
                     </div>
-                    <p><strong>Kategorija:</strong>{recept.kategorija}</p>
+                    <p><strong>Kategorija: </strong>{nazivKategorije(recept.kategorija)}</p>
                     <p><strong>Vrijeme pripreme:</strong>{" "}
                         {recept.vrijeme} min</p>
                 </div>
@@ -156,7 +174,7 @@ export default function ReceptDetalji() {
             </p>
             <div className="d-flex gap-2 flex-wrap mt-4">
                 <Button variant="secondary" onClick={() => navigate(-1)}>Natrag</Button>
-                <Button variant="outline-success" onClick={generirajPDF}>📄 Izvezi recept u PDF</Button>
+                <Button variant="outline-success" onClick={handleGenerirajPDF}>📄 Izvezi recept u PDF</Button>
             </div>
         </div>
     )

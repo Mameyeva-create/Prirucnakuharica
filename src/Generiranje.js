@@ -26,7 +26,8 @@ export async function dohvatiKoristene() {
     const jedinice = new Set()
 
     for (const r of recepti) {
-        if (r.kategorija != null) kategorije.add(normalizirajNaziv(r.kategorija))
+        const kat = Number(r.kategorija)
+        if (r.kategorija != null && Number.isFinite(kat)) kategorije.add(kat)
         for (const s of r.sastojci || []) {
             if (s.sastojak != null) sastojci.add(Number(s.sastojak))
             if (s.jedMjere != null) jedinice.add(Number(s.jedMjere))

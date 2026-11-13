@@ -13,7 +13,7 @@ import {
 const predlosci = [
     {
         naziv: "Tjestenina Carbonara",
-        kategorija: "Ručak",
+        kategorija: 2,
         vrijeme: 20,
         slikaPutanja: "/slike/carbonara.jpg",
         opis: "Jednostavna tjestenina s jajima, sirom i pancetom.",
@@ -35,7 +35,7 @@ const predlosci = [
     },
     {
         naziv: "Palačinke",
-        kategorija: "Doručak",
+        kategorija: 1,
         vrijeme: 15,
         slikaPutanja: "/slike/palacinke.jpg",
         opis: "Brze palačinke koje možete poslužiti sa slatkim nadjevom.",
@@ -57,7 +57,7 @@ const predlosci = [
     },
     {
         naziv: "Piletina s povrćem",
-        kategorija: "Ručak",
+        kategorija: 2,
         vrijeme: 35,
         slikaPutanja: "/slike/piletina.jpg",
         opis: "Ukusan obrok s piletinom i svježim povrćem.",
@@ -81,7 +81,7 @@ const predlosci = [
     },
     {
         naziv: "Pizza Margherita",
-        kategorija: "Večera",
+        kategorija: 3,
         vrijeme: 30,
         slikaPutanja: "/slike/pizza.jpg",
         opis: "Klasična pizza s rajčicom, mozzarellom i bosiljkom.",
@@ -102,7 +102,7 @@ const predlosci = [
     },
     {
         naziv: "Cezar salata",
-        kategorija: "Ručak",
+        kategorija: 2,
         vrijeme: 20,
         slikaPutanja: "/slike/cezar-salata.jpg",
         opis: "Svježa salata s piletinom, krutonima i Cezar umakom.",
@@ -123,7 +123,7 @@ const predlosci = [
     },
     {
         naziv: "Čokoladni kolač",
-        kategorija: "Desert",
+        kategorija: 4,
         vrijeme: 45,
         slikaPutanja: "/slike/cokoladni-kolac.jpg",
         opis: "Sočan čokoladni kolač bogatog okusa.",
@@ -145,7 +145,7 @@ const predlosci = [
     },
     {
         naziv: "Povrtna juha",
-        kategorija: "Ručak",
+        kategorija: 2,
         vrijeme: 25,
         slikaPutanja: "/slike/povrtna-juha.jpg",
         opis: "Lagana juha od svježeg povrća.",
@@ -181,6 +181,14 @@ async function osiguraj(servis, naziv, popis) {
     if (!stavka) throw new Error(`"${naziv}" nije uspješno dodan.`)
     return stavka
 }
+// Находим категорию по ID (для predložaka)
+function nadiKategorijuPoId(id, popis) {
+    const stavka = popis.find(x => Number(x.id) === Number(id))
+    if (!stavka) {
+        throw new Error(`Kategorija s ID ${id} nije pronađena.`)
+    }
+    return stavka
+}
 
 async function generiraj(broj) {
     const [r, k, s, j] = await Promise.all([
@@ -198,7 +206,7 @@ async function generiraj(broj) {
     try {
         for (let i = 0; i < broj; i++) {
             const p = predlosci[i % predlosci.length]
-            const kategorija = await osiguraj(KategorijaService, p.kategorija, kategorije)
+            const kategorija = nadiKategorijuPoId(p.kategorija, kategorije)
 
             const sastojci = []
             for (const [nazivS, kol, nazivJ] of p.sastojci) {
@@ -213,7 +221,7 @@ async function generiraj(broj) {
 
             await ReceptService.dodaj({
                 naziv: jedinstvenNaziv(p.naziv, zauzeti),
-                kategorija: kategorija.naziv,
+                kategorija: Number(kategorija.id),
                 vrijeme: p.vrijeme,
                 slikaPutanja: p.slikaPutanja,
                 opis: p.opis,
@@ -238,7 +246,7 @@ async function obrisi() {
     // 2. zatim samo ono što je generator recepata sam stvorio, a nitko ne koristi
     const izRecepta = x => x.izRecepta === true
     const koristeni = await dohvatiKoristene()
-    const kategorije = await obrisiGenerirane(KategorijaService, koristeni.kategorije, k => normalizirajNaziv(k.naziv), izRecepta)
+    const kategorije = await obrisiGenerirane(KategorijaService, koristeni.kategorije, undefined, izRecepta)
     const sastojci = await obrisiGenerirane(SastojakService, koristeni.sastojci, undefined, izRecepta)
     const jedinice = await obrisiGenerirane(JedinicaMjereService, koristeni.jedinice, undefined, izRecepta)
 

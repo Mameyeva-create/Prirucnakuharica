@@ -24,7 +24,7 @@ async function generiraj(broj) {
 
 async function obrisi() {
     const koristeni = await dohvatiKoristene()
-    const rezultat = await obrisiGenerirane(KategorijaService, koristeni.kategorije, k => normalizirajNaziv(k.naziv))
+    const rezultat = await obrisiGenerirane(KategorijaService, koristeni.kategorije)
     return porukaBrisanja('kategorije', rezultat)
 }
 

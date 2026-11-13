@@ -7,6 +7,7 @@ import { FaFilePdf } from "react-icons/fa"
 import ReceptPDFGenerator from "../../components/ReceptPDFGenerator"
 import JedinicaMjereService from "../../services/jedinicaMjere/JedinicaMjereService"
 import KategorijaService from "../../services/kategorije/KategorijaService"
+import RecipeCard from "../../components/RecipeCard"
 
 function korijenRijeci(rijec) {
     let rezultat = rijec
@@ -24,15 +25,20 @@ function korijenRijeci(rijec) {
 
 export default function ReceptPregled() {
     const [recepti, setRecepti] = useState([])
+    const [kategorije, setKategorije] = useState([])
+    const navigate = useNavigate()
+    const [searchParams] = useSearchParams()
+
+
+
     const [sviSastojci, setSviSastojci] = useState([])
     const [jediniceMjere, setJediniceMjere] = useState([])
     const [stranica, setStranica] = useState(1)
     const velicinaStranice = 10
-    const navigate = useNavigate()
-    const [searchParams] = useSearchParams()
+
     const prikaziGenerirane = searchParams.get('generirani') === 'true'
 
-    const [kategorije, setKategorije] = useState([])
+
 
     const kategorija = searchParams.get('kategorija')
     const samoVegansko = searchParams.get('vegansko') === 'true'
@@ -48,10 +54,10 @@ export default function ReceptPregled() {
     }, [])
 
     async function ucitajKategorije() {
-            const odgovor = await KategorijaService.get()
-            // console.table(odgovor.data)
-            setKategorije(odgovor.data)
-        }
+        const odgovor = await KategorijaService.get()
+        // console.table(odgovor.data)
+        setKategorije(odgovor.data)
+    }
 
     useEffect(() => {
         setStranica(1)
@@ -90,11 +96,7 @@ export default function ReceptPregled() {
     }
 
     async function generirajPDFZaRecept(recept) {
-        const generiraj = ReceptPDFGenerator({
-            recept,
-            sviSastojci,
-            jediniceMjere
-        })
+        const generiraj = ReceptPDFGenerator({ recept, sviSastojci, jediniceMjere, kategorije })
         await generiraj()
     }
 
@@ -105,7 +107,7 @@ export default function ReceptPregled() {
         if (samoVegansko && recept.vegansko !== true) {
             return false
         }
-        if (kategorija && recept.kategorija != kategorija) {
+        if (kategorija && Number(recept.kategorija) !== Number(kategorija)) {
             return false
         }
         const sastojciTekst = Array.isArray(recept.sastojci)
@@ -153,14 +155,15 @@ export default function ReceptPregled() {
     )
 
 
-    function nazivKategorija(idKategorije){
-        return kategorije.find(k => k.id == idKategorije).naziv
+    function nazivKategorija(kategorijaId) {
+        const kat = kategorije.find(k => Number(k.id) === Number(kategorijaId))
+        return kat?.naziv || 'Nepoznata kategorija'
     }
 
     return (
         <>
             <div className="naslov-recepti my-2 px-3 py-2">
-                <h2>Svi recepti</h2>
+                <h2>{prikaziGenerirane ? 'Generirani recepti' : 'Svi recepti'}</h2>
                 <p>Pronađeno recepata: {prikazaniRecepti.length}</p>
             </div>
 
@@ -203,7 +206,6 @@ export default function ReceptPregled() {
                                             onClick={(e) => {
                                                 e.stopPropagation()
                                                 generirajPDFZaRecept(recept)
-
                                             }}
                                         />
                                     </td>
@@ -240,7 +242,8 @@ export default function ReceptPregled() {
                                 <tr>
                                     <td colSpan={7} className="text-center">{trazi
                                         ? `Nema recepata za: ${trazi}`
-                                        : 'Nema recepata u ovoj kategoriji'}
+                                        : prikaziGenerirane ? 'Nema generiranih recepata'
+                                            : 'Nema recepata u ovoj kategoriji'}
                                     </td>
                                 </tr>
                             )}
@@ -285,7 +288,7 @@ export default function ReceptPregled() {
                             </Card.Title>
 
                             <Card.Subtitle className="mb-2 text-muted">
-                                {recept.kategorija} · {recept.vrijeme} min
+                                {nazivKategorija(recept.kategorija)} · {recept.vrijeme} min
                             </Card.Subtitle>
 
                             <Card.Text>
@@ -316,9 +319,9 @@ export default function ReceptPregled() {
                 ))}
                 {prikazaniRecepti.length === 0 && (
                     <p className="text-center my-4">
-                        {trazi
-                            ? `Nema recepata za: ${trazi}`
-                            : 'Nema recepata u ovoj kategoriji'}</p>
+                        {trazi ? `Nema recepata za: ${trazi}` : prikaziGenerirane
+                            ? 'Nema generiranih recepata' : 'Nema recepata u ovoj kategoriji'}
+                    </p>
                 )}
             </div>
 

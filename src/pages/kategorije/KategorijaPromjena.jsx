@@ -17,7 +17,7 @@ export default function KategorijaPromjena() {
     }, [])
 
     async function ucitajKategorija() {
-       // debugger
+        // debugger
         await KategorijaService.getById(params.id).then((odgovor) => {
             const i = odgovor.data
             setKategorija(i)
@@ -52,11 +52,10 @@ export default function KategorijaPromjena() {
                 <Form.Group controlId="naziv">
                     <Form.Label>Naziv kategorija</Form.Label>
                     <Form.Control type="text"
-                        name="naziv" required 
-                        defaultValue={kategorija?.naziv || ""}/>
+                        name="naziv" required
+                        key={kategorija?.id}
+                        defaultValue={kategorija?.naziv || ""} />
                 </Form.Group>
-
-               
 
                 <Row className="mt-4">
                     <Col>
@@ -70,9 +69,7 @@ export default function KategorijaPromjena() {
                         </Button>
                     </Col>
                 </Row>
-
             </Form>
-
         </>
     )
 }

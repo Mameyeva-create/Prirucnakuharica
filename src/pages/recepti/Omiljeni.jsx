@@ -3,11 +3,12 @@ import ReceptService from "../../services/recepti/ReceptService";
 import { Card, Table } from "react-bootstrap";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import { Link, useNavigate } from "react-router-dom";
-
+import KategorijaService from "../../services/kategorije/KategorijaService";
 
 export default function Omiljeni() {
 
     const [recepti, setRecepti] = useState([])
+    const [kategorije, setKategorije] = useState([])
     const navigate = useNavigate()
 
     useEffect(() => {
@@ -15,21 +16,27 @@ export default function Omiljeni() {
     }, [])
 
     async function ucitajOmiljene() {
-        const odgovor = await ReceptService.get()
+        const [odgovor, odgovorKategorije] = await Promise.all([
+            ReceptService.get(), KategorijaService.get()
+        ])
         const omiljeni = odgovor.data.filter(recept => recept.omiljen === true)
         setRecepti(omiljeni)
+        setKategorije(odgovorKategorije.data || [])
     }
-
+    function nazivKategorije(kategorijaId) {
+        const kat = kategorije.find(k => Number(k.id) === Number(kategorijaId))
+        return kat?.naziv || 'Nepoznata kategorija'
+    }
     function otvoriRecept(id) {
         navigate(`/recepti/${id}/detalji`)
     }
 
     return (
         <>
-         <div className="naslov-recepti my-2 px-3 py-2">
-            <h2>Omiljeni recepti</h2>
-            <p>Pronađeno recepata: {recepti.length}</p>
-        </div>
+            <div className="naslov-recepti my-2 px-3 py-2">
+                <h2>Omiljeni recepti</h2>
+                <p>Pronađeno recepata: {recepti.length}</p>
+            </div>
             <div className="d-none d-md-block table-responsive">
                 <Table hover striped className="table-recepti">
                     <thead>
@@ -60,7 +67,7 @@ export default function Omiljeni() {
                                         {recept.naziv}
                                     </Link>
                                 </td>
-                                <td>{recept.kategorija}</td>
+                                <td>{nazivKategorije(recept.kategorija)}</td>
                                 <td className="text-end">{recept.vrijeme} min</td>
                                 <td>{recept.opis}</td>
                                 <td>❤️</td>
@@ -107,7 +114,7 @@ export default function Omiljeni() {
                             </Card.Title>
 
                             <Card.Subtitle className='mb-2 text-muted'>
-                                {recept.kategorija} · {recept.vrijeme} min
+                                {nazivKategorije(recept.kategorija)} · {recept.vrijeme} min
                             </Card.Subtitle>
                             <Card.Text>{recept.opis || 'Nema opisa recepta'}</Card.Text>
 
@@ -124,7 +131,7 @@ export default function Omiljeni() {
                 {recepti.length === 0 && (
                     <p className="text-center my-4">Još nema omiljenih recepata</p>
                 )}
-</div>
+            </div>
 
             <div style={{ maxWidth: '700px', margin: '100px auto 0', textAlign: 'center' }}>
                 <DotLottieReact

@@ -2,7 +2,7 @@ import { jsPDF } from 'jspdf';
 import { autoTable } from 'jspdf-autotable';
 
 
-export default function ReceptPDFGenerator({ recept, sviSastojci, jediniceMjere }) {
+export default function ReceptPDFGenerator({ recept, sviSastojci, jediniceMjere, kategorije }) {
 
     const fetchFontAsBase64 = async (url) => {
         const response = await fetch(url)
@@ -57,6 +57,7 @@ export default function ReceptPDFGenerator({ recept, sviSastojci, jediniceMjere 
         doc.setTextColor(...textColor);
         doc.text(`Recept: ${recept?.naziv || '-'}`, 15, 42)
 
+        const kategorija = kategorije?.find(k => Number(k.id) === Number(recept?.kategorija))
         // PODACI O RECEPTU
         autoTable(doc, {
             startY: 50,
@@ -66,7 +67,7 @@ export default function ReceptPDFGenerator({ recept, sviSastojci, jediniceMjere 
 
             head: [['PODACI O RECEPTU']],
             body: [
-                [`Kategorija: ${recept?.kategorija || '-'}`],
+                [`Kategorija: ${kategorija?.naziv || '-'}`],
                 [`Vrijeme pripreme: ${recept?.vrijeme || '-'}`],
                 [`Veganski recept: ${recept?.vegansko ? 'Da' : 'Ne'}`],
                 [`Omiljeni recept: ${recept?.omiljen ? 'Da' : 'Ne'}`]

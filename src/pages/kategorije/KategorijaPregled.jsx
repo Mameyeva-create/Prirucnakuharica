@@ -26,7 +26,7 @@ export default function KategorijaPregled() {
         const odgovor  = await ReceptService.get()
         const recepti = odgovor.data || []
         const kategorija = kategorije.find(k => String(k.id) === String(id))
-        const koristiSe = recepti.some(recept => recept.kategorija === kategorija?.naziv)
+        const koristiSe = recepti.some(recept => String(recept.kategorija) === String(kategorija?.id))
         if (koristiSe) {
            alert('Kategorija se koristi u receptima i ne može se obrisati!')  
            return
@@ -40,25 +40,12 @@ export default function KategorijaPregled() {
 
     return (
         <>
-            {/* <div style={{ overflowX: 'auto' }}> */}
-
             <div className="naslov-recepti my-2 px-3 py-2">
                 <h2>Sve kategorije</h2>
                 <p>Ukupno kategorija: {kategorije.length}</p>
             </div>
 
-            {/* <Link to={RouteNames.KATEGORIJE_NOVI}
-                        className="btn btn-success w-100 my-3"
-                        style={{
-                            display: 'block',
-                            boxSizing: 'border-box',
-                            whiteSpace: 'normal',
-                            overflowWrap: 'break-word'
-                        }}>
-                        Dodavanje nove kategorije
-                    </Link> */}
             <div style={{ width: '100%' }}>
-
 
                 <Table hover striped className="table-kategorije">
                     <thead>

@@ -96,24 +96,30 @@ export default function ReceptNovi() {
         e.preventDefault()
 
         const podaci = new FormData(e.target)
+        const naziv = podaci.get('naziv')?.trim()
 
-        const naziv = podaci.get('naziv').trim()
-        const kategorija = parseInt(podaci.get('kategorija'))
+        const kategorija = Number(podaci.get('kategorija'))
+        if (!kategorija) {
+            alert('Odaberite kategoriju')
+            return
+        }
         const vrijeme = parseInt(podaci.get('vrijeme'), 10)
-        const opis = podaci.get('opis').trim()
+        const opis = podaci.get('opis')?.trim() || ''
+        const priprema = podaci.get('priprema')?.trim() || ''
+        const vegansko = podaci.get('vegansko') === 'on'
+        const omiljen = podaci.get('omiljen') === 'on'
 
-        if (naziv.length < 2) {
+        if (!naziv || naziv.length < 2) {
             alert('Naziv recepta mora imati najmanje 2 znaka')
             return
         }
-        console.log(kategorija)
 
-        if (!kategorija || kategorija==0) {
+        if (!kategorija || isNaN(kategorija)) {
             alert('Unesi kategoriju ')
             return
         }
 
-        if (isNaN(vrijeme) || vrijeme < 1 || vrijeme > 300) {
+        if (!(vrijeme) || vrijeme < 1 || vrijeme > 300) {
             alert('Vrijeme mora biti između 1 i 300 minuta')
             return
         }
@@ -122,30 +128,31 @@ export default function ReceptNovi() {
             alert('Opis recepata mora imati najmanje 5 znakova')
             return
         }
-         if (opis.length < 5) {
-            alert('Opis recepata mora imati najmanje 5 znakova')
-            return
-        }
 
         // novo: recept mora imati barem jedan sastojak
         if (odabraniSastojci.length === 0) {
-             if (trenutniSastojak.id || trenutnaKolicina) {
+            if (trenutniSastojak.id || trenutnaKolicina) {
                 alert('Klikni "+ Dodaj sastojak" prije spremanja recepta')
             } else {
                 alert('Dodaj barem jedan sastojak u recept')
             }
             return
         }
-
+        const sastojciZaSpremanje = odabraniSastojci.map(({ sastojak, kolicina, jedMjere }) => ({
+            sastojak: Number(sastojak),
+            kolicina: Number(kolicina),
+            jedMjere: Number(jedMjere)
+        }))
         const recept = {
             naziv,
             kategorija,
             vrijeme,
             opis,
-            slika,
-            sastojci: odabraniSastojci,
-            omiljen: podaci.get('omiljen') === 'on',
-            vegansko: podaci.get('vegansko') === 'on',
+            priprema,
+            slika: slika || null,
+            sastojci: sastojciZaSpremanje,
+            omiljen,
+            vegansko,
             generirano: false
         }
         // console.log(JSON.stringify(recept))
@@ -248,6 +255,15 @@ export default function ReceptNovi() {
                                         <Form.Control as="textarea"
                                             name="opis" rows={5}
                                             placeholder="Opiši pripremu i posebnosti recepta..." required />
+                                    </Form.Group>
+                                    <Form.Group controlId="priprema" className="mb-3">
+                                        <Form.Label>Priprema</Form.Label>
+                                        <Form.Control
+                                            as="textarea"
+                                            name="priprema"
+                                            rows={6}
+                                            placeholder="Korak po korak upute za pripremu..."
+                                        />
                                     </Form.Group>
 
                                     <SlikaCropper slika={slika} onPromjena={setSlika} />
@@ -354,7 +370,7 @@ export default function ReceptNovi() {
                                     {odabraniSastojci.length > 0 && (
                                         <>
                                             <hr />
-                                            <div style={{ overflow: 'auto', maxHeight: '250px' }}>
+                                            <div style={{ overflowY: 'auto', maxHeight: '60vh' }}>
                                                 <Table striped bordered hover size="sm">
                                                     <thead>
                                                         <tr>

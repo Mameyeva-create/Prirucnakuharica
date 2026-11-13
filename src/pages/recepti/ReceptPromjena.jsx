@@ -20,6 +20,7 @@ export default function ReceptPromjena() {
     const [kategorija, setKategorija] = useState('')
     const [vrijeme, setVrijeme] = useState('')
     const [opis, setOpis] = useState('')
+    const [priprema, setPriprema] = useState('')
     const [omiljen, setOmiljen] = useState(false)
     const [vegansko, setVegansko] = useState(false)
     const [generirano, setGenerirano] = useState(false)
@@ -122,8 +123,8 @@ export default function ReceptPromjena() {
             return
         }
 
-        if (!kategorija || kategorija.trim().length < 2) {
-            alert('Unesi kategoriju s najmanje 2 znaka')
+        if (!Number(kategorija)) {
+            alert('Unesi kategoriju')
             return
         }
 
@@ -137,11 +138,7 @@ export default function ReceptPromjena() {
             alert('Opis recepta mora imati najmanje 5 znakova')
             return
         }
-        if (opis.trim().length < 5) {
-            alert('Opis recepta mora imati najmanje 5 znakova')
-            return
-        }
-
+        
         // novo: recept mora imati barem jedan sastojak
         if (odabraniSastojci.length === 0) {
             if (trenutniSastojak.id || trenutnaKolicina) {
@@ -153,9 +150,10 @@ export default function ReceptPromjena() {
         }
         const recept = {
             naziv: naziv.trim(),
-            kategorija,
+            kategorija: Number(kategorija),
             vrijeme: parsedVrijeme,
             opis: opis.trim(),
+            priprema: priprema.trim(),
             slika,
             slikaPutanja,
             sastojci: odabraniSastojci,
@@ -271,7 +269,7 @@ export default function ReceptPromjena() {
                                         >
                                             <option value="">-- Odaberi kategoriju --</option>
                                             {kategorije.map((kat) => (
-                                                <option key={kat.id} value={kat.naziv}>{kat.naziv}</option>
+                                                <option key={kat.id} value={kat.id}>{kat.naziv}</option>
                                             ))}
                                         </Form.Select>
                                     </Form.Group>
@@ -293,6 +291,12 @@ export default function ReceptPromjena() {
                                             onChange={(e) => setOpis(e.target.value)}
                                             placeholder="Opiši pripremu i posebnosti recepta..." required />
                                     </Form.Group>
+                                    <Form.Group controlId="priprema" className="mb-3">
+    <Form.Label>Priprema</Form.Label>
+    <Form.Control as="textarea" name="priprema" rows={6}
+        value={priprema}
+        onChange={(e) => setPriprema(e.target.value)} />
+</Form.Group>
 
                                     <SlikaCropper
                                         slika={slika || slikaPutanja}
@@ -408,7 +412,7 @@ export default function ReceptPromjena() {
                                     {odabraniSastojci.length > 0 && (
                                         <>
                                             <hr />
-                                            <div style={{ overflow: 'auto', maxHeight: '250px' }}>
+                                            <div style={{ overflowY: 'auto', maxHeight: '60vh' }}>
                                                 <Table striped bordered hover size="sm">
                                                     <thead>
                                                         <tr>
