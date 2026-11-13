@@ -32,6 +32,6 @@ export default {
     get: () => AktivniServis.get(),
     dodaj: (sastojak) => AktivniServis.dodaj(sastojak),
     getById: (id) => AktivniServis.getById(id),
-    promijeni: (id, sastojak) => AktivniServis.promijeni(id, sastojak),
+    promijeni: (id, jedinicaMjere) => AktivniServis.promijeni(id, jedinicaMjere),
     obrisi: (id) => AktivniServis.obrisi(id)
 }
