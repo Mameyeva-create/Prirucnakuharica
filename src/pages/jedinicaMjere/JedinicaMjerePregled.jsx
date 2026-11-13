@@ -30,7 +30,7 @@ export default function JedinicaMjerePregled() {
                 return
             }
             if (e.key === 'Backspace') {
-                setTrazeniPojam(prethodni.slice(0, -1))
+                setTrazeniPojam(prethodni => prethodni.slice(0, -1))
                 return
             }
             if (e.key.length === 1) {
@@ -44,7 +44,7 @@ export default function JedinicaMjerePregled() {
     }, [])
     async function ucitajJediniceMjere() {
         const odgovor = await JedinicaMjereService.get()
-         console.table(odgovor.data)
+        console.table(odgovor.data)
         setJediniceMjere(odgovor.data)
     }
 
@@ -53,13 +53,10 @@ export default function JedinicaMjerePregled() {
         const odgovor = await ReceptService.get()
         const recepti = odgovor.data
 
-        // Dohvat naziva jedinice mjere
-        const jedinica = jediniceMjere.find(j => j.id === id)
-
         // Provjera koristi li se jedinica mjere u nekom receptu
         const koristiSe = recepti.some(recept =>
             recept.sastojci?.some(s =>
-               String(s.jedMjere) === String(id)
+                String(s.jedMjere) === String(id)
             )
         )
         if (koristiSe) {

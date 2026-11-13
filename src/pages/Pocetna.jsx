@@ -8,6 +8,7 @@ import KategorijaService from '../services/kategorije/KategorijaService';
 import { BiCategory, BiLeaf } from 'react-icons/bi';
 import SastojakService from '../services/sastojci/SastojakService'
 import JedinicaMjereService from '../services/jedinicaMjere/JedinicaMjereService'
+import { pretragaSchema, validiraj } from '../validacije';
 
 
 export default function Pocetna() {
@@ -53,45 +54,42 @@ export default function Pocetna() {
 
   function pretrazi(e) {
     e.preventDefault()
-
-    const unos = namirnice.trim()
-
-    if (unos.length < 3) {
-      alert('Unesi najmanje 3 znaka za pretragu')
+    const rezultat = validiraj(pretragaSchema, namirnice)
+    if (!rezultat.ok) {
+      alert(rezultat.greska)
       return
     }
-
-    navigate(`/recepti?trazi=${encodeURIComponent(unos)}`)
+    navigate(`/recepti?trazi=${encodeURIComponent(rezultat.data)}`)
   }
 
-function pomakniGaleriju(smjer) {
-  const traka = galerijaRef.current
+  function pomakniGaleriju(smjer) {
+    const traka = galerijaRef.current
 
-  if (!traka) return
+    if (!traka) return
 
-  const stavka = traka.querySelector('.galerija-stavka')
+    const stavka = traka.querySelector('.galerija-stavka')
 
-  if (!stavka) return
+    if (!stavka) return
 
-  const sirina = stavka.offsetWidth + 16
+    const sirina = stavka.offsetWidth + 16
 
-  if (smjer === 1) {
-    if (traka.scrollLeft + traka.clientWidth >= traka.scrollWidth - 5) {
-      traka.scrollTo({ left: 0, behavior: 'smooth' })
+    if (smjer === 1) {
+      if (traka.scrollLeft + traka.clientWidth >= traka.scrollWidth - 5) {
+        traka.scrollTo({ left: 0, behavior: 'smooth' })
+      } else {
+        traka.scrollBy({ left: sirina, behavior: 'smooth' })
+      }
     } else {
-      traka.scrollBy({ left: sirina, behavior: 'smooth' })
-    }
-  } else {
-    if (traka.scrollLeft <= 5) {
-      traka.scrollTo({
-        left: traka.scrollWidth,
-        behavior: 'smooth'
-      })
-    } else {
-      traka.scrollBy({ left: -sirina, behavior: 'smooth' })
+      if (traka.scrollLeft <= 5) {
+        traka.scrollTo({
+          left: traka.scrollWidth,
+          behavior: 'smooth'
+        })
+      } else {
+        traka.scrollBy({ left: -sirina, behavior: 'smooth' })
+      }
     }
   }
-}
   return (
     <div className="pocetna">
       <div className='pocetna-gore' >
@@ -113,7 +111,7 @@ function pomakniGaleriju(smjer) {
         <p className='hero-slogan'>za svaki dan.</p>
       </div>
 
-     
+
 
       <div className="pocetna-kartice">
         <Row className="g-3 mt-2">
@@ -187,50 +185,50 @@ function pomakniGaleriju(smjer) {
         </Row>
       </div>
 
-      
-<div className="pocetna-galerija mt-4 px-3">
-  <div className="d-flex justify-content-end gap-2 mb-3">
-    <Button
-      variant="outline-success"
-      onClick={() => pomakniGaleriju(-1)}
-      aria-label="Prethodne slike"
-    >
-      &#10094;
-    </Button>
 
-    <Button
-      variant="outline-success"
-      onClick={() => pomakniGaleriju(1)}
-      aria-label="Sljedeće slike"
-    >
-      &#10095;
-    </Button>
-  </div>
-
-  <div className="galerija-traka" ref={galerijaRef}>
-    {recepti
-      .filter(recept => recept.slikaBase64 || recept.slikaPutanja || recept.slika)
-      .map(recept => (
-        <div className="galerija-stavka" key={recept.id}>
-          <Card
-            className="h-100"
-            onClick={() => navigate(`/recepti/${recept.id}/detalji`)}
-            style={{ cursor: 'pointer' }}
+      <div className="pocetna-galerija mt-4 px-3">
+        <div className="d-flex justify-content-end gap-2 mb-3">
+          <Button
+            variant="outline-success"
+            onClick={() => pomakniGaleriju(-1)}
+            aria-label="Prethodne slike"
           >
-            <Card.Img
-              variant="top"
-              src={recept.slikaBase64 || recept.slikaPutanja || recept.slika}
-              alt={recept.naziv}
-              className="galerija-slika"
-            />
-            <Card.Body className="text-center galerija-opis">
-              <Card.Title>{recept.naziv}</Card.Title>
-            </Card.Body>
-          </Card>
+            &#10094;
+          </Button>
+
+          <Button
+            variant="outline-success"
+            onClick={() => pomakniGaleriju(1)}
+            aria-label="Sljedeće slike"
+          >
+            &#10095;
+          </Button>
         </div>
-      ))}
-  </div>
-</div>
+
+        <div className="galerija-traka" ref={galerijaRef}>
+          {recepti
+            .filter(recept => recept.slikaBase64 || recept.slikaPutanja || recept.slika)
+            .map(recept => (
+              <div className="galerija-stavka" key={recept.id}>
+                <Card
+                  className="h-100"
+                  onClick={() => navigate(`/recepti/${recept.id}/detalji`)}
+                  style={{ cursor: 'pointer' }}
+                >
+                  <Card.Img
+                    variant="top"
+                    src={recept.slikaBase64 || recept.slikaPutanja || recept.slika}
+                    alt={recept.naziv}
+                    className="galerija-slika"
+                  />
+                  <Card.Body className="text-center galerija-opis">
+                    <Card.Title>{recept.naziv}</Card.Title>
+                  </Card.Body>
+                </Card>
+              </div>
+            ))}
+        </div>
+      </div>
 
 
     </div>

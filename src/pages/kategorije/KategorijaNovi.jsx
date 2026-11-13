@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import KategorijaService from "../../services/kategorije/KategorijaService";
 import { RouteNames } from "../../constants";
 import { Button, Col, Form, Row } from "react-bootstrap";
+import { kategorijaSchema, validiraj } from "../../validacije";
 
 
 export default function KategorijaNovi() {
@@ -14,17 +15,13 @@ export default function KategorijaNovi() {
 
         const podaci = new FormData(e.target)
 
-        const naziv = podaci.get('naziv').trim()
-
-        if (naziv.length < 2) {
-            alert('Naziv kategorije mora imati najmanje 2 znaka')
+        const rezultat = validiraj(kategorijaSchema, { naziv: podaci.get('naziv') ?? '' })
+        if (!rezultat.ok) {
+            alert(rezultat.greska)
             return
         }
 
-        const kategorija = {
-            naziv,
-            generirano: false
-        }
+        const kategorija = { ...rezultat.data, generirano: false }
         try {
             await KategorijaService.dodaj(kategorija)
             navigate(RouteNames.KATEGORIJE)

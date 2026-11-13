@@ -1,6 +1,7 @@
 import { useId, useState } from 'react'
 import { Alert, Button, Form } from 'react-bootstrap'
 import { useNavigate } from 'react-router-dom'
+import { brojGeneriranjaSchema, validiraj } from '../validacije'
 
 export default function GeneratorKartica({
     naslov,
@@ -38,20 +39,19 @@ export default function GeneratorKartica({
     }
 
     function klikGeneriraj() {
-        const n = Number(broj)
-        if (!Number.isInteger(n) || n < 1 || n > max) {
+        const rezultat = validiraj(brojGeneriranjaSchema(max), broj)
+        if (!rezultat.ok) {
             setGreska(true)
-            setPoruka(`Unesi broj između 1 i ${max}.`)
+            setPoruka(rezultat.greska)
             return
         }
-        pokreni(() => generiraj(n))
+        pokreni(() => generiraj(rezultat.data))
     }
 
     function klikObrisi() {
         if (!window.confirm(potvrdaBrisanja)) return
         pokreni(obrisi)
     }
-
     return (
         <div className="p-3">
             <h4>{naslov}</h4>

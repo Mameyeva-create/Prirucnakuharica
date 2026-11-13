@@ -4,6 +4,7 @@ import JedinicaMjereService from "../../services/jedinicaMjere/JedinicaMjereServ
 import { RouteNames } from "../../constants";
 import { Alert, Button, Card, Form } from "react-bootstrap";
 import { useState } from "react";
+import { jedinicaMjereSchema, validiraj } from "../../validacije";
 
 export default function JedinicaMjereNovi() {
     const navigate = useNavigate()
@@ -14,12 +15,13 @@ export default function JedinicaMjereNovi() {
         e.preventDefault()
         setGreska("")
 
-        const ocisceniNaziv = naziv.trim()
-
-        if (!ocisceniNaziv) {
-            setGreska('Unesite naziv jedinice mjere')
+        const rezultat = validiraj(jedinicaMjereSchema, { naziv })
+        if (!rezultat.ok) {
+            setGreska(rezultat.greska)
             return
         }
+        const ocisceniNaziv = rezultat.data.naziv
+
         try {
             // Dohvat svih jedinica mjere
             const odgovor = await JedinicaMjereService.get()
@@ -36,7 +38,7 @@ export default function JedinicaMjereNovi() {
             }
 
             await JedinicaMjereService.dodaj({
-                naziv: naziv.trim(),
+                naziv: ocisceniNaziv,
                 generirano: false
             })
             navigate(RouteNames.JEDINICE_MJERE)

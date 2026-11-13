@@ -4,6 +4,7 @@ import KategorijaService from "../../services/kategorije/KategorijaService";
 import { RouteNames } from "../../constants";
 import { Button, Col, Form, Row } from "react-bootstrap";
 import { useEffect } from "react";
+import { kategorijaSchema, validiraj } from "../../validacije";
 
 
 export default function KategorijaPromjena() {
@@ -33,13 +34,14 @@ export default function KategorijaPromjena() {
 
     function odradiSubmit(e) {
         e.preventDefault()
-
         const podaci = new FormData(e.target)
 
-        promijeni({
-            naziv: podaci.get('naziv'),
-            generirano: kategorija.generirano
-        })
+        const rezultat = validiraj(kategorijaSchema, { naziv: podaci.get('naziv') ?? '' })
+        if (!rezultat.ok) {
+            alert(rezultat.greska)
+            return
+        }
+        promijeni({ ...rezultat.data, generirano: kategorija.generirano })
     }
 
     return (

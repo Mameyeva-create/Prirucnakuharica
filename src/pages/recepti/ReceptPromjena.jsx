@@ -7,6 +7,7 @@ import KategorijaService from "../../services/kategorije/KategorijaService"
 import SastojakService from "../../services/sastojci/SastojakService";
 import JedinicaMjereService from "../../services/jedinicaMjere/JedinicaMjereService";
 import SlikaCropper from "../../components/SlikaCropper";
+import { receptSchema, stavkaSastojkaSchema, validiraj } from "../../validacije";
 
 export default function ReceptPromjena() {
     const navigate = useNavigate()
@@ -60,6 +61,7 @@ export default function ReceptPromjena() {
             setKategorija(r.kategorija || '')
             setVrijeme(r.vrijeme || '')
             setOpis(r.opis || '')
+            setPriprema(r.priprema || '')
             setOmiljen(r.omiljen || false)
             setVegansko(r.vegansko || false)
             setSlika(r.slika || '')
@@ -74,39 +76,25 @@ export default function ReceptPromjena() {
     }
 
     function dodajStavku() {
-        const sastojakId = trenutniSastojak.id
-        const kolicina = Number(trenutnaKolicina)
-
-        // 1. sastojak mora biti odabran iz popisa
-        if (!sastojakId) {
-            alert('Odaberite sastojak iz popisa')
-            return
-        }
-        // 2. količina mora biti pozitivan broj
-        if (!trenutnaKolicina || !Number.isFinite(kolicina) || kolicina <= 0) {
-            alert('Unesite ispravnu količinu')
-            return
-        }
-        // 3. jedinica mjere mora biti odabrana
-        const jedinica = jediniceMjere.find(
-            jm => Number(jm.id) === Number(trenutnaJedinicaMjere)
-        )
-        if (!jedinica) {
-            alert('Odaberite jedinicu mjere')
+        const rezultat = validiraj(stavkaSastojkaSchema, {
+            sastojak: trenutniSastojak.id,
+            kolicina: trenutnaKolicina,
+            jedMjere: trenutnaJedinicaMjere,
+        })
+        if (!rezultat.ok) {
+            alert(rezultat.greska)
             return
         }
         // 4. sastojak ne smije već biti u receptu
         const postoji = odabraniSastojci.some(
-            s => Number(s.sastojak) === Number(sastojakId)
+            s => Number(s.sastojak) === rezultat.data.sastojak
         )
         if (postoji) {
             alert('Ovaj sastojak već je dodan u recept')
             return
         }
-        setOdabraniSastojci([
-            ...odabraniSastojci,
-            { sastojak: sastojakId, kolicina, jedMjere: jedinica.id },
-        ])
+
+        setOdabraniSastojci([...odabraniSastojci, rezultat.data])
         setOdabraniIndex(-1)
         setPrikaziAutocomplete(false)
         setPretragaSastojka('')
@@ -118,50 +106,20 @@ export default function ReceptPromjena() {
     async function odradiSubmit(e) {
         e.preventDefault()
 
-        if (naziv.trim().length < 2) {
-            alert('Naziv recepta mora imati najmanje 2 znaka')
+        if (odabraniSastojci.length === 0 && (trenutniSastojak.id || trenutnaKolicina)) {
+            alert('Klikni "+ Dodaj sastojak" prije spremanja recepta')
             return
         }
-
-        if (!Number(kategorija)) {
-            alert('Unesi kategoriju')
-            return
-        }
-
-        const parsedVrijeme = parseInt(vrijeme, 10)
-        if (isNaN(parsedVrijeme) || parsedVrijeme < 1 || parsedVrijeme > 300) {
-            alert('Vrijeme mora biti između 1 i 300 minuta')
-            return
-        }
-
-        if (opis.trim().length < 5) {
-            alert('Opis recepta mora imati najmanje 5 znakova')
-            return
-        }
-        
-        // novo: recept mora imati barem jedan sastojak
-        if (odabraniSastojci.length === 0) {
-            if (trenutniSastojak.id || trenutnaKolicina) {
-                alert('Klikni "+ Dodaj sastojak" prije spremanja recepta')
-            } else {
-                alert('Dodaj barem jedan sastojak u recept')
-            }
-            return
-        }
-        const recept = {
-            naziv: naziv.trim(),
-            kategorija: Number(kategorija),
-            vrijeme: parsedVrijeme,
-            opis: opis.trim(),
-            priprema: priprema.trim(),
-            slika,
-            slikaPutanja,
+        const rezultat = validiraj(receptSchema, {
+            naziv, kategorija, vrijeme, opis, priprema,
             sastojci: odabraniSastojci,
-            omiljen,
-            vegansko,
-            generirano
+            omiljen, vegansko,
+        })
+        if (!rezultat.ok) {
+            alert(rezultat.greska)
+            return
         }
-        console.log('RECEPT ZA SPREMANJE:', recept)
+        const recept = { ...rezultat.data, slika, slikaPutanja, generirano }
         try {
             await ReceptService.promijeni(id, recept)
             navigate(RouteNames.RECEPTI)
@@ -292,11 +250,11 @@ export default function ReceptPromjena() {
                                             placeholder="Opiši pripremu i posebnosti recepta..." required />
                                     </Form.Group>
                                     <Form.Group controlId="priprema" className="mb-3">
-    <Form.Label>Priprema</Form.Label>
-    <Form.Control as="textarea" name="priprema" rows={6}
-        value={priprema}
-        onChange={(e) => setPriprema(e.target.value)} />
-</Form.Group>
+                                        <Form.Label>Priprema</Form.Label>
+                                        <Form.Control as="textarea" name="priprema" rows={6}
+                                            value={priprema}
+                                            onChange={(e) => setPriprema(e.target.value)} />
+                                    </Form.Group>
 
                                     <SlikaCropper
                                         slika={slika || slikaPutanja}

@@ -8,6 +8,8 @@ import KategorijaService from "../../services/kategorije/KategorijaService"
 import SastojakService from "../../services/sastojci/SastojakService";
 import JedinicaMjereService from "../../services/jedinicaMjere/JedinicaMjereService";
 import SlikaCropper from "../../components/SlikaCropper";
+import { receptSchema, stavkaSastojkaSchema, validiraj } from "../../validacije";
+import { sastojci } from "../../services/sastojci/SastojakPodaci";
 
 
 export default function ReceptNovi() {
@@ -61,28 +63,25 @@ export default function ReceptNovi() {
         // console.log("jm",trenutnaJedinicaMjere)
         // console.log("količina", trenutnaKolicina)
 
-        if (!trenutniSastojak.id || !trenutnaKolicina || !Number.isFinite(Number(trenutnaKolicina)) || !trenutnaJedinicaMjere) {
-            alert('Odaberite sastojak, unesite količinu i izaberite jedinicu mjere')
+        const rezultat = validiraj(stavkaSastojkaSchema, {
+            sastojak: trenutniSastojak.id,
+            kolicina: trenutnaKolicina,
+            jediniceMjere: trenutnaJedinicaMjere,
+        })
+        if (!rezultat.ok) {
+            alert(rezultat.greska)
             return
         }
         const postoji = odabraniSastojci.some(
-            s => Number(s.sastojak) === Number(trenutniSastojak.id)
+            s => Number(s.sastojak) === rezultat.data.sastojak
         )
         if (postoji) {
             alert('Ovaj sastojak već je dodan u recept')
             return
         }
-        const jedinica = jediniceMjere.find(jm => Number(jm.id) === Number(trenutnaJedinicaMjere))
-        if (!jedinica) return
+        const nova = { id: Date.now(), ...rezultat.data }
 
-        const nova = {
-            id: Date.now(),
-            sastojak: trenutniSastojak.id,
-            kolicina: Number(trenutnaKolicina),
-            jedMjere: jedinica.id,
-        }
         // console.log(JSON.stringify(nova))
-
         setOdabraniSastojci([...odabraniSastojci, nova])
         setOdabraniIndex(-1)
         setPrikaziAutocomplete(false)
@@ -94,67 +93,29 @@ export default function ReceptNovi() {
 
     async function odradiSubmit(e) {
         e.preventDefault()
-
         const podaci = new FormData(e.target)
-        const naziv = podaci.get('naziv')?.trim()
 
-        const kategorija = Number(podaci.get('kategorija'))
-        if (!kategorija) {
-            alert('Odaberite kategoriju')
-            return
-        }
-        const vrijeme = parseInt(podaci.get('vrijeme'), 10)
-        const opis = podaci.get('opis')?.trim() || ''
-        const priprema = podaci.get('priprema')?.trim() || ''
-        const vegansko = podaci.get('vegansko') === 'on'
-        const omiljen = podaci.get('omiljen') === 'on'
-
-        if (!naziv || naziv.length < 2) {
-            alert('Naziv recepta mora imati najmanje 2 znaka')
+        if (odabraniSastojci.length === 0 && (trenutniSastojak.id || trenutnaKolicina)) {
+            alert('Klikni "+ Dodaj sastojak" prije spremanja recepta')
             return
         }
 
-        if (!kategorija || isNaN(kategorija)) {
-            alert('Unesi kategoriju ')
+        const rezultat = validiraj(receptSchema, {
+            naziv: podaci.get('naziv') ?? '',
+            kategorija: podaci.get('kategorija') ?? '',
+            vrijeme: podaci.get('vrijeme') ?? '',
+            opis: podaci.get('opis') ?? '',
+            priprema: podaci.get('priprema') ?? '',
+            sastojci: odabraniSastojci.map(({ sastojak, kolicina, jedMjere }) =>
+                ({ sastojak, kolicina, jedMjere })),
+            omiljen: podaci.get('omiljen') === 'on',
+            vegansko: podaci.get('vegansko') === 'on',
+        })
+        if (!rezultat.ok) {
+            alert(rezultat.greska)
             return
         }
-
-        if (!(vrijeme) || vrijeme < 1 || vrijeme > 300) {
-            alert('Vrijeme mora biti između 1 i 300 minuta')
-            return
-        }
-
-        if (opis.length < 5) {
-            alert('Opis recepata mora imati najmanje 5 znakova')
-            return
-        }
-
-        // novo: recept mora imati barem jedan sastojak
-        if (odabraniSastojci.length === 0) {
-            if (trenutniSastojak.id || trenutnaKolicina) {
-                alert('Klikni "+ Dodaj sastojak" prije spremanja recepta')
-            } else {
-                alert('Dodaj barem jedan sastojak u recept')
-            }
-            return
-        }
-        const sastojciZaSpremanje = odabraniSastojci.map(({ sastojak, kolicina, jedMjere }) => ({
-            sastojak: Number(sastojak),
-            kolicina: Number(kolicina),
-            jedMjere: Number(jedMjere)
-        }))
-        const recept = {
-            naziv,
-            kategorija,
-            vrijeme,
-            opis,
-            priprema,
-            slika: slika || null,
-            sastojci: sastojciZaSpremanje,
-            omiljen,
-            vegansko,
-            generirano: false
-        }
+        const recept = { ...rezultat.data, slika: slika || null, generirano: false }
         // console.log(JSON.stringify(recept))
         try {
             await ReceptService.dodaj(recept)

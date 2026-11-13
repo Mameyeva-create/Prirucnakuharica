@@ -2,6 +2,7 @@ import { useRef, useState } from 'react'
 import { Button, Form } from 'react-bootstrap'
 import Cropper from 'react-cropper'
 import 'cropperjs/dist/cropper.css'
+import { slikaDatotekaSchema, validiraj } from '../validacije'
 
 export default function SlikaCropper({ slika, onPromjena }) {
     const [izvor, setIzvor] = useState(null)   // slika koja se trenutno obrezuje
@@ -16,13 +17,10 @@ export default function SlikaCropper({ slika, onPromjena }) {
     function odaberi(e) {
         const datoteka = e.target.files[0]
         if (!datoteka) return
-        if (!datoteka.type.startsWith('image/')) {
-            alert('Odaberite datoteku slike')
-            zatvori()
-            return
-        }
-        if (datoteka.size > 10 * 1024 * 1024) {
-            alert('Slika ne smije biti veća od 10 MB')
+
+        const rezultat = validiraj(slikaDatotekaSchema, datoteka)
+        if (!rezultat.ok) {
+            alert(rezultat.greska)
             zatvori()
             return
         }

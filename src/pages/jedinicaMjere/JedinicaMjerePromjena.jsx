@@ -4,6 +4,7 @@ import JedinicaMjereService from "../../services/jedinicaMjere/JedinicaMjereServ
 import { RouteNames } from "../../constants";
 import { Alert, Button, Col, Form, Row } from "react-bootstrap";
 import { useEffect } from "react";
+import { jedinicaMjereSchema, validiraj } from "../../validacije";
 
 
 export default function JedinicaMjerePromjena() {
@@ -21,7 +22,6 @@ export default function JedinicaMjerePromjena() {
         // debugger
         await JedinicaMjereService.getById(params.id).then((odgovor) => {
             const i = odgovor.data
-            console.log("Što si vratio: ", i)
             setJedinicaMjere(i)
 
         })
@@ -53,12 +53,12 @@ export default function JedinicaMjerePromjena() {
         setGreska("")
 
         const podaci = new FormData(e.target)
-        const naziv = podaci.get('naziv').trim()
-        if (!naziv) {
-            setGreska('Unesite naziv jedinice mjere')
+        const rezultat = validiraj(jedinicaMjereSchema, { naziv: podaci.get('naziv') ?? '' })
+        if (!rezultat.ok) {
+            setGreska(rezultat.greska)
             return
         }
-        promijeni({ naziv, generirano: jedinicaMjere.generirano })
+        promijeni({ ...rezultat.data, generirano: jedinicaMjere.generirano })
     }
 
     return (
@@ -67,11 +67,12 @@ export default function JedinicaMjerePromjena() {
                 Promijeni JM
             </h3>
             <Form onSubmit={odradiSubmit}>
-{greska && (<Alert variant="danger">{greska}</Alert>)}
+                {greska && (<Alert variant="danger">{greska}</Alert>)}
                 <Form.Group controlId="naziv">
                     <Form.Label>Naziv JM</Form.Label>
                     <Form.Control type="text"
                         name="naziv" required
+                        key={jedinicaMjere?.id}
                         defaultValue={jedinicaMjere?.naziv || ""} />
                 </Form.Group>
 

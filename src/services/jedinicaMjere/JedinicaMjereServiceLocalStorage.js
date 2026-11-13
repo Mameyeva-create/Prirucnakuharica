@@ -8,7 +8,13 @@ function sortirajJedinice(jedinice) {
 
 function dohvatiSveIzStorage() {
     const podaci = localStorage.getItem(STORAGE_KEY)
-    return podaci ? JSON.parse(podaci) : []
+    if (!podaci) return []
+    try {
+        return JSON.parse(podaci)
+    } catch (error) {
+        console.error('Greška pri čitanju jedinica mjere:', error)
+        return
+    }
 }
 
 function spremiUStorage(podaci) {
@@ -33,7 +39,7 @@ async function dodaj(jedinicaMjere) {
 
     const noviJedinicaMjere = {
         ...jedinicaMjere,
-        id: !jedinicaMjere || jediniceMjera.length === 0
+        id: jediniceMjera.length === 0
             ? 1
             : Math.max(...jediniceMjera?.map(i => i.id)) + 1
     }
@@ -44,7 +50,6 @@ async function dodaj(jedinicaMjere) {
 }
 
 async function promijeni(id, jedinicaMjere) {
-    console.log(jedinicaMjere)
     const jedinicaMjera = dohvatiSveIzStorage()
     const index = jedinicaMjera.findIndex(i => i.id === parseInt(id, 10))
     if (index === -1) {
