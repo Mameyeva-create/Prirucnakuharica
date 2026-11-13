@@ -21,9 +21,7 @@ export default function JedinicaMjerePromjena() {
     async function ucitajJedinicaMjere() {
         // debugger
         await JedinicaMjereService.getById(params.id).then((odgovor) => {
-            const i = odgovor.data
-            setJedinicaMjere(i)
-
+            setJedinicaMjere(odgovor.data || {})
         })
     }
 
@@ -58,7 +56,7 @@ export default function JedinicaMjerePromjena() {
             setGreska(rezultat.greska)
             return
         }
-        promijeni({ ...rezultat.data, generirano: jedinicaMjere.generirano })
+        promijeni({ ...rezultat.data, generirano: jedinicaMjere?.generirano })
     }
 
     return (
