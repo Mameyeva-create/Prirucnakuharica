@@ -147,7 +147,7 @@ export default function Pocetna() {
                   <Col xs={6} md={3} className="stat-celija py-1 px-2">
                     <div className="d-flex flex-column align-items-center justify-content-center">
                       <GiCookingPot size={40} className="mb-1 text-success" />
-                      <div className="fs-5 fw-bold 1h-1">{brojGeneriranih}</div>
+                      <div className="fs-5 fw-bold 1h-1">{brojGeneriranih > 0 ? brojGeneriranih : ' '}</div>
                       <div className="pocetna-statistika-tekst-mali">Generirani recepti</div>
                     </div>
                   </Col>
@@ -156,7 +156,7 @@ export default function Pocetna() {
                   <Col xs={6} md={3} className="stat-celija py-1 px-2">
                     <div className="d-flex flex-column align-items-center justify-content-center">
                       <BiCategory size={36} className="mb-1 text-success" />
-                      <div className="fs-5 fw-bold 1h-1">{brojGeneriranihKategorija}</div>
+                      <div className="fs-5 fw-bold 1h-1">{brojGeneriranihKategorija > 0 ? brojGeneriranihKategorija : ' '}</div>
                       <div className="pocetna-statistika-tekst-mali">Generirane kategorije</div>
                     </div>
                   </Col>
@@ -165,7 +165,7 @@ export default function Pocetna() {
                   <Col xs={6} md={3} className="stat-celija py-1 px-2">
                     <div className="d-flex flex-column align-items-center justify-content-center">
                       <BiLeaf size={36} className="mb-1 text-success" />
-                      <div className="fs-5 fw-bold 1h-1">{brojGeneriranihSastojaka}</div>
+                      <div className="fs-5 fw-bold 1h-1">{brojGeneriranihSastojaka > 0 ? brojGeneriranihSastojaka : ' '}</div>
                       <div className="pocetna-statistika-tekst-mali">Generirani sastojci</div>
                     </div>
                   </Col>
@@ -174,7 +174,7 @@ export default function Pocetna() {
                   <Col xs={6} md={3} className="stat-celija py-1 px-2">
                     <div className="d-flex flex-column align-items-center justify-content-center">
                       <MdScale size={36} className="mb-1 text-success" />
-                      <div className="fs-5 fw-bold 1h-1">{brojGeneriranihJedinica}</div>
+                      <div className="fs-5 fw-bold 1h-1">{brojGeneriranihJedinica > 0 ? brojGeneriranihJedinica : ' '}</div>
                       <div className="pocetna-statistika-tekst-mali">Generirane jedinice</div>
                     </div>
                   </Col>
