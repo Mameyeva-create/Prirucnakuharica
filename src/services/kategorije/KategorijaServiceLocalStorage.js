@@ -1,17 +1,27 @@
-import { kategorije } from "./KategorijaPodaci"
+import { kategorije as pocetneKategorije } from "./KategorijaPodaci"
 
 
 const STORAGE_KEY = 'kategorije'
-
-function dohvatiSveIzStorage() {
-    const podaci = localStorage.getItem(STORAGE_KEY)
-    return podaci ? JSON.parse(podaci) : []
-}
 
 function spremiUStorage(podaci) {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(podaci))
 }
 
+function dohvatiSveIzStorage() {
+    const podaci = localStorage.getItem(STORAGE_KEY)
+    // Первый запуск: ключа ещё нет, засеваем стартовые категории (ID 1-4)
+    if (podaci === null) {
+        const pocetne = pocetneKategorije.map(k => ({ ...k }))
+        spremiUStorage(pocetne)
+        return pocetne
+    }
+    try {
+        return JSON.parse(podaci)
+    } catch (error) {
+        console.error('Greška pri čitanju kategorija:', error)
+        return []
+    }
+}
 async function get() {
     const kategorije = dohvatiSveIzStorage()
     return { data: [...kategorije] }
@@ -26,7 +36,7 @@ async function getById(id) {
 async function dodaj(kategorija) {
     const kategorije = dohvatiSveIzStorage()
     const novaKategorija = {
-        ...kategorija, slikaPutanja: kategorija.slikaPutanja || "",
+        ...kategorija,
         id: kategorije.length === 0
             ? 1
             : Math.max(...kategorije.map(i => i.id)) + 1

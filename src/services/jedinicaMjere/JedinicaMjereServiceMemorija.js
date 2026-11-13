@@ -5,7 +5,7 @@ function sortirajJedinice(jedinice) {
 }
 
 async function get() {
-    return { data: sortirajJedinice(jediniceMjere)}
+    return { data: sortirajJedinice(jediniceMjere) }
 }
 
 async function getById(id) {
@@ -24,11 +24,11 @@ async function dodaj(jedinicaMjere) {
 
 async function promijeni(id, jedinicaMjere) {
     const index = nadiIndex(id)
-if (index === -1) {
-    return
-}
+    if (index === -1) {
+        return
+    }
     jediniceMjere[index] = { ...jediniceMjere[index], ...jedinicaMjere }
-jediniceMjere.sort((a, b) => a.naziv.localeCompare(b.naziv, 'hr'))
+    jediniceMjere.sort((a, b) => a.naziv.localeCompare(b.naziv, 'hr'))
 }
 
 function nadiIndex(id) {
@@ -38,7 +38,7 @@ function nadiIndex(id) {
 async function obrisi(id) {
     const index = nadiIndex(id)
     if (index !== -1) {
- jediniceMjere.splice(index, 1)
+        jediniceMjere.splice(index, 1)
     }
 }
 

@@ -58,7 +58,6 @@ export default function SastojakPregled() {
             }
             if (e.key === 'Escape') {
                 setTrazeniPojam("")
-                clearTimeout(timer.current)
                 return
             }
             if (e.key === 'Backspace') {

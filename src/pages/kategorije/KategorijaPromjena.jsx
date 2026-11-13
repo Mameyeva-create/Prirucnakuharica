@@ -20,9 +20,7 @@ export default function KategorijaPromjena() {
     async function ucitajKategorija() {
         // debugger
         await KategorijaService.getById(params.id).then((odgovor) => {
-            const i = odgovor.data
-            setKategorija(i)
-
+            setKategorija(odgovor.data || {})
         })
     }
 

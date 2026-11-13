@@ -9,7 +9,7 @@ import SastojakService from "../../services/sastojci/SastojakService";
 import JedinicaMjereService from "../../services/jedinicaMjere/JedinicaMjereService";
 import SlikaCropper from "../../components/SlikaCropper";
 import { receptSchema, stavkaSastojkaSchema, validiraj } from "../../validacije";
-import { sastojci } from "../../services/sastojci/SastojakPodaci";
+
 
 
 export default function ReceptNovi() {
@@ -62,11 +62,12 @@ export default function ReceptNovi() {
         // console.log("sastojak",trenutniSastojak.id)
         // console.log("jm",trenutnaJedinicaMjere)
         // console.log("količina", trenutnaKolicina)
+        // console.log('DEBUG', { sastojak: trenutniSastojak.id, kolicina: trenutnaKolicina, jedMjere: trenutnaJedinicaMjere })
 
         const rezultat = validiraj(stavkaSastojkaSchema, {
             sastojak: trenutniSastojak.id,
             kolicina: trenutnaKolicina,
-            jediniceMjere: trenutnaJedinicaMjere,
+            jedMjere: trenutnaJedinicaMjere,
         })
         if (!rezultat.ok) {
             alert(rezultat.greska)
@@ -309,7 +310,7 @@ export default function ReceptNovi() {
                                             <Form.Label>Jedinica</Form.Label>
                                             <Form.Select name="jm"
                                                 value={trenutnaJedinicaMjere}
-                                                onChange={(e) => { setTrenutnaJedinicaMjere(parseInt(e.target.value)) }}>
+                                                onChange={(e) => { setTrenutnaJedinicaMjere(e.target.value) }}>
                                                 <option value="">Odaberite jedinicu mjere</option>
                                                 {jediniceMjere && jediniceMjere.map((jm) => (
                                                     <option key={jm.id} value={jm.id}>

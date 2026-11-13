@@ -4,6 +4,7 @@ import SastojakService from "../../services/sastojci/SastojakService";
 import { RouteNames } from "../../constants";
 import { Alert, Button, Card, Form } from "react-bootstrap";
 import { useState } from "react";
+import { sastojakSchema, validiraj } from "../../validacije";
 
 
 export default function SastojakNovi() {
@@ -12,15 +13,16 @@ export default function SastojakNovi() {
     const [greska, setGreska] = useState("")
 
     async function odradiSubmit(e) {
-
         e.preventDefault()
         setGreska("")
 
-        const ocisceniNaziv = naziv.trim()
-        if (!ocisceniNaziv) {
-            setGreska('Unesite naziv sastojka')
+        const rezultat = validiraj(sastojakSchema, { naziv })
+        if (!rezultat.ok) {
+            setGreska(rezultat.greska)
             return
         }
+        const ocisceniNaziv = rezultat.data.naziv
+
         try {
             // Dohvat svih sastojaka
             const odgovor = await SastojakService.get()
@@ -35,9 +37,7 @@ export default function SastojakNovi() {
                 setGreska('Sastojak s tim nazivom već postoji!')
                 return
             }
-
-           // Dodavanje novog sastojka
-           console.log('Dodajem sastojak: ' + ocisceniNaziv)
+            // Dodavanje novog sastojka
             await SastojakService.dodaj({
                 naziv: ocisceniNaziv,
                 generirano: false

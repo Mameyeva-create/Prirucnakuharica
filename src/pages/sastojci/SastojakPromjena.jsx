@@ -4,6 +4,7 @@ import SastojakService from "../../services/sastojci/SastojakService";
 import { RouteNames } from "../../constants";
 import { Alert, Button, Col, Form, Row } from "react-bootstrap";
 import { useEffect } from "react";
+import { sastojakSchema, validiraj } from "../../validacije";
 
 
 export default function SastojakPromjena() {
@@ -20,9 +21,7 @@ export default function SastojakPromjena() {
     async function ucitajSastojak() {
         // debugger
         await SastojakService.getById(params.id).then((odgovor) => {
-            const i = odgovor.data
-            setSastojak(i)
-
+            setSastojak(odgovor.data || {})
         })
     }
 
@@ -50,17 +49,12 @@ export default function SastojakPromjena() {
         setGreska('')
 
         const podaci = new FormData(e.target)
-        const naziv = podaci.get('naziv').trim()
-
-        if (!naziv) {
-            setGreska('Unesite naziv sastojka')
+        const rezultat = validiraj(sastojakSchema, { naziv: podaci.get('naziv') ?? '' })
+        if (!rezultat.ok) {
+            setGreska(rezultat.greska)
             return
         }
-
-        promijeni({
-            naziv: podaci.get('naziv'),
-            generirano: sastojak.generirano
-        })
+        promijeni({ ...rezultat.data, generirano: sastojak?.generirano })
     }
 
     return (
@@ -77,6 +71,7 @@ export default function SastojakPromjena() {
                     <Form.Label>Naziv sastojak</Form.Label>
                     <Form.Control type="text"
                         name="naziv" required
+                        key={sastojak?.id}
                         defaultValue={sastojak?.naziv || ""} />
                 </Form.Group>
 

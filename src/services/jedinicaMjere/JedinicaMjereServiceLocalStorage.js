@@ -13,7 +13,7 @@ function dohvatiSveIzStorage() {
         return JSON.parse(podaci)
     } catch (error) {
         console.error('Greška pri čitanju jedinica mjere:', error)
-        return
+        return []
     }
 }
 
