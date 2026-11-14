@@ -9,6 +9,11 @@ import JedinicaMjereService from "../../services/jedinicaMjere/JedinicaMjereServ
 import KategorijaService from "../../services/kategorije/KategorijaService"
 import RecipeCard from "../../components/RecipeCard"
 
+const STOP_RIJECI = new Set(['i', 'te', 'ili', 'a', 's', 'sa', 'u', 'na'])
+
+function rijeciIzTeksta(tekst) {
+    return tekst.split(/[^\p{L}\p{N}]+/u).filter(Boolean)
+}
 function korijenRijeci(rijec) {
     let rezultat = rijec
         .toLocaleLowerCase('hr')
@@ -100,52 +105,46 @@ export default function ReceptPregled() {
         await generiraj()
     }
 
-    const prikazaniRecepti = recepti.filter((recept) => {
-        if (prikaziGenerirane && recept.generirano !== true) {
-            return false
-        }
-        if (samoVegansko && recept.vegansko !== true) {
-            return false
-        }
-        if (kategorija && Number(recept.kategorija) !== Number(kategorija)) {
-            return false
-        }
+    const rijeciPretrage = [...new Set(
+        rijeciIzTeksta(trazi)
+            .filter(r => !STOP_RIJECI.has(r))
+            .map(korijenRijeci)
+    )]
+    function brojPodudaranja(recept) {
         const sastojciTekst = Array.isArray(recept.sastojci)
             ? recept.sastojci.map(stavka => {
                 const podatakSastojka = sviSastojci.find(s => Number(s.id) === Number(stavka.sastojak))
                 return podatakSastojka?.naziv || ''
             }).join(' ') : ''
 
-        const tekstRecepta = [
-            recept.naziv,
-            recept.opis,
-            sastojciTekst
-        ]
+        const tekstRecepta = [recept.naziv, recept.opis, sastojciTekst]
             .filter(Boolean)
             .join(' ')
+        const rijeciRecepta = rijeciIzTeksta(tekstRecepta).map(korijenRijeci)
 
-        if (trazi) {
-            const rijeciPretrage = trazi
-                .split(/\s+/)
-                .map(korijenRijeci)
-                .filter(Boolean)
-            const rijeciRecepta = tekstRecepta
-                .split(/[^\p{L}\p{N}]+/u)
-                .filter(Boolean)
-                .map(korijenRijeci)
-            const pronadjen = rijeciPretrage.every((rijec) =>
-                rijeciRecepta.some((rijeciRecepta) =>
-                    rijeciRecepta.startsWith(rijec) ||
-                    rijec.startsWith(rijeciRecepta)
-                )
+        return rijeciPretrage.filter(rijec =>
+            rijeciRecepta.some(rr =>
+                rr.startsWith(rijec) ||
+                (rr.length >= 3 && rijec.startsWith(rr))
             )
-            if (!pronadjen) return false
-        }
+        ).length
+    }
+    const imaPretragu = rijeciPretrage.length > 0
 
-        return true
-    })
-        .sort((a, b) => a.naziv.localeCompare(b.naziv, 'hr', { sensitivity: 'base' }))
-
+    const prikazaniRecepti = recepti
+        .filter((recept) => {
+            if (prikaziGenerirane && recept.generirano !== true) return false
+            if (samoVegansko && Number(recept.kategorija) !== Number(kategorija)) return false
+            return true
+        })
+        .map(recept => ({
+            recept,
+            podudaranja: imaPretragu ? brojPodudaranja(recept) : 0,
+        }))
+        .filter(x => !imaPretragu || x.podudaranja > 0)
+        .sort((a, b) => b.podudaranja - a.podudaranja ||
+            a.recept.naziv.localeCompare(b.recept.naziv, 'hr', { sensitivity: 'base' }))
+        .map(x => x.recept)
     // Straničenje recepata
     const ukupnoStranica = Math.ceil(
         prikazaniRecepti.length / velicinaStranice
@@ -163,8 +162,17 @@ export default function ReceptPregled() {
     return (
         <>
             <div className="naslov-recepti my-2 px-3 py-2">
-                <h2>{prikaziGenerirane ? 'Generirani recepti' : 'Svi recepti'}</h2>
-                <p>Pronađeno recepata: {prikazaniRecepti.length}</p>
+                <h2>{trazi ? 'Rezultati pretrage'
+                    : prikaziGenerirane ? 'Generirani recepti' : 'Svi recepti'}</h2>
+                {trazi ? (
+                    <p className="mb-0">{prikazaniRecepti.length === 0
+                        ? `Nažalost, s "${trazi}" nema pronađenih recepta`
+                        : prikazaniRecepti.length === 1
+                            ? `S "${trazi}" pronađen je 1 recept`
+                            : `S "${trazi}" pronađeno je ${prikazaniRecepti.length} recepta`}</p>
+                ) : (
+                    <p className="mb-0">Pronađeno recepata: {prikazaniRecepti.length}</p>
+                )}
             </div>
 
             <div className="d-none d-md-block">
@@ -199,15 +207,7 @@ export default function ReceptPregled() {
                                             {recept.naziv}
                                         </Link>
 
-                                        <FaFilePdf
-                                            color="#cb72dd"
-                                            style={{ cursor: 'pointer', marginLeft: '10px' }}
-                                            title="Generiraj PDF"
-                                            onClick={(e) => {
-                                                e.stopPropagation()
-                                                generirajPDFZaRecept(recept)
-                                            }}
-                                        />
+
                                     </td>
 
                                     <td>{nazivKategorija(recept.kategorija)}</td>
@@ -219,8 +219,18 @@ export default function ReceptPregled() {
 
                                     <td className="text-end align-middle"
                                         style={{ whiteSpace: 'nowrap' }}>
-
+                                        <FaFilePdf
+                                            color="#c75b5b"
+                                            size={30}
+                                            style={{ cursor: 'pointer', marginRight: '12px', verticalAlign: 'middle' }}
+                                            title="Generiraj PDF"
+                                            onClick={(e) => {
+                                                e.stopPropagation()
+                                                generirajPDFZaRecept(recept)
+                                            }}
+                                        />
                                         <Button className="btn-promijeni me-2"
+                                        size="sm"
                                             onClick={(e) => {
                                                 e.stopPropagation()
                                                 navigate(`/recepti/${recept.id}`)
@@ -228,7 +238,7 @@ export default function ReceptPregled() {
                                             Promijeni
                                         </Button>
                                         {/* &nbsp;&nbsp; */}
-                                        <Button variant="danger" onClick={(e) => {
+                                        <Button variant="danger" size="sm" onClick={(e) => {
                                             e.stopPropagation()
                                             obrisi(recept.id)
                                         }}>
