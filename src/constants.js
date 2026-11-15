@@ -2,6 +2,7 @@ export const IME_APLIKACIJE = 'Priručna kuharica'
 
 export const RouteNames = {
     HOME: '/',
+    PRIJAVA: '/prijava',
     RECEPTI: '/recepti',
     RECEPTI_NOVI: '/recepti/novi',
     OMILJENI: '/omiljeni',
@@ -21,8 +22,13 @@ export const RouteNames = {
     JEDINICE_MJERE_NOVI: '/jediniceMjere/novi',
     JEDINICE_MJERE_PROMJENA: '/jediniceMjere/:id',
 
+    OPERATERI: '/operateri',
+    OPERATERI_NOVI: '/operateri/novi',
+    OPERATERI_PROMJENA: '/operateri/:id',
+    OPERATERI_PROMJENA_LOZINKE: '/operateri/:id/lozinka',
+
     GENERIRANJE_PODATAKA: '/generiranje-podataka'
 
 }
 // memorija, LocalStorage
-export const DATA_SOURCE = 'memorija'
+export const DATA_SOURCE = 'LocalStorage'

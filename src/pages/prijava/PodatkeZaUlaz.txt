@@ -1,0 +1,14 @@
+АDMINISTRATOR:
+EMAIL
+admin@edunova.hr
+
+LOZINKA
+Edunova123!
+
+
+OPERATER:
+EMAIL
+operater@edunova.hr
+
+LOZINKA
+Edunova123!

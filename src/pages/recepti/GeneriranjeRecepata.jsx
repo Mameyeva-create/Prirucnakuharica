@@ -231,6 +231,7 @@ async function generiraj(broj) {
                 vegansko: p.vegansko,
                 generirano: true,
             })
+            
             dodano++
         }
     } catch (error) {

@@ -3,12 +3,14 @@ import GeneriranjeJedinicaMjere from '../pages/jedinicaMjere/GeneriranjeJedinica
 import GeneriranjeSastojaka from '../pages/sastojci/GeneriranjeSastojaka'
 import GeneriranjeKategorija from '../pages/kategorije/GeneriranjeKategorija'
 import GeneriranjeRecepata from '../pages/recepti/GeneriranjeRecepata'
+import GeneriranjeOperatera from '../pages/operateri/GeneriranjeOperatera'
 
 const KARTICE = [
     GeneriranjeJedinicaMjere,
     GeneriranjeSastojaka,
     GeneriranjeKategorija,
     GeneriranjeRecepata,
+    GeneriranjeOperatera,
 ]
 
 export default function GeneriranjePodataka() {

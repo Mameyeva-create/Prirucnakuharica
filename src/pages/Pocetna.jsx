@@ -123,7 +123,7 @@ export default function Pocetna() {
                   <MdKitchen size={36} className='text-success' />
                   <h2>Namirnice koje imaš</h2>
                 </div>
-                <p className='pocetna-podnaslov'>Unesi namirnice koje imaš kod kuće ✍️</p>
+                <p className='pocetna-podnaslov'>Unesi namirnice koje imaš kod kuće </p>
                 <Form onSubmit={pretrazi} className='d-flex flex-column gap-2'>
                   <Form.Control size='sm' type='text' placeholder='jaja, brašno, mlijeko'
                     value={namirnice} onChange={(e) =>

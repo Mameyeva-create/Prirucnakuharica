@@ -4,15 +4,18 @@ import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import { IME_APLIKACIJE, RouteNames } from '../constants';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { BiBookAdd, BiHeart, BiHomeAlt, BiRestaurant } from 'react-icons/bi';
+import { BiBookAdd, BiHeart, BiHomeAlt, BiRestaurant, BiLogOut, BiUser, BiCog } from 'react-icons/bi';
 import { useEffect, useState } from 'react';
 import KategorijaService from '../services/kategorije/KategorijaService';
+import { useAuth } from '../context/AuthContext';
+
 
 export default function Izbornik() {
 
     const navigate = useNavigate()
     const location = useLocation()
 
+    const { prijavljeniOperater, jePrijavljen, jeAdmin, odjava } = useAuth()
     const [kategorije, setKategorie] = useState([])
     const [prikaziKategorije, setPrikaziKategorije] = useState(false)
     const [receptiOtvoreni, setReceptiOtvoreni] = useState(false)
@@ -28,6 +31,11 @@ export default function Izbornik() {
             window.removeEventListener('focus', handleFocus)
         }
     }, [location.pathname])
+
+    function obradiOdjavu() {
+        odjava()
+        navigate(RouteNames.PRIJAVA)
+    }
 
     async function ucitajKategorije() {
         try {
@@ -143,31 +151,22 @@ export default function Izbornik() {
                             >
                                 🥕 Svi sastojci
                             </NavDropdown.Item>
-
-                            <NavDropdown.Divider />
-                            <NavDropdown.Item
-                                onClick={() => {
-                                    setPrikaziKategorije(false)
-                                    setReceptiOtvoreni(false)
-                                    navigate(RouteNames.GENERIRANJE_PODATAKA)
-                                }}
-                            >
-                                🎲 Generiranje podataka
-                            </NavDropdown.Item>
                         </NavDropdown>
 
-                        <NavDropdown title={
-                            <>
-                                <BiHeart color='#e9b88b' size={20} className='me-2' />
-                                Omiljeni
-                            </>
-                        }
-                            id="omiljeni-dropdown">
-                            <NavDropdown.Item
-                                onClick={() => navigate(RouteNames.OMILJENI)}
-                            > ❤️ Omiljeni </NavDropdown.Item>
-                        </NavDropdown>
 
+                        {jePrijavljen && (
+                            <NavDropdown title={
+                                <>
+                                    <BiHeart color='#e9b88b' size={20} className='me-2' />
+                                    Omiljeni
+                                </>
+                            }
+                                id="omiljeni-dropdown">
+                                <NavDropdown.Item
+                                    onClick={() => navigate(RouteNames.OMILJENI)}
+                                > ❤️ Omiljeni </NavDropdown.Item>
+                            </NavDropdown>
+                        )}
                         <NavDropdown align="end" title={
                             <>
                                 <BiBookAdd color="#e9b88b" size={20} className='me-2' />
@@ -190,7 +189,67 @@ export default function Izbornik() {
                             <NavDropdown.Item onClick={() => navigate(RouteNames.JEDINICE_MJERE_NOVI)}
                             > ⚖️ Dodaj jedinicu mjere</NavDropdown.Item>
                         </NavDropdown>
+                        {/* Administracija - samo za administratora */}
+                        {jeAdmin && (
+                            <NavDropdown title={
+                                <>
+                                    <BiCog color='#e9b88b' size={20} className='me-2' />
+                                    Administracija
+                                </>
+                            }
+                                id="administracija-dropdown">
+                                <NavDropdown.Item
+                                    onClick={() => navigate(RouteNames.OPERATERI)}
+                                >
+                                    👥 Operateri
+                                </NavDropdown.Item>
+                                <NavDropdown.Divider />
+                                <NavDropdown.Item
+                                    onClick={() => {
+                                        setPrikaziKategorije(false)
+                                        setReceptiOtvoreni(false)
+                                        navigate(RouteNames.GENERIRANJE_PODATAKA)
+                                    }}
+                                >
+                                    🎲 Generiranje podataka
+                                </NavDropdown.Item>
+                            </NavDropdown>
+                        )}
+                        {jePrijavljen ? (
+                            <>
+                                <NavDropdown
+                                    title={
+                                        <>
+                                            <BiUser color="#e9b88b" size={20} className='me-2' />
+                                            {prijavljeniOperater.email}
+                                        </>
+                                    }
+                                    id="profil-dropdown"
+                                    align="end"
+                                >
+                                    <NavDropdown.Item
+                                        onClick={() => navigate('/moj-profil')}
+                                    >
+                                        👤 Moj profil
+                                    </NavDropdown.Item>
 
+                                    <NavDropdown.Item
+                                        onClick={() => navigate('/promjena-lozinke')}
+                                    >
+                                        🔒 Promjena lozinke
+                                    </NavDropdown.Item>
+                                </NavDropdown>
+
+                                <Nav.Link onClick={obradiOdjavu}>
+                                    <BiLogOut color="#e9b88b" size={20} className='me-2' />
+                                    Odjava
+                                </Nav.Link>
+                            </>
+                        ) : (
+                            <Nav.Link onClick={() => navigate(RouteNames.PRIJAVA)}>
+                                🔐 Prijava
+                            </Nav.Link>
+                        )}
                     </Nav>
                 </Navbar.Collapse >
             </Container >
