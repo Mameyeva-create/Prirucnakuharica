@@ -1,15 +1,16 @@
 import { useEffect, useState } from "react"
 import ReceptService from "../../services/recepti/ReceptService"
 import { Button, Card, Table } from "react-bootstrap"
-import { Await, Link, useNavigate, useSearchParams } from "react-router-dom"
+import { Link, useNavigate, useSearchParams } from "react-router-dom"
 import SastojakService from "../../services/sastojci/SastojakService"
 import { FaFilePdf } from "react-icons/fa"
 import ReceptPDFGenerator from "../../components/ReceptPDFGenerator"
 import JedinicaMjereService from "../../services/jedinicaMjere/JedinicaMjereService"
 import KategorijaService from "../../services/kategorije/KategorijaService"
-import RecipeCard from "../../components/RecipeCard"
+import { useAuth } from "../../context/AuthContext"
 
 const STOP_RIJECI = new Set(['i', 'te', 'ili', 'a', 's', 'sa', 'u', 'na'])
+
 
 function rijeciIzTeksta(tekst) {
     return tekst.split(/[^\p{L}\p{N}]+/u).filter(Boolean)
@@ -32,9 +33,8 @@ export default function ReceptPregled() {
     const [recepti, setRecepti] = useState([])
     const [kategorije, setKategorije] = useState([])
     const navigate = useNavigate()
+    const { jePrijavljen } = useAuth()
     const [searchParams] = useSearchParams()
-
-
 
     const [sviSastojci, setSviSastojci] = useState([])
     const [jediniceMjere, setJediniceMjere] = useState([])
@@ -42,8 +42,6 @@ export default function ReceptPregled() {
     const velicinaStranice = 10
 
     const prikaziGenerirane = searchParams.get('generirani') === 'true'
-
-
 
     const kategorija = searchParams.get('kategorija')
     const samoVegansko = searchParams.get('vegansko') === 'true'
@@ -134,7 +132,8 @@ export default function ReceptPregled() {
     const prikazaniRecepti = recepti
         .filter((recept) => {
             if (prikaziGenerirane && recept.generirano !== true) return false
-            if (samoVegansko && Number(recept.kategorija) !== Number(kategorija)) return false
+            if (samoVegansko && recept.vegansko !== true) return false
+            if (kategorija && Number(recept.kategorija) !== Number(kategorija)) return false
             return true
         })
         .map(recept => ({
@@ -152,7 +151,6 @@ export default function ReceptPregled() {
     const receptiZaStranicu = prikazaniRecepti.slice(
         (stranica - 1) * velicinaStranice, stranica * velicinaStranice
     )
-
 
     function nazivKategorija(kategorijaId) {
         const kat = kategorije.find(k => Number(k.id) === Number(kategorijaId))
@@ -186,10 +184,10 @@ export default function ReceptPregled() {
                                 <th>Opis</th>
                                 <th>Omiljen</th>
                                 <th>Vegansko</th>
-                                <th className="text-end" style={{ width: '80px' }}>Akcija</th>
+                                <th className="text-center">PDF</th>
+                                {jePrijavljen && (<th className="text-end" style={{ width: '80px' }}>Akcija</th>)}
                             </tr>
                         </thead>
-
                         <tbody>
                             {receptiZaStranicu.map((recept) => (
                                 <tr key={recept.id}
@@ -206,51 +204,54 @@ export default function ReceptPregled() {
                                         >
                                             {recept.naziv}
                                         </Link>
-
-
                                     </td>
 
                                     <td>{nazivKategorija(recept.kategorija)}</td>
-                                    {/* <td className="text-end">{recept.vrijeme} min</td> */}
                                     <td>{recept.vrijeme} min</td>
                                     <td>{recept.opis}</td>
                                     <td>{recept.omiljen ? '❤️' : ''}</td>
                                     <td> {recept.vegansko ? '🌱' : ''} </td>
-
-                                    <td className="text-end align-middle"
-                                        style={{ whiteSpace: 'nowrap' }}>
+                                    {/* PDF — dostupan svima */}
+                                    <td className="text-center align-middle">
                                         <FaFilePdf
                                             color="#c75b5b"
                                             size={30}
-                                            style={{ cursor: 'pointer', marginRight: '12px', verticalAlign: 'middle' }}
+                                            style={{ cursor: 'pointer' }}
                                             title="Generiraj PDF"
                                             onClick={(e) => {
                                                 e.stopPropagation()
                                                 generirajPDFZaRecept(recept)
                                             }}
                                         />
-                                        <Button className="btn-promijeni me-2"
-                                        size="sm"
-                                            onClick={(e) => {
-                                                e.stopPropagation()
-                                                navigate(`/recepti/${recept.id}`)
-                                            }}>
-                                            Promijeni
-                                        </Button>
-                                        {/* &nbsp;&nbsp; */}
-                                        <Button variant="danger" size="sm" onClick={(e) => {
-                                            e.stopPropagation()
-                                            obrisi(recept.id)
-                                        }}>
-                                            Obriši
-                                        </Button>
                                     </td>
+
+                                    {/* Akcije — samo prijavljeni korisnici */}
+                                    {jePrijavljen && (
+                                        <td className="text-end align-middle"
+                                            style={{ whiteSpace: 'nowrap' }}>
+                                            <Button className="btn-promijeni me-2"
+                                                size="sm"
+                                                onClick={(e) => {
+                                                    e.stopPropagation()
+                                                    navigate(`/recepti/${recept.id}`)
+                                                }}>
+                                                Promijeni
+                                            </Button>
+                                            {/* &nbsp;&nbsp; */}
+                                            <Button variant="danger" size="sm" onClick={(e) => {
+                                                e.stopPropagation()
+                                                obrisi(recept.id)
+                                            }}>
+                                                Obriši
+                                            </Button>
+                                        </td>
+                                    )}
                                 </tr>
                             ))}
 
                             {prikazaniRecepti.length === 0 && (
                                 <tr>
-                                    <td colSpan={7} className="text-center">{trazi
+                                    <td colSpan={jePrijavljen ? 8 : 7} className="text-center">{trazi
                                         ? `Nema recepata za: ${trazi}`
                                         : prikaziGenerirane ? 'Nema generiranih recepata'
                                             : 'Nema recepata u ovoj kategoriji'}
@@ -309,21 +310,24 @@ export default function ReceptPregled() {
                                 {recept.omiljen && <span>❤️ Omiljen</span>}
                                 {recept.vegansko && <span>🌱 Vegansko</span>}
                             </div>
+                            {jePrijavljen && (
+                                <>
+                                    <Button size="sm"
+                                        className="btn-promijeni me-2 mb-2"
+                                        onClick={(e) => {
+                                            e.stopPropagation()
+                                            navigate(`/recepti/${recept.id}`)
+                                        }}
+                                    >Promijeni</Button>
 
-                            <Button size="sm"
-                                className="btn-promijeni me-2 mb-2"
-                                onClick={(e) => {
-                                    e.stopPropagation()
-                                    navigate(`/recepti/${recept.id}`)
-                                }}
-                            >Promijeni</Button>
-
-                            <Button size="sm" variant="danger" className="mb-2"
-                                onClick={(e) => {
-                                    e.stopPropagation()
-                                    obrisi(recept.id)
-                                }}
-                            >Obriši</Button>
+                                    <Button size="sm" variant="danger" className="mb-2"
+                                        onClick={(e) => {
+                                            e.stopPropagation()
+                                            obrisi(recept.id)
+                                        }}
+                                    >Obriši</Button>
+                                </>
+                            )}
                         </Card.Body>
                     </Card>
                 ))}

@@ -167,6 +167,7 @@ export default function Izbornik() {
                                 > ❤️ Omiljeni </NavDropdown.Item>
                             </NavDropdown>
                         )}
+                        {jePrijavljen && (
                         <NavDropdown align="end" title={
                             <>
                                 <BiBookAdd color="#e9b88b" size={20} className='me-2' />
@@ -189,6 +190,7 @@ export default function Izbornik() {
                             <NavDropdown.Item onClick={() => navigate(RouteNames.JEDINICE_MJERE_NOVI)}
                             > ⚖️ Dodaj jedinicu mjere</NavDropdown.Item>
                         </NavDropdown>
+                        )}
                         {/* Administracija - samo za administratora */}
                         {jeAdmin && (
                             <NavDropdown title={

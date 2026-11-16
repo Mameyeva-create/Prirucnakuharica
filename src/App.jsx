@@ -1,7 +1,7 @@
 import { Container } from 'react-bootstrap'
 import Izbornik from './components/Izbornik'
 import { DATA_SOURCE, IME_APLIKACIJE, RouteNames } from './constants'
-import { Route, Routes } from 'react-router-dom'
+import { Route, Routes, Navigate } from 'react-router-dom'
 import './App.css'
 import ReceptPregled from './pages/recepti/ReceptPregled'
 import ReceptNovi from './pages/recepti/ReceptNovi'
@@ -26,6 +26,8 @@ import OperaterPromjenaLozinke from './pages/operateri/OperaterPromjenaLozinke'
 import { AuthProvider } from './context/AuthContext'
 import Prijava from './pages/prijava/Prijava'
 import ZasticenaRuta from './components/ZasticenaRuta'
+import MojProfil from './pages/operateri/MojProfil'
+import MojaLozinka from './pages/operateri/MojaLozinka'
 
 function App() {
 
@@ -40,27 +42,36 @@ function App() {
         <Container fluid className='app'>
           <main>
             <Routes>
+              {/* Javno: samo pregled */}
               <Route path={RouteNames.HOME} element={<Pocetna />} />
               <Route path={RouteNames.PRIJAVA} element={<Prijava />} />
               <Route path={RouteNames.RECEPTI} element={<ReceptPregled />} />
-              <Route path={RouteNames.RECEPTI_NOVI} element={<ReceptNovi />} />
-              <Route path={RouteNames.OMILJENI} element={<Omiljeni />} />
-              <Route path={RouteNames.RECEPTI_PROMJENA} element={<ReceptPromjena />} />
               <Route path="/recepti/:id/detalji" element={<ReceptDetalji />} />
               <Route path={RouteNames.KATEGORIJE} element={<KategorijaPregled />} />
-              <Route path={RouteNames.KATEGORIJE_NOVI} element={<KategorijaNovi />} />
-              <Route path={RouteNames.KATEGORIJE_PROMJENA} element={<KategorijaPromjena />} />
               <Route path={RouteNames.SASTOJCI} element={<SastojakPregled />} />
-              <Route path={RouteNames.SASTOJAK_PROMJENA} element={<SastojakPromjena />} />
-              <Route path='/sastojci/novi' element={<SastojakNovi />} />
               <Route path={RouteNames.JEDINICE_MJERE} element={<JedinicaMjerePregled />} />
-              <Route path={RouteNames.JEDINICE_MJERE_NOVI} element={<JedinicaMjereNovi />} />
-              <Route path={RouteNames.JEDINICE_MJERE_PROMJENA} element={<JedinicaMjerePromjena />} />
+
+              {/* Prijavljeni korisnici: dodavanje i promjena */}
+              <Route path={RouteNames.RECEPTI_NOVI} element={<ZasticenaRuta><ReceptNovi /></ZasticenaRuta>} />
+              <Route path={RouteNames.RECEPTI_PROMJENA} element={<ZasticenaRuta><ReceptPromjena /></ZasticenaRuta>} />
+              <Route path={RouteNames.OMILJENI} element={<ZasticenaRuta><Omiljeni /></ZasticenaRuta>} />
+              <Route path={RouteNames.KATEGORIJE_NOVI} element={<ZasticenaRuta><KategorijaNovi /></ZasticenaRuta>} />
+              <Route path={RouteNames.KATEGORIJE_PROMJENA} element={<ZasticenaRuta><KategorijaPromjena /></ZasticenaRuta>} />
+              <Route path="/sastojci/novi" element={<ZasticenaRuta><SastojakNovi /></ZasticenaRuta>} />
+              <Route path={RouteNames.SASTOJAK_PROMJENA} element={<ZasticenaRuta><SastojakPromjena /></ZasticenaRuta>} />
+              <Route path={RouteNames.JEDINICE_MJERE_NOVI} element={<ZasticenaRuta><JedinicaMjereNovi /></ZasticenaRuta>} />
+              <Route path={RouteNames.JEDINICE_MJERE_PROMJENA} element={<ZasticenaRuta><JedinicaMjerePromjena /></ZasticenaRuta>} />
+              <Route path="/moj-profil" element={<ZasticenaRuta><MojProfil /></ZasticenaRuta>} />
+              <Route path="/promjena-lozinke" element={<ZasticenaRuta><MojaLozinka /></ZasticenaRuta>} />
+
+              {/* OPERATERI*, GENERIRANJE_PODATAKA: ZasticenaRuta samoAdmin */}
               <Route path={RouteNames.OPERATERI} element={<ZasticenaRuta samoAdmin><OperaterPregled /></ZasticenaRuta>} />
               <Route path={RouteNames.OPERATERI_NOVI} element={<ZasticenaRuta samoAdmin><OperaterNovi /></ZasticenaRuta>} />
               <Route path={RouteNames.OPERATERI_PROMJENA} element={<ZasticenaRuta samoAdmin><OperaterPromjena /></ZasticenaRuta>} />
               <Route path={RouteNames.OPERATERI_PROMJENA_LOZINKE} element={<ZasticenaRuta samoAdmin><OperaterPromjenaLozinke /></ZasticenaRuta>} />
               <Route path={RouteNames.GENERIRANJE_PODATAKA} element={<ZasticenaRuta samoAdmin><GeneriranjePodataka /></ZasticenaRuta>} />
+
+              <Route path="*" element={<Navigate to={RouteNames.HOME} replace />} />
 
             </Routes>
           </main>
