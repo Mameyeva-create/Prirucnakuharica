@@ -5,6 +5,11 @@ import { Container, Row, Col, Card, Form, Button, Alert } from 'react-bootstrap'
 import { useAuth } from '../../context/AuthContext'
 import { RouteNames } from '../../constants'
 
+const DEMO_RACUNI = [
+    { naslov: 'Klikni za Admina', email: 'admin@edunova.hr', lozinka: 'Edunova123!' },
+    { naslov: 'Klikni za Korisnika', email: 'operater@edunova.hr', lozinka: 'Edunova123!' },
+]
+
 function Prijava() {
 
     const { prijava, jePrijavljen } = useAuth()
@@ -53,6 +58,24 @@ function Prijava() {
                             <h2 className="text-center mb-4">
                                 Prijava
                             </h2>
+                            <Row className="mb-3 g-2">
+                                {DEMO_RACUNI.map((racun) => (
+                                    <Col xs={12} sm={6} key={racun.email}>
+                                        <Card
+                                            className="p-2 bg-light text-center"
+                                            style={{ cursor: 'pointer', borderStyle: 'dashed' }}
+                                            onClick={() => {
+                                                setEmail(racun.email)
+                                                setLozinka(racun.lozinka)
+                                                setPoruka('')
+                                            }}
+                                        >
+                                            <small className="text-muted">{racun.naslov}</small>
+                                            <div className="fw-bold">{racun.email}</div>
+                                        </Card>
+                                    </Col>
+                                ))}
+                            </Row>
                             {poruka && (
                                 <Alert variant="danger">
                                     {poruka}

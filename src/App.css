@@ -22,36 +22,32 @@ body,
     overflow-x: hidden;
 }
 
-body {
-    margin: 0;
-}
-
-* {
-    box-sizing: border-box;
-}
-
 #root {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
 }
 
-main {
-    padding: 0;
+.container,
+.container-fluid,
+.container-lg,
+.container-md,
+.container-sm,
+.container-xl,
+.container-xxl {
+    max-width: 100%;
 }
 
-/* =====================================
+/* =========================
    ОСНОВНОЙ КОНТЕНТ
-   ===================================== */
+   ========================= */
 .app {
     width: 100%;
-    min-height: 0;
     flex: 1 0 auto;
     display: flex;
     flex-direction: column;
     padding: 0;
     margin: 0;
-    background-color: transparent;
 }
 
 .app main {
@@ -65,17 +61,14 @@ main {
 }
 
 /* =========================
-   ШАПКА
+   ШАПКА (NAVBAR)
    ========================= */
 .navbar-kuharica {
     width: 100%;
-    min-height: 20px;
     padding: 0;
     background-color: #35483b;
-    box-sizing: border-box;
 }
 
-/* Svijetli tekst u izborniku */
 .navbar-kuharica .navbar-brand,
 .navbar-kuharica .navbar-nav .nav-link,
 .navbar-kuharica .navbar-nav .nav-link.show,
@@ -84,7 +77,6 @@ main {
     color: #fffaf2 !important;
 }
 
-/* Boja teksta pri prelasku mišem */
 .navbar-kuharica .navbar-nav .nav-link:hover,
 .navbar-kuharica .navbar-nav .nav-link:focus,
 .navbar-kuharica .dropdown-item:hover,
@@ -102,16 +94,10 @@ main {
     font-family: 'Amarillo', cursive;
     font-size: 12px;
     font-weight: normal;
-    color: #fff8ed;
     display: flex;
     align-items: center;
     margin-right: auto;
     cursor: pointer;
-}
-
-.navbar-kuharica .nav-link:hover,
-.navbar-kuharica .navbar-brand:hover {
-    color: #e9b88b;
 }
 
 .chef-hat {
@@ -124,43 +110,41 @@ main {
     margin-right: 8px;
 }
 
-/* =========================
-   ТЕКСТ НА ГЛАВНОЙ
-   ========================= */
-.pocetna {
-    width: 100%;
-    text-align: center;
-    background: transparent;
-    padding: 0;
+/* От 992px: пункты не переносятся внутри строки */
+@media (min-width: 992px) {
+
+    .navbar-kuharica .navbar-nav .nav-link,
+    .navbar-kuharica .navbar-nav .dropdown-toggle {
+        display: flex;
+        align-items: center;
+        white-space: nowrap;
+    }
+
+    /* Длинный email не растягивает меню */
+    .navbar-kuharica #profil-dropdown {
+        max-width: 220px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
 }
 
-.pocetna h1 {
-    margin: 0;
-    font-size: clamp(32px, 5vw, 56px);
-    line-height: 1.2;
-    color: #35483b;
-}
+/* 992–1199px: название сверху, меню под ним */
+@media (min-width: 992px) and (max-width: 1199.98px) {
+    .navbar-kuharica .navbar-collapse {
+        flex-basis: 100%;
+    }
 
-/* =====================================
-   ТАБЛИЦЫ
-   ===================================== */
-.table-responsive {
-    width: 100%;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-}
+    .navbar-kuharica .navbar-nav {
+        width: 100%;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+    }
 
-table {
-    width: 100%;
-}
-
-.table-recepti th:last-child,
-.table-recepti td:last-child {
-    text-align: right;
-}
-
-.table-recepti {
-    width: 100%;
+    .navbar-kuharica .navbar-nav .nav-link,
+    .navbar-kuharica .navbar-nav .dropdown-toggle {
+        padding-left: 0.6rem;
+        padding-right: 0.6rem;
+    }
 }
 
 /* =========================
@@ -180,8 +164,16 @@ footer hr {
 }
 
 /* =========================
- GUMB PROMIJENI
- ========================= */
+   ТАБЛИЦЫ
+   ========================= */
+.table-recepti th:last-child,
+.table-recepti td:last-child {
+    text-align: right;
+}
+
+/* =========================
+   КНОПКА PROMIJENI
+   ========================= */
 .btn-promijeni {
     background-color: #3c8453;
     color: #fff8ed;
@@ -195,25 +187,79 @@ footer hr {
     color: #3c8453;
 }
 
-.hero-ime {
-    font-family: 'Amarillo', cursive;
-    font-size: clamp(48px, 6vw, 70px);
-    font-weight: 700;
-    line-height: 1.7;
-    letter-spacing: 1.5px;
-    font-style: inherit;
+/* =========================
+   ЗАГОЛОВОК СТРАНИЦЫ
+   ========================= */
+.naslov-recepti {
+    padding: 5px 20px;
+    background-color: #f7f5ef;
+    border: 1px solid #d5d9d0;
+    border-left: 5px solid #35483b;
+    border-radius: 8px;
+    margin-bottom: 12px;
+}
+
+.naslov-recepti h2 {
+    margin: 0 0 3px;
+    color: #35483b;
+    font-size: 1.7rem;
+    font-weight: 600;
+}
+
+.naslov-recepti p {
     margin: 0;
-    text-shadow: 2px 3px 5px rgba(0, 0, 0, 0.15);
+    color: #68766b;
+    font-size: 0.95rem;
+}
+
+/* =========================
+   КАРТОЧКИ РЕЦЕПТОВ
+   ========================= */
+.omiljeni-kartica {
+    cursor: pointer;
+    border: 1px solid #dce5dc;
+    border-radius: 12px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.omiljeni-kartica:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(53, 72, 59, 0.15) !important;
+}
+
+/* =========================
+   ГЛАВНАЯ СТРАНИЦА
+   ========================= */
+.pocetna {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    text-align: center;
+    background: url('/slike/kuhinja.png') center / cover no-repeat;
+}
+
+.pocetna-gore {
+    flex: 1;
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
+    padding: 2rem 1rem 1rem;
 }
 
-.hero-ime.hero-red,
-.hero-ime.hero-green {
-    color: #35483B;
+.hero-ime {
+    font-family: 'Amarillo', cursive;
+    font-size: clamp(48px, 6vw, 70px);
     font-weight: 400;
+    line-height: 1.7;
+    letter-spacing: 1.5px;
+    margin: 0;
+    color: #35483b;
     text-shadow: 1px 2px 3px rgba(100, 30, 30, 0.2);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .hero-ime.hero-green {
@@ -256,80 +302,11 @@ footer hr {
     text-shadow: 1px 1px 3px #fff8ed;
 }
 
-/* Kartice omiljenih recepata */
-.omiljeni-kartica {
-    cursor: pointer;
-    border: 1px solid #dce5dc;
-    border-radius: 12px;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.omiljeni-kartica:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(53, 72, 59, 0.15) !important;
-}
-
-.naslov-recepti {
-    padding: 5px 20px;
-    background-color: #f7f5ef;
-    border: 1px solid #d5d9d0;
-    border-left: 5px solid #35483b;
-    border-radius: 8px;
-    margin-bottom: 12px;
-}
-
-.naslov-recepti h2 {
-    margin: 0 0 3px;
-    color: #35483b;
-    font-size: 1.7rem;
-    font-weight: 600;
-}
-
-.naslov-recepti p {
-    margin: 0;
-    color: #68766b;
-    font-size: 0.95rem;
-}
-
-.container,
-.container-fluid,
-.container-lg,
-.container-md,
-.container-sm,
-.container-xl,
-.container-xxl {
-    max-width: 100%;
-}
-
-/* Glavna stranica - kartice */
-.pocetna {
-    flex: 1;
-    /* занимает всё свободное место до footer */
-    display: flex;
-    flex-direction: column;
-    background-image: url('/slike/kuhinja.png');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-}
-
-.pocetna-gore {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 2rem 1rem 1rem;
-    margin: 0;
-    text-align: center;
-
-}
-
+/* Kartice na glavnoj stranici */
 .pocetna-kartice {
     width: 100%;
     padding: 0 1rem 0.75rem;
-    margin: 2px 0 0;
-    background-color: transparent;
+    margin-top: 2px;
 }
 
 .pocetna-kartica {
@@ -338,7 +315,6 @@ footer hr {
     box-shadow: 0 4px 14px rgba(37, 52, 45, 0.10);
     background-color: transparent;
     color: #35483b;
-    margin: 0;
 }
 
 .pocetna-kartica .card-body {
@@ -351,12 +327,6 @@ footer hr {
     color: #35483b;
 }
 
-.pocetna-podnaslov {
-    font-size: 0.85rem;
-    color: #25342d;
-    margin: 0 0 8px;
-}
-
 .pocetna-kartica h2 {
     font-size: 1.15rem;
     margin: 0;
@@ -367,14 +337,11 @@ footer hr {
     font-size: 0.9rem;
 }
 
-.pocetna-statistika-tekst-mali {
-    font-size: 1.15rem;
+.pocetna-podnaslov {
+    font-size: 0.85rem;
     color: #25342d;
-    margin-top: 2px;
-    line-height: 1.1;
+    margin: 0 0 8px;
 }
-
-
 
 .pocetna-kartica .form-control {
     min-height: 30px;
@@ -396,13 +363,7 @@ footer hr {
     color: #25342d;
 }
 
-.pocetna-statistika-broj {
-    font-size: 2rem;
-    line-height: 1.1;
-    font-weight: 700;
-    color: #35483b;
-}
-
+/* Statistika */
 .pocetna-statistika svg {
     margin-bottom: 3px;
 }
@@ -415,106 +376,97 @@ footer hr {
     border-right: none;
 }
 
+.pocetna-statistika-tekst-mali {
+    font-size: 1.15rem;
+    color: #25342d;
+    margin-top: 2px;
+    line-height: 1.1;
+}
 
-.pocetna-statistika-sadrzaj {
+/* =========================
+   ГАЛЕРЕЯ НА ГЛАВНОЙ
+   ========================= */
+.pocetna-galerija {
+    margin-bottom: 15px;
+}
+
+.galerija-traka {
     display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-    gap: 0px;
-    padding: 24px;
+    gap: 16px;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
 }
 
-.pocetna-statistika-tekst {
-    flex: 1;
-    text-align: left;
+.galerija-traka::-webkit-scrollbar {
+    display: none;
 }
 
-.pocetna-statistika-tekst h2 {
-    margin:5px 0;
+.galerija-stavka {
+    flex: 0 0 calc((100% - 80px) / 6);
+    scroll-snap-align: start;
 }
 
-.recepti-naslov {
-    width: 180px;
-    max-width: 100%;
+.galerija-stavka .card {
+    border-radius: 10px;
+    overflow: hidden;
+    background-color: transparent;
+}
+
+.galerija-slika {
+    height: 120px;
+    object-fit: cover;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    cursor: pointer;
+}
+
+.galerija-slika:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+}
+
+.galerija-opis {
+    border: 1px solid #e7dccc;
+    background-color: transparent;
+    padding: 10px 5px;
+}
+
+.galerija-opis .card-title {
+    color: #35483b;
+    font-size: 0.9rem;
+    margin-bottom: 0;
+}
+
+/* =========================
+   СТРАНИЦА «DODAJ SASTOJAK»
+   ========================= */
+.ilustracija-dodaj-sastojak {
+    margin-top: 220px;
+}
+
+.ilustracija-dodaj-sastojak img {
+    width: 100%;
+    height: 40vh;
+    object-fit: contain;
 }
 
 /* ========================================
-   ADAPTACIJA POD RAZLIČITE EKRANE
-   АДАПТАЦИЯ ПОД РАЗНЫЕ ЭКРАНЫ
+   АДАПТАЦИЯ (от больших экранов к малым)
    ======================================== */
 
-/* ========================================
-   1. ŠIROKI EKRANI — 1400px I VIŠE
-   ======================================== */
-
-@media (min-width: 1400px) {
-
-    .container,
-    .container-lg,
-    .container-md,
-    .container-sm,
-    .container-xl,
-    .container-xxl {
-        max-width: 100%;
-    }
-}
-@media (min-width: 1200px) {
-    .navbar-kuharica .navbar-nav .nav-link,
-    .navbar-kuharica .navbar-nav .dropdown-toggle {
-        display: flex;
-        align-items: center;
-        white-space: nowrap;
-    }
-
-    .navbar-kuharica #profil-dropdown {
-        max-width: 220px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-}
-@media (min-width: 992px) and (max-width: 1199.98px) {
-    .navbar-kuharica .navbar-collapse {
-        flex-basis: 100%;
-    }
-
-    .navbar-kuharica .navbar-nav {
-        width: 100%;
-        flex-wrap: wrap;
-        justify-content: flex-start;
-    }
-
-    .navbar-kuharica .navbar-nav .nav-link,
-    .navbar-kuharica .navbar-nav .dropdown-toggle {
-        display: flex;
-        align-items: center;
-        white-space: nowrap;
-        padding-left: 0.6rem;
-        padding-right: 0.6rem;
-    }
-}
-/* ========================================
-   2. TABLETI I MANJI LAPTOPI — DO 992px
-   ======================================== */
-
-@media (max-width: 992px) {
+/* ---- до 991.98px: планшеты, меню-гамбургер ---- */
+@media (max-width: 991.98px) {
     .navbar-kuharica {
         padding: 12px 15px;
     }
 
     .navbar-kuharica .navbar-brand {
-        font-size: 14px !important;
+        font-size: 14px;
     }
 
-    .pocetna h1 {
-        font-size: 44px;
-    }
-}
-
-/* ========================================
-   3. NAVIGACIJA — DO 991.98px
-   ======================================== */
-
-@media (max-width: 991.98px) {
     .navbar-kuharica .navbar-collapse {
         text-align: left;
         padding-top: 12px;
@@ -522,8 +474,6 @@ footer hr {
 
     .navbar-kuharica .navbar-nav {
         align-items: stretch;
-        display: flex;
-        flex-direction: column;
         width: 100%;
         margin: 0;
         padding: 0;
@@ -535,33 +485,19 @@ footer hr {
     }
 
     .navbar-kuharica .navbar-nav .nav-link {
-        display: block;
-        text-align: left;
         width: 100%;
+        text-align: left;
         padding: 13px 8px;
-        color: #fff8ed;
     }
 
-    /* Boja pri prelasku mišem */
-    .navbar-kuharica .navbar-nav .nav-link:hover,
-    .navbar-kuharica .navbar-nav .nav-link:focus {
-        color: #e9b88b;
-        background-color: rgba(255, 248, 237, 0.011);
-    }
-
-    /* Padajući izbornici */
     .navbar-kuharica .dropdown-menu {
         width: 100%;
         margin: 0 0 8px;
         text-align: left;
-        background-color: #2d3d32;
-        border: none;
-        border-radius: 0;
     }
 
     .navbar-kuharica .dropdown-item:hover,
     .navbar-kuharica .dropdown-item:focus {
-        color: #e9b88b;
         background-color: rgba(255, 248, 237, 0.05);
     }
 
@@ -569,33 +505,20 @@ footer hr {
         border-top: 1px solid rgba(255, 250, 242, 0.25);
         margin: 5px 12px;
     }
+
+    .galerija-stavka {
+        flex: 0 0 calc((100% - 48px) / 4);
+    }
 }
 
-/* ========================================
-   4. MOBILNI UREĐAJI I TABLETI — DO 768px
-   ======================================== */
-
+/* ---- до 768px: мобильные ---- */
 @media (max-width: 768px) {
-
-    /* Navigacija */
     .navbar-kuharica {
         padding: 10px 12px;
     }
 
-    .navbar-kuharica .navbar-brand {
-        font-size: 14px;
-    }
-
-    .chef-hat {
-        width: 34px;
-        height: 34px;
-    }
-
     .navbar-kuharica .navbar-nav {
         margin-top: 10px;
-        align-items: flex-end;
-        width: 100%;
-        margin-left: 0;
     }
 
     .navbar-kuharica .nav-link,
@@ -603,16 +526,15 @@ footer hr {
         font-size: 16px;
     }
 
-    .pocetna {
-        padding: 0;
+    .chef-hat {
+        width: 34px;
+        height: 34px;
     }
 
-    .pocetna h1 {
-        font-size: 32px;
-        line-height: 1.2;
+    .btn {
+        font-size: 15px;
     }
 
-    /* Naslovna stranica */
     .pocetna-gore {
         min-height: 0;
         padding: 2rem 1rem;
@@ -630,13 +552,7 @@ footer hr {
         font-size: 1.2rem;
     }
 
-    /* Tablice */
-    .table-responsive {
-        width: 100%;
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-    }
-
+    /* Таблицы */
     .table-kategorije {
         width: 100%;
         min-width: 0;
@@ -671,27 +587,13 @@ footer hr {
         width: 120px;
     }
 
-    /* Gumbi i obrasci */
-    .btn {
-        font-size: 15px;
-    }
-
-    .pretraga-forma {
-        flex-direction: column;
-    }
-
-    .pretraga-forma .btn {
-        width: 100%;
-    }
-
-    /* Podnožje */
     footer {
         padding: 10px 15px;
         font-size: 12px;
     }
 }
 
-/* телефон: сетка 2×2, линия справа у левых и снизу у верхних */
+/* ---- до 767.98px: статистика 2×2 ---- */
 @media (max-width: 767.98px) {
     .pocetna-statistika .stat-celija:nth-child(2n) {
         border-right: none;
@@ -702,23 +604,19 @@ footer hr {
     }
 }
 
-/* ========================================
-   5. MANJI MOBILNI UREĐAJI — DO 576px
-   ======================================== */
-
+/* ---- до 576px ---- */
 @media (max-width: 576px) {
     .naslov-recepti h2 {
         font-size: 1.4rem;
     }
+
+    .galerija-stavka {
+        flex: 0 0 calc((100% - 16px) / 2);
+    }
 }
 
-/* ========================================
-   6. MALI MOBILNI UREĐAJI — DO 480px
-   ======================================== */
-
+/* ---- до 480px ---- */
 @media (max-width: 480px) {
-
-    /* Navigacija */
     .navbar-kuharica .navbar-brand {
         font-size: 18px;
     }
@@ -726,118 +624,5 @@ footer hr {
     .chef-hat {
         width: 30px;
         height: 30px;
-    }
-
-    .pocetna h1 {
-        font-size: 27px;
-    }
-
-    .pocetna {
-        padding: 0;
-    }
-
-    .hero-naslov {
-        top: 100px;
-    }
-
-    /* Kartice statistike */
-    .pocetna-statistika-sadrzaj {
-        padding: 16px;
-        gap: 6px;
-    }
-
-    .pocetna-statistika-tekst h2 {
-        font-size: 1.05rem;
-    }
-
-    footer {
-        font-size: 13px;
-    }
-}
-
-.stranica-dodaj-sastojak {
-    padding-bottom: 0;
-}
-
-.ilustracija-dodaj-sastojak {
-    margin-top: 220px;
-}
-
-.ilustracija-dodaj-sastojak img {
-    width: 100%;
-    max-width: 100%;
-    height: 40vh;
-    object-fit: contain;
-}
-
-
-.galerija-traka {
-    display: flex;
-    gap: 16px;
-    overflow-x: auto;
-    scroll-behavior: smooth;
-    scroll-snap-type: x mandatory;
-    scrollbar-width: none;
-}
-
-.galerija-traka::-webkit-scrollbar {
-    display: none;
-}
-
-.pocetna-galerija {
-    margin-bottom: 15px;
-}
-
-.galerija-stavka {
-    /* flex: 0 0 calc(20% - 13px); */
-    flex: 0 0 calc((100% - 80px) / 6);
-    scroll-snap-align: start;
-}
-
-.galerija-stavka .card {
-    border-radius: 10px;
-    overflow: hidden;
-    background-color: transparent;
-    
-}
-
-.galerija-slika {
-    height: 120px;
-    object-fit: cover;
-    transition: transform 0.25s ease, box-shadow 0.25s ease;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  border-radius: 12px;
-  cursor: pointer;
-}
-.galerija-slika:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
-}
-
-.galerija-opis {
-    border: 1px solid #e7dccc;
-    background-color: transparent;
-    padding: 10px 5px;
-}
-
-.galerija-opis .card-title {
-    color: #35483b;
-    font-size: 0.9rem;
-    margin-bottom: 0;
-    background-color: transparent;
-}
-
-
-/* Tablet */
-@media (max-width: 991px) {
-    .galerija-stavka {
-        flex: 0 0 calc((100% - 48px) / 4);
-    }
-}
-
-/* Mobile */
-@media (max-width: 576px) {
-    .galerija-stavka {
-        flex: 0 0 calc((100% - 16px) / 2);
     }
 }
