@@ -4,12 +4,13 @@ import { Button, Table } from "react-bootstrap"
 import { Link, useNavigate } from "react-router-dom"
 import { RouteNames } from "../../constants"
 import ReceptService from "../../services/recepti/ReceptService"
-
+import { useAuth } from "../../context/AuthContext"
 
 export default function JedinicaMjerePregled() {
     const [jediniceMjere, setJediniceMjere] = useState([])
     const [trazeniPojam, setTrazeniPojam] = useState("")
     const navigate = useNavigate()
+    const { jePrijavljen } = useAuth()
 
     useEffect(() => {
         // console.log('Dosla na pregled JedinicaMjerea')
@@ -86,7 +87,7 @@ export default function JedinicaMjerePregled() {
                     <thead>
                         <tr>
                             <th>Naziv</th>
-                            <th className="text-end">Akcija</th>
+                            {jePrijavljen && <th className="text-end">Akcija</th>}
                         </tr>
                     </thead>
 
@@ -96,23 +97,24 @@ export default function JedinicaMjerePregled() {
                                 <td className="lead">
                                     {jedinicaMjere.naziv}
                                 </td>
+                                {jePrijavljen && (
+                                    <td className="text-end"
+                                        style={{ minWidth: '190px', whiteSpace: 'nowrap' }}>
 
-                                <td className="text-end"
-                                    style={{ minWidth: '190px', whiteSpace: 'nowrap' }}>
-
-                                    <Button className="btn-promijeni me-2"
-                                        onClick={(e) => {
-                                            navigate(`/jediniceMjere/${jedinicaMjere.id}`)
+                                        <Button className="btn-promijeni me-2"
+                                            onClick={(e) => {
+                                                navigate(`/jediniceMjere/${jedinicaMjere.id}`)
+                                            }}>
+                                            Promjeni
+                                        </Button>
+                                        {/* &nbsp;&nbsp; */}
+                                        <Button variant="danger" onClick={(e) => {
+                                            obrisi(jedinicaMjere.id)
                                         }}>
-                                        Promjeni
-                                    </Button>
-                                    {/* &nbsp;&nbsp; */}
-                                    <Button variant="danger" onClick={(e) => {
-                                        obrisi(jedinicaMjere.id)
-                                    }}>
-                                        Obriši
-                                    </Button>
-                                </td>
+                                            Obriši
+                                        </Button>
+                                    </td>
+                                )}
                             </tr>
                         ))}
                         {filtriraneJediniceMjere.length === 0 && (

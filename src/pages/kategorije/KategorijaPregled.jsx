@@ -4,17 +4,17 @@ import { Button, Table } from "react-bootstrap"
 import { Link, useNavigate, useSearchParams } from "react-router-dom"
 import { RouteNames } from "../../constants"
 import ReceptService from "../../services/recepti/ReceptService"
-
+import { useAuth } from "../../context/AuthContext"
 
 export default function KategorijaPregled() {
     const [kategorije, setKategorije] = useState([])
     const navigate = useNavigate()
+    const { jePrijavljen } = useAuth()
 
     useEffect(() => {
         // console.log('Dosla na pregled kategorijaa')
         ucitajKategorije()
     }, [])
-
 
     async function ucitajKategorije() {
         const odgovor = await KategorijaService.get()
@@ -23,13 +23,13 @@ export default function KategorijaPregled() {
     }
 
     async function obrisi(id) {
-        const odgovor  = await ReceptService.get()
+        const odgovor = await ReceptService.get()
         const recepti = odgovor.data || []
         const kategorija = kategorije.find(k => String(k.id) === String(id))
         const koristiSe = recepti.some(recept => String(recept.kategorija) === String(kategorija?.id))
         if (koristiSe) {
-           alert('Kategorija se koristi u receptima i ne može se obrisati!')  
-           return
+            alert('Kategorija se koristi u receptima i ne može se obrisati!')
+            return
         }
         if (!confirm('Sigurno obrisati?')) {
             return
@@ -51,7 +51,7 @@ export default function KategorijaPregled() {
                     <thead>
                         <tr>
                             <th>Naziv</th>
-                            <th className="text-end">Akcija</th>
+                            {jePrijavljen && <th className="text-end">Akcija</th>}
                         </tr>
                     </thead>
 
@@ -61,26 +61,26 @@ export default function KategorijaPregled() {
                                 <td className="lead">
                                     {kategorija.naziv}
                                 </td>
+                                {jePrijavljen && (
+                                    <td className="text-end"
+                                        style={{ minWidth: '190px', whiteSpace: 'nowrap' }}>
 
-                                <td className="text-end"
-                                    style={{ minWidth: '190px', whiteSpace: 'nowrap' }}>
-
-                                    <Button className="btn-promijeni me-2"
-                                        onClick={(e) => {
-                                            navigate(`/kategorije/${kategorija.id}`)
+                                        <Button className="btn-promijeni me-2"
+                                            onClick={(e) => {
+                                                navigate(`/kategorije/${kategorija.id}`)
+                                            }}>
+                                            Promjeni
+                                        </Button>
+                                        {/* &nbsp;&nbsp; */}
+                                        <Button variant="danger" onClick={(e) => {
+                                            obrisi(kategorija.id)
                                         }}>
-                                        Promjeni
-                                    </Button>
-                                    {/* &nbsp;&nbsp; */}
-                                    <Button variant="danger" onClick={(e) => {
-                                        obrisi(kategorija.id)
-                                    }}>
-                                        Obriši
-                                    </Button>
-                                </td>
+                                            Obriši
+                                        </Button>
+                                    </td>
+                                )}
                             </tr>
                         ))}
-
                     </tbody>
                 </Table>
             </div>

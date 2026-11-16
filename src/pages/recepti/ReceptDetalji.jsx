@@ -20,8 +20,6 @@ export default function ReceptDetalji() {
     const [jediniceMjere, setJediniceMjere] = useState([])
     const [sveKategorije, setSveKategorije] = useState([])
 
-
-
     async function promjeniOmiljen() {
         const azuriraniRecept = {
             ...recept, omiljen: !recept.omiljen
