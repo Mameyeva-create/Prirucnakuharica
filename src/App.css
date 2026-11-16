@@ -458,7 +458,40 @@ footer hr {
         max-width: 100%;
     }
 }
+@media (min-width: 1200px) {
+    .navbar-kuharica .navbar-nav .nav-link,
+    .navbar-kuharica .navbar-nav .dropdown-toggle {
+        display: flex;
+        align-items: center;
+        white-space: nowrap;
+    }
 
+    .navbar-kuharica #profil-dropdown {
+        max-width: 220px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+}
+@media (min-width: 992px) and (max-width: 1199.98px) {
+    .navbar-kuharica .navbar-collapse {
+        flex-basis: 100%;
+    }
+
+    .navbar-kuharica .navbar-nav {
+        width: 100%;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+    }
+
+    .navbar-kuharica .navbar-nav .nav-link,
+    .navbar-kuharica .navbar-nav .dropdown-toggle {
+        display: flex;
+        align-items: center;
+        white-space: nowrap;
+        padding-left: 0.6rem;
+        padding-right: 0.6rem;
+    }
+}
 /* ========================================
    2. TABLETI I MANJI LAPTOPI — DO 992px
    ======================================== */

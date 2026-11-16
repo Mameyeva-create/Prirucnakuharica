@@ -1,0 +1,161 @@
+import { Form, Button, Row, Col, Container, Card, Alert } from "react-bootstrap"
+import { RouteNames } from "../../constants"
+import { useNavigate } from "react-router-dom"
+import { ShemaOperater } from "../../schemas/ShemaOperater"
+import { useState } from "react"
+import { useAuth } from "../../context/AuthContext"
+
+export default function Registracija() {
+
+    const navigate = useNavigate()
+    const { registracija } = useAuth()
+    const [errors, setErrors] = useState({})
+    const [serverError, setServerError] = useState('')
+
+    async function registriraj(operater) {
+        try {
+            const rezultat = await registracija(operater)
+            if (rezultat.success) {
+                navigate(RouteNames.PRIJAVA)
+            } else {
+                setServerError(rezultat.message || 'Registracija nije uspjela'
+                )
+            }
+        } catch (error) {
+            console.error("Greška pri registraciji:", error)
+            setServerError("Došlo je do greške pri registraciji")
+        }
+    }
+
+    function odradiSubmit(e) {
+        e.preventDefault()
+        const podaci = new FormData(e.target)
+
+        setErrors({})
+        setServerError('')
+        const objektPodataka = Object.fromEntries(podaci)
+
+        if (podaci.get('lozinka') !== podaci.get('potvrdaLozinke')) {
+            setErrors({ potvrdaLozinke: "Lozinke se ne podudaraju!" })
+            return
+        }
+
+        const rezultat = ShemaOperater.safeParse({
+            email: objektPodataka.email,
+            lozinka: objektPodataka.lozinka,
+            uloga: 'korisnik'
+        })
+
+        if (!rezultat.success) {
+            const noveGreske = {}
+
+            rezultat.error.issues.forEach((issue) => {
+                const kljuc = issue.path[0]
+                if (!noveGreske[kljuc]) {
+                    noveGreske[kljuc] = issue.message
+                }
+            })
+
+            setErrors(noveGreske)
+            return
+        }
+
+        registriraj({
+            email: objektPodataka.email,
+            lozinka: objektPodataka.lozinka
+        })
+    }
+
+    const ocistiGresku = (nazivPolja) => {
+        if (errors[nazivPolja]) {
+            const noveGreske = { ...errors }
+            delete noveGreske[nazivPolja]
+            setErrors(noveGreske)
+        }
+        setServerError('')
+    }
+
+    return (
+        <>
+            <Form onSubmit={odradiSubmit}>
+                <Container className="mt-4">
+                    <Card className="shadow-sm">
+                        <Card.Body>
+                            <Card.Title className="mb-4">Podaci za registraciju</Card.Title>
+                            {serverError && (
+                                <Alert variant="danger">
+                                    {serverError}
+                                </Alert>
+                            )}
+                            <Row>
+                                <Col xs={12}>
+                                    <Form.Group controlId="email" className="mb-3">
+                                        <Form.Label className="fw-bold">Email</Form.Label>
+                                        <Form.Control
+                                            type="email"
+                                            name="email"
+                                            placeholder="vas@email.hr"
+                                            isInvalid={!!errors.email}
+                                            onFocus={() => ocistiGresku('email')}
+                                            autoComplete="email"
+                                        />
+                                        <Form.Control.Feedback type="invalid">
+                                            {errors.email}
+                                        </Form.Control.Feedback>
+                                    </Form.Group>
+                                </Col>
+                            </Row>
+
+                            <Row>
+                                <Col md={6}>
+                                    <Form.Group controlId="lozinka" className="mb-3">
+                                        <Form.Label className="fw-bold">Lozinka</Form.Label>
+                                        <Form.Control
+                                            type="password"
+                                            name="lozinka"
+                                            placeholder="Unesite lozinku"
+                                            isInvalid={!!errors.lozinka}
+                                            onFocus={() => ocistiGresku('lozinka')}
+                                            autoComplete="new-password"
+                                        />
+                                        <Form.Control.Feedback type="invalid">
+                                            {errors.lozinka}
+                                        </Form.Control.Feedback>
+                                    </Form.Group>
+                                </Col>
+                                <Col md={6}>
+                                    <Form.Group controlId="potvrdaLozinke" className="mb-3">
+                                        <Form.Label className="fw-bold">Potvrdi lozinku</Form.Label>
+                                        <Form.Control
+                                            type="password"
+                                            name="potvrdaLozinke"
+                                            placeholder="Ponovite lozinku"
+                                            isInvalid={!!errors.potvrdaLozinke}
+                                            onFocus={() => ocistiGresku('potvrdaLozinke')}
+                                            autoComplete="new-password"
+                                        />
+                                        <Form.Control.Feedback type="invalid">
+                                            {errors.potvrdaLozinke}
+                                        </Form.Control.Feedback>
+                                    </Form.Group>
+                                </Col>
+                            </Row>
+
+                            <hr />
+
+                            <div className="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                                <Button
+                                    type="submit"
+                                    variant="success"
+                                    className="px-4"
+                                >
+                                    Registriraj se
+                                </Button>
+                            </div>
+                        </Card.Body>
+                    </Card>
+                </Container>
+            </Form>
+        </>
+    )
+}

@@ -1,3 +1,4 @@
+import { success } from "zod"
 import { operateri } from "./OperaterPodaci"
 import bcrypt from 'bcryptjs'
 
@@ -34,20 +35,32 @@ async function getById(id) {
 
 // 2/4 Create od CRUD
 async function dodaj(operater) {
-    if (operateri.length === 0) {
-        operater.id = '1'
-    } else {
-        const najveciId = operateri.reduce(
-            (max, op) => Math.max(max, Number(op.id) || 0),
-            0
-        )
-        operater.id = String(najveciId + 1)
+    // Provjera postoji li već isti email
+    const email = operater.email.trim().toLowerCase()
+    const postojiEmail = operateri.some(
+        op => op.email.toLowerCase()
+    )
+    if (postojiEmail) {
+        return {
+            success: false,
+            message: 'Operater s ovim emailom već postoji'
+        }
     }
-    // Hashiraj lozinku prije spremanja
-    operater.lozinka = bcrypt.hashSync(operater.lozinka, 10)
-
-    operateri.push(operater)
-    return { success: true, data: { id: operater.id, email: operater.email } }
+    // Određivanje novog ID-a
+    const najveciId = operateri.reduce(
+        (max, op) => Math.max(max, Number(op.id) || 0),
+        0
+    )
+    const noviOperater = {
+        ...operater,
+        id: String(najveciId + 1),
+        email: email,
+        uloga: 'korisnik',
+        lozinka: bcrypt.hashSync(operater.lozinka, 10)
+        // operater.id = String(najveciId + 1)
+    }
+    operateri.push(noviOperater)
+    return { success: true, data: { id: noviOperater.id, email: noviOperater.email, uloga: noviOperater.uloga } }
 }
 
 // 3/4 Update od CRUD
@@ -97,7 +110,8 @@ async function obrisi(id) {
 
 // Funkcija za prijavu
 async function prijava(email, lozinka) {
-    const operater = operateri.find(o => o.email === email)
+    const trazeniEmail = email.trim().toLowerCase()
+    const operater = operateri.find(o => o.email.toLocaleLowerCase() === trazeniEmail)
     if (!operater) {
         return { success: false, message: "Email i lozinka ne odgovaraju" } // iako bi ovdje mogli napisati i da email ne postoji ali to onda napadačima omogućuje da zna tko je a tko nije registriran
     }
@@ -112,6 +126,8 @@ async function prijava(email, lozinka) {
         success: true,
         data: {
             id: operater.id,
+            ime: operater.ime,
+            prezime: operater.prezime,
             email: operater.email,
             uloga: operater.uloga
         }

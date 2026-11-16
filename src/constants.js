@@ -3,6 +3,7 @@ export const IME_APLIKACIJE = 'Priručna kuharica'
 export const RouteNames = {
     HOME: '/',
     PRIJAVA: '/prijava',
+    REGISTRACIJA: '/registracija',
     RECEPTI: '/recepti',
     RECEPTI_NOVI: '/recepti/novi',
     OMILJENI: '/omiljeni',
@@ -31,4 +32,4 @@ export const RouteNames = {
 
 }
 // memorija, LocalStorage
-export const DATA_SOURCE = 'LocalStorage'
+export const DATA_SOURCE = 'memorija'

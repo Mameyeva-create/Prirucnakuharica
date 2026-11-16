@@ -73,7 +73,7 @@ export default function OperaterPromjenaLozinke() {
 
     return (
         <>
-            <h3>Promjena lozinke</h3>
+            <h3 className="mt-4 px-3">Promjena lozinke</h3>
             <Form onSubmit={odradiSubmit}>
                 <Container className="mt-4">
                     <Card className="shadow-sm">

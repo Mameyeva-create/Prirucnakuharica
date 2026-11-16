@@ -25,6 +25,7 @@ import OperaterPromjena from './pages/operateri/OperaterPromjena'
 import OperaterPromjenaLozinke from './pages/operateri/OperaterPromjenaLozinke'
 import { AuthProvider } from './context/AuthContext'
 import Prijava from './pages/prijava/Prijava'
+import Registracija from './pages/prijava/Registracija'
 import ZasticenaRuta from './components/ZasticenaRuta'
 import MojProfil from './pages/operateri/MojProfil'
 import MojaLozinka from './pages/operateri/MojaLozinka'
@@ -45,6 +46,8 @@ function App() {
               {/* Javno: samo pregled */}
               <Route path={RouteNames.HOME} element={<Pocetna />} />
               <Route path={RouteNames.PRIJAVA} element={<Prijava />} />
+              <Route path={RouteNames.REGISTRACIJA} element={<Registracija />}
+/>
               <Route path={RouteNames.RECEPTI} element={<ReceptPregled />} />
               <Route path="/recepti/:id/detalji" element={<ReceptDetalji />} />
               <Route path={RouteNames.KATEGORIJE} element={<KategorijaPregled />} />

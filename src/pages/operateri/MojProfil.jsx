@@ -1,10 +1,13 @@
+import { Link } from "react-router-dom"
+import { Card, Container } from "react-bootstrap"
+import { useAuth } from "../../context/AuthContext"
 
 export default function MojProfil() {
     const { prijavljeniOperater } = useAuth()
 
     return (
         <>
-            <h3>Moj profil</h3>
+            <h3 className="mt-4 px-3">Moj profil</h3>
             <Container className="mt-4">
                 <Card className="shadow-sm">
                     <Card.Body>

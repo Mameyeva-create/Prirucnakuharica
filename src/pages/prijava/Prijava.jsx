@@ -1,9 +1,9 @@
 
 import { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import { Container, Row, Col, Card, Form, Button, Alert } from 'react-bootstrap'
 import { useAuth } from '../../context/AuthContext'
-
+import { RouteNames } from '../../constants'
 
 function Prijava() {
 
@@ -18,7 +18,7 @@ function Prijava() {
     // Ako je korisnik već prijavljen, vrati ga na početnu
     useEffect(() => {
         if (jePrijavljen) {
-            navigate('/', { replace: true })
+            navigate(RouteNames.HOME, { replace: true })
         }
     }, [jePrijavljen, navigate])
 
@@ -27,12 +27,11 @@ function Prijava() {
 
         setPoruka('')
         setUcitavanje(true)
-
         try {
             const rezultat = await prijava(email.trim(), lozinka)
 
             if (rezultat.success) {
-                navigate('/')
+                navigate(RouteNames.HOME)
             } else {
                 setPoruka(rezultat.message || 'Prijava nije uspjela')
             }
@@ -54,7 +53,6 @@ function Prijava() {
                             <h2 className="text-center mb-4">
                                 Prijava
                             </h2>
-
                             {poruka && (
                                 <Alert variant="danger">
                                     {poruka}
@@ -98,7 +96,9 @@ function Prijava() {
                                 </Button>
 
                             </Form>
-
+                            <p className="mt-3">
+                                Nemate račun? <Link to={RouteNames.REGISTRACIJA}>Registrirajte se</Link>
+                            </p>
                         </Card.Body>
                     </Card>
 
