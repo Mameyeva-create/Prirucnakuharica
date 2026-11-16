@@ -7,11 +7,13 @@ import SastojakService from "../../services/sastojci/SastojakService"
 import ReceptPDFGenerator from "../../components/ReceptPDFGenerator"
 import JedinicaMjereService from "../../services/jedinicaMjere/JedinicaMjereService"
 import KategorijaService from "../../services/kategorije/KategorijaService"
+import { useAuth } from "../../context/AuthContext"
+
 
 export default function ReceptDetalji() {
     const { id } = useParams()
     const navigate = useNavigate()
-
+    const { jePrijavljen } = useAuth()
     const [recept, setRecept] = useState(null)
     const [porcije, setPorcije] = useState(2)
     const [sviSastojci, setSviSastojci] = useState([])
@@ -68,7 +70,7 @@ export default function ReceptDetalji() {
     function handleGenerirajPDF() {
         if (!recept) return
         const generiraj = ReceptPDFGenerator({ recept, sviSastojci, jediniceMjere, kategorije: sveKategorije })
-        generiraj() 
+        generiraj()
     }
     // === Проверка после всех хуков ===
     if (!recept || !recept.id) {
@@ -117,25 +119,26 @@ export default function ReceptDetalji() {
                 <div className="col-12 col-md-6">
                     <div className="d-flex align-items-center gap-3">
                         <h2 className="mb-0">{recept.naziv}</h2>
-
-                        <Button variant="link"
-                            onClick={promjeniOmiljen}
-                            className="p-0 border-0"
-                            style={{
-                                fontSize: '32px',
-                                color: recept.omiljen ? "#dc3545" : "#adb5bd",
-                                textDecoration: 'none',
-                                lineHeight: 1
-                            }}
-                            title={recept.omiljen
-                                ? 'Ukloni iz omiljenih'
-                                : 'Dodaj u omiljene'}
-                            aria-label={recept.omiljen
-                                ? 'Ukloni iz omiljenih'
-                                : 'Dodaj u omiljene'}
-                        >
-                            {recept.omiljen ? "♥" : "♡"}
-                        </Button>
+                        {jePrijavljen && (
+                            <Button variant="link"
+                                onClick={promjeniOmiljen}
+                                className="p-0 border-0"
+                                style={{
+                                    fontSize: '32px',
+                                    color: recept.omiljen ? "#dc3545" : "#adb5bd",
+                                    textDecoration: 'none',
+                                    lineHeight: 1
+                                }}
+                                title={recept.omiljen
+                                    ? 'Ukloni iz omiljenih'
+                                    : 'Dodaj u omiljene'}
+                                aria-label={recept.omiljen
+                                    ? 'Ukloni iz omiljenih'
+                                    : 'Dodaj u omiljene'}
+                            >
+                                {recept.omiljen ? "♥" : "♡"}
+                            </Button>
+                        )}
                     </div>
                     <p><strong>Kategorija: </strong>{nazivKategorije(recept.kategorija)}</p>
                     <p><strong>Vrijeme pripreme:</strong>{" "}
