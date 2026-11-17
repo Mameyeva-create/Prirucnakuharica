@@ -31,5 +31,15 @@ export const RouteNames = {
     GENERIRANJE_PODATAKA: '/generiranje-podataka'
 
 }
-// memorija, LocalStorage
+// memorija, LocalStorage, firebase
 export const DATA_SOURCE = 'memorija'
+
+// Predavač je e.
+// Polaznici su eN. gdje je N broj s origo servera (npr e1.)
+export const PrefixStorage = {
+    RECEPTI: 'e.recepti',
+    KATEGORIJE: 'e.kategorije',
+    SASTOJCI: 'e.sastojci',
+    JEDINICE_MJERE: 'e.jediniceMjere',
+    OPERATERI: 'e.operateri'
+} 
