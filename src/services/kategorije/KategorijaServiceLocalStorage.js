@@ -1,14 +1,13 @@
+import { PrefixStorage } from "../../constants"
 import { kategorije as pocetneKategorije } from "./KategorijaPodaci"
 
 
-const STORAGE_KEY = 'kategorije'
-
 function spremiUStorage(podaci) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(podaci))
+    localStorage.setItem(PrefixStorage.KATEGORIJE, JSON.stringify(podaci))
 }
 
 function dohvatiSveIzStorage() {
-    const podaci = localStorage.getItem(STORAGE_KEY)
+    const podaci = localStorage.getItem(PrefixStorage.KATEGORIJE)
     // Первый запуск: ключа ещё нет, засеваем стартовые категории (ID 1-4)
     if (podaci === null) {
         const pocetne = pocetneKategorije.map(k => ({ ...k }))

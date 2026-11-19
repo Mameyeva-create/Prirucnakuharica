@@ -1,15 +1,13 @@
 import bcrypt from 'bcryptjs'
 import { operateri as pocetniOperateri } from './OperaterPodaci'
-import { success } from 'zod'
-
-const STORAGE_KEY = 'operateri'
+import { PrefixStorage } from '../../constants'
 
 function spremiUStorage(podaci) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(podaci))
+    localStorage.setItem(PrefixStorage.OPERATERI, JSON.stringify(podaci))
 }
 
 function dohvatiSveIzStorage() {
-    const podaci = localStorage.getItem(STORAGE_KEY)
+    const podaci = localStorage.getItem(PrefixStorage.OPERATERI)
     // Prvo pokretanje: ključa još nema, upisujemo početne operatere
     if (podaci === null) {
         const pocetni = pocetniOperateri.map(o => ({ ...o }))

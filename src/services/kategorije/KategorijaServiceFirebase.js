@@ -4,7 +4,7 @@ import getFirebaseDB from "../Firebase"
 import { PrefixStorage } from "../../constants"
 import { kategorije as pocetneKategorije } from "./KategorijaPodaci"
 
-const KOLEKCIJA = PrefixStorage?.KATEGORIJE || "kategorije"
+const KOLEKCIJA = PrefixStorage.KATEGORIJE
 const BROJAC = "brojaci"
 
 // ===================== READ =====================

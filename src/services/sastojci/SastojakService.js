@@ -1,5 +1,6 @@
 // import { data } from "react-router-dom"
 import { DATA_SOURCE } from "../../constants"
+import SastojakServiceFirebase from "./SastojakServiceFirebase"
 import SastojakServiceLocalStorage from "./SastojakServiceLocalStorage"
 import SastojakServiceMemorija from "./SastojakServiceMemorija"
 
@@ -7,12 +8,21 @@ import SastojakServiceMemorija from "./SastojakServiceMemorija"
 
 let Servis = null
 
-if (DATA_SOURCE.trim() === 'LocalStorage') {
-    Servis = SastojakServiceLocalStorage
-} else if (DATA_SOURCE.trim() === 'memorija') {
-    Servis = SastojakServiceMemorija
-} else {
-    console.error('Nepoznat DATA_SOURCE:', DATA_SOURCE)
+switch (DATA_SOURCE.trim()) {
+    case 'LocalStorage':
+        Servis = SastojakServiceLocalStorage
+        break
+
+    case 'memorija':
+        Servis = SastojakServiceMemorija
+        break
+
+    case 'firebase':
+        Servis = SastojakServiceFirebase
+        break
+
+    default:
+        console.error('Nepoznat DATA_SOURCE:', DATA_SOURCE)
 }
 
 

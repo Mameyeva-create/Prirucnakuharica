@@ -37,9 +37,9 @@ export const DATA_SOURCE = 'memorija'
 // Predavač je e.
 // Polaznici su eN. gdje je N broj s origo servera (npr e1.)
 export const PrefixStorage = {
-    RECEPTI: 'e.recepti',
-    KATEGORIJE: 'e.kategorije',
-    SASTOJCI: 'e.sastojci',
-    JEDINICE_MJERE: 'e.jediniceMjere',
-    OPERATERI: 'e.operateri'
+    RECEPTI: 'e5.recepti',
+    KATEGORIJE: 'e5.kategorije',
+    SASTOJCI: 'e5.sastojci',
+    JEDINICE_MJERE: 'e5.jediniceMjere',
+    OPERATERI: 'e5.operateri'
 } 

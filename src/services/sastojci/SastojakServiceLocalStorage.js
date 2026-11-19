@@ -1,17 +1,17 @@
+import { PrefixStorage } from "../../constants"
 
-const STORAGE_KEY = 'sastojci'
 
 function sortirajSastojke(sastojci) {
     return sastojci?.sort((a, b) => a.naziv?.localeCompare(b.naziv, 'hr'))
 }
 
 function dohvatiSveIzStorage() {
-    const podaci = localStorage.getItem(STORAGE_KEY)
+    const podaci = localStorage.getItem(PrefixStorage.SASTOJCI)
     return podaci ? JSON.parse(podaci) : []
 }
 
 function spremiUStorage(podaci) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(podaci))
+    localStorage.setItem(PrefixStorage.SASTOJCI, JSON.stringify(podaci))
 }
 
 async function get() {

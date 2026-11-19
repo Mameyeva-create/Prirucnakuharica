@@ -6,7 +6,7 @@ import {
 import { db, auth } from "../Firebase"   
 import { PrefixStorage } from "../../constants"     
 
-const KOLEKCIJA = PrefixStorage?.OPERATERI || "operateri"
+const KOLEKCIJA = PrefixStorage.OPERATERI
 
 // ===================== READ =====================
 
@@ -157,6 +157,27 @@ async function prijava(email, lozinka) {
     }
 }
 
+
+
+async function dodajBezHash(operater) {
+    try {
+        const noviOperater = {
+            email: operater.email,
+            uloga: operater.uloga,
+            lozinka: operater.lozinka
+        };
+        const skupOperatera = collection(getFirebaseDB(), PrefixStorage.OPERATERI);
+        const docRef = await addDoc(skupOperatera, noviOperater);
+        return {
+            success: true,
+            data: { sifra: docRef.id, email: operater.email }
+        };
+    } catch (e) {
+        return { success: false, message: e.message };
+    }
+}
+
+
 export default {
     get,
     getById,
@@ -164,5 +185,6 @@ export default {
     promjeni,
     promjeniLozinku,
     obrisi,
-    prijava
+    prijava,
+    dodajBezHash
 }

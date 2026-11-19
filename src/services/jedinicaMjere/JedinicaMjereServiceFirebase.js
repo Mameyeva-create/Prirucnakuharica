@@ -3,7 +3,7 @@ import {collection, doc, getDocs, getDoc, runTransaction, updateDoc, deleteDoc} 
 import getFirebaseDB from "../Firebase"
 import { PrefixStorage } from "../../constants"
 
-const KOLEKCIJA = PrefixStorage?.JEDINICE_MJERE || "jediniceMjere"
+const KOLEKCIJA = PrefixStorage.JEDINICE_MJERE
 const BROJAC = "brojaci"
 
 // ===================== SORT =====================

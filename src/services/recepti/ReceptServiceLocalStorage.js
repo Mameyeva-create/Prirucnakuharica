@@ -1,11 +1,8 @@
-
-
-
-const STORAGE_KEY = 'recepti'
+import { PrefixStorage } from "../../constants"
 
 // Dohvaća sve recepte iz LocalStoragea
 function dohvatiSveIzStorage() {
-    const podaci = localStorage.getItem(STORAGE_KEY)
+    const podaci = localStorage.getItem(PrefixStorage.RECEPTI)
     if (!podaci) {
         return []
     }
@@ -18,7 +15,7 @@ function dohvatiSveIzStorage() {
 }
 // Sprema recepte u LocalStorage
 function spremiUStorage(podaci) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(podaci))
+    localStorage.setItem(PrefixStorage.RECEPTI, JSON.stringify(podaci))
 }
 // Dohvaća sve recepte
 async function get() {

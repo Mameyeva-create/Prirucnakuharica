@@ -1,5 +1,6 @@
 // import { data } from "react-router-dom"
 import { DATA_SOURCE } from "../../constants"
+import JedinicaMjereServiceFirebase from "./JedinicaMjereServiceFirebase"
 import JedinicaMjereServiceLocalStorage from "./JedinicaMjereServiceLocalStorage"
 import JedinicaMjereServiceMemorija from "./JedinicaMjereServiceMemorija"
 
@@ -7,14 +8,22 @@ import JedinicaMjereServiceMemorija from "./JedinicaMjereServiceMemorija"
 
 let Servis = null
 
-if (DATA_SOURCE.trim() === 'LocalStorage') {
-    Servis = JedinicaMjereServiceLocalStorage
-} else if (DATA_SOURCE.trim() === 'memorija') {
-    Servis = JedinicaMjereServiceMemorija
-} else {
-    console.error('Nepoznat DATA_SOURCE:', DATA_SOURCE)
-}
+switch (DATA_SOURCE.trim()) {
+    case 'LocalStorage':
+        Servis = JedinicaMjereServiceLocalStorage
+        break
 
+    case 'memorija':
+        Servis = JedinicaMjereServiceMemorija
+        break
+
+    case 'firebase':
+        Servis = JedinicaMjereServiceFirebase
+        break
+
+    default:
+        console.error('Nepoznat DATA_SOURCE:', DATA_SOURCE)
+}
 
 
 const PrazanServis = {

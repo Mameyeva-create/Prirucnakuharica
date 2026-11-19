@@ -1,5 +1,4 @@
-
-const STORAGE_KEY = 'jediniceMjere'
+import { PrefixStorage } from "../../constants"
 
 function sortirajJedinice(jedinice) {
     return [...jedinice].sort((a, b) =>
@@ -7,7 +6,7 @@ function sortirajJedinice(jedinice) {
 }
 
 function dohvatiSveIzStorage() {
-    const podaci = localStorage.getItem(STORAGE_KEY)
+    const podaci = localStorage.getItem(PrefixStorage.JEDINICE_MJERE)
     if (!podaci) return []
     try {
         return JSON.parse(podaci)
@@ -18,7 +17,7 @@ function dohvatiSveIzStorage() {
 }
 
 function spremiUStorage(podaci) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(podaci))
+    localStorage.setItem(PrefixStorage.JEDINICE_MJERE, JSON.stringify(podaci))
 }
 
 async function get() {
