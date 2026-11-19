@@ -69,6 +69,17 @@ export default function GeneriranjePodataka() {
                     )}
                 </>
             )}
+            {/* Новый блок для Firebase */}
+            {DATA_SOURCE.trim() === 'firebase' && (
+                <>
+                    <hr className="my-4" />
+                    <h3>Firebase</h3>
+                    <p className="text-muted">
+                        Podaci se generiraju direktno u Firestore kroz kartice iznad.
+                        Pazite da ne generirate iste podatke više puta.
+                    </p>
+                </>
+            )}
         </div>
     )
 }

@@ -2,25 +2,35 @@
 import { DATA_SOURCE } from "../../constants"
 import ReceptServiceLocalStorage from "./ReceptServiceLocalStorage"
 import ReceptServiceMemorija from "./ReceptServiceMemorija"
+import ReceptServiceFirebase from "./ReceptServiceFirebase"
 
 
 
 let Servis = null
 
-if (DATA_SOURCE.trim() === 'LocalStorage') {
-    Servis = ReceptServiceLocalStorage
-} else if (DATA_SOURCE.trim() === 'memorija') {
-    Servis = ReceptServiceMemorija
-} else {
-    console.error('Nepoznat DATA_SOURCE:', DATA_SOURCE)
+switch (DATA_SOURCE.trim()) {
+    case 'LocalStorage':
+        Servis = ReceptServiceLocalStorage
+        break
+
+    case 'memorija':
+        Servis = ReceptServiceMemorija
+        break
+
+    case 'firebase':
+        Servis = ReceptServiceFirebase
+        break
+
+    default:
+        console.error('Nepoznat DATA_SOURCE:', DATA_SOURCE)
 }
 
 const PrazanServis = {
     get: async () => ({ data: [] }),
-    dodaj: async (recept) => { console.log('Servis nije implementiran') },
-    getById: async (id) => ({ data: {} }),
-    promijeni: async (id, recept) => { console.error('Servis nije implementiran') },
-    obrisi: async (id) => { console.error('Servis nije implementiran') },
+    dodaj: async () => { console.log('Servis nije implementiran') },
+    getById: async () => ({ data: null }),
+    promijeni: async () => { console.error('Servis nije implementiran') },
+    obrisi: async () => { console.error('Servis nije implementiran') },
 }
 
 const AktivniServis = Servis || PrazanServis

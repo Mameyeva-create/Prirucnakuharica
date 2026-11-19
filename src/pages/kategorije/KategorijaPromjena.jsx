@@ -1,9 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import KategorijaService from "../../services/kategorije/KategorijaService";
 import { RouteNames } from "../../constants";
 import { Button, Col, Form, Row } from "react-bootstrap";
-import { useEffect } from "react";
 import { kategorijaSchema, validiraj } from "../../validacije";
 
 
@@ -18,16 +17,33 @@ export default function KategorijaPromjena() {
     }, [])
 
     async function ucitajKategorija() {
-        // debugger
-        await KategorijaService.getById(params.id).then((odgovor) => {
+        try {
+            const odgovor = await KategorijaService.getById(params.id)
+            if (odgovor?.success === false) {
+                alert(odgovor.message || 'Kategorija nije pronađena')
+                navigate(RouteNames.KATEGORIJE)
+                return
+            }
             setKategorija(odgovor.data || {})
-        })
+        } catch (greska) {
+            console.error('Greška pri učitavanju kategorije:', greska)
+            alert('Greška pri učitavanju kategorije')
+            navigate(RouteNames.KATEGORIJE)
+        }
     }
 
     async function promijeni(kategorija) {
-        await KategorijaService.promijeni(params.id, kategorija).then(() => {
+        try {
+            const odgovor = await KategorijaService.promijeni(params.id, kategorija)
+            if (odgovor?.success === false) {
+                alert(odgovor.message || 'Kategorija nije promijenjena')
+                return
+            }
             navigate(RouteNames.KATEGORIJE)
-        })
+        } catch (greska) {
+            console.error('Greška pri promjeni kategorije:', greska)
+            alert('Kategorija nije promijenjena')
+        }
     }
 
     function odradiSubmit(e) {

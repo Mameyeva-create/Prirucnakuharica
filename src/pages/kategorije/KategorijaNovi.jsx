@@ -11,10 +11,42 @@ export default function KategorijaNovi() {
     const [status, setStatus] = useState('idle') // idle | loading | success | error
 
     const { rive, RiveComponent } = useRive({
-    src: '/sobo.riv',
-    stateMachine: 'State Machine 1',
-    autoplay: true,
-})
+        src: '/shopping-cart.riv',
+        autoplay: true,
+    })
+
+    // === Полная инспекция анимации /shopping-cart.riv ===
+    useEffect(() => {
+        if (!rive) return
+
+        console.group('🛒 Rive: shopping-cart.riv')
+        console.log('Rive instance:', rive)
+        console.log('Artboard name:', rive.artboardName)
+        console.log('Active artboard:', rive.activeArtboard)
+
+        // Все анимации в файле
+        console.log('Animation names:', rive.animationNames)
+
+        // Все state machines
+        console.log('State Machine names:', rive.stateMachineNames)
+
+        // Inputs каждой state machine
+        if (rive.stateMachineNames?.length) {
+            rive.stateMachineNames.forEach(smName => {
+                const inputs = rive.stateMachineInputs(smName)
+                console.log(`Inputs of "${smName}":`, inputs)
+            })
+        }
+
+        // Статус воспроизведения
+        console.log('isPlaying:', rive.isPlaying)
+        console.log('isPaused:', rive.isPaused)
+        console.log('isStopped:', rive.isStopped)
+
+        // Все доступные методы
+        console.log('Methods:', Object.getOwnPropertyNames(Object.getPrototypeOf(rive)))
+        console.groupEnd()
+    }, [rive])
 
     // При смене статуса — перезапускаем анимацию
     useEffect(() => {
@@ -43,7 +75,12 @@ export default function KategorijaNovi() {
         const kategorija = { ...rezultat.data, generirano: false }
 
         try {
-            await KategorijaService.dodaj(kategorija)
+           const odgovor = await KategorijaService.dodaj(kategorija)
+           if (odgovor?.success === false) {
+            setStatus('error')
+            alert (odgovor.message || 'Kategorija nije dodana')
+            return
+           }
             setStatus('success')
 
             // Даём анимации немного отыграть

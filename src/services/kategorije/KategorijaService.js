@@ -1,40 +1,47 @@
-// import { data } from "react-router-dom"
+
 import { DATA_SOURCE } from "../../constants"
+
 import KategorijaServiceLocalStorage from "./KategorijaServiceLocalStorage"
 import KategorijaServiceMemorija from "./KategorijaServiceMemorija"
-
-
+import KategorijaServiceFirebase from "./KategorijaServiceFirebase"
 
 let Servis = null
 
-if (DATA_SOURCE.trim() === 'LocalStorage') {
-    Servis = KategorijaServiceLocalStorage
-} else if (DATA_SOURCE.trim() === 'memorija') {
-    Servis = KategorijaServiceMemorija
-} else {
-    console.error('Nepoznat DATA_SOURCE:', DATA_SOURCE)
+switch (DATA_SOURCE.trim()) {
+    case "LocalStorage":
+        Servis = KategorijaServiceLocalStorage
+        break
+
+    case "memorija":
+        Servis = KategorijaServiceMemorija
+        break
+
+    case "firebase":
+        Servis = KategorijaServiceFirebase
+        break
+
+    default:
+        console.error("Nepoznat DATA_SOURCE:", DATA_SOURCE)
 }
 
-
+// ===================== FALLBACK =====================
 
 const PrazanServis = {
-    get: async () => ({ data: [] }),
-    dodaj: async (Kategorija) => { console.log('Servis nije implementiran') },
-    getById: async (id) => ({ data: {} }),
-    promijeni: async (id, Kategorija) => { console.error('Servis nije implementiran') },
-    obrisi: async (id) => { console.error('Servis nije implementiran') },
+    get: async () => ({ success: false, data: [] }),
+    getById: async () => ({ success: false, data: null }),
+    dodaj: async () => ({ success: false, message: "Servis nije implementiran" }),
+    promijeni: async () => ({ success: false, message: "Servis nije implementiran" }),
+    obrisi: async () => ({ success: false, message: "Servis nije implementiran" })
 }
 
 const AktivniServis = Servis || PrazanServis
 
-
-
-
+// ===================== EXPORT =====================
 
 export default {
     get: () => AktivniServis.get(),
-    dodaj: (Kategorija) => AktivniServis.dodaj(Kategorija),
+    dodaj: (kategorija) => AktivniServis.dodaj(kategorija),
     getById: (id) => AktivniServis.getById(id),
-    promijeni: (id, Kategorija) => AktivniServis.promijeni(id, Kategorija),
+    promijeni: (id, kategorija) => AktivniServis.promijeni(id, kategorija),
     obrisi: (id) => AktivniServis.obrisi(id)
 }

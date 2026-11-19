@@ -1,5 +1,6 @@
 import OperaterServiceLocalStorage from "./OperaterServiceLocalStorage"
 import OperaterServiceMemorija from "./OperaterServiceMemorija"
+import OperaterServiceFirebase from "./OperaterServiceFirebase"
 import { DATA_SOURCE } from "../../constants"
 
 let Servis = null
@@ -11,9 +12,14 @@ switch (DATA_SOURCE.trim()) {
         break
     case 'LocalStorage':
         Servis = OperaterServiceLocalStorage
-        break;
+        break
+        case 'firebase':
+            Servis = OperaterServiceFirebase
+            break
     default:
+        console.error(`Nepoznat DATA_SOURCE: ${DATA_SOURCE}`)
         Servis = null
+        break
 }
 
 // 2. Definiranje defaultnog (praznog) ponašanja ako Servis nije pronađen

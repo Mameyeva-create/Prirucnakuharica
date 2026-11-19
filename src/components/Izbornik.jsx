@@ -2,12 +2,14 @@ import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
-import { IME_APLIKACIJE, RouteNames } from '../constants';
+import { IME_APLIKACIJE, RouteNames, DATA_SOURCE } from '../constants';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { BiBookAdd, BiHeart, BiHomeAlt, BiRestaurant, BiLogOut, BiUser, BiCog } from 'react-icons/bi';
 import { useEffect, useState } from 'react';
 import KategorijaService from '../services/kategorije/KategorijaService';
 import { useAuth } from '../context/AuthContext';
+import { GrServer } from 'react-icons/gr';
+
 
 
 export default function Izbornik() {
@@ -50,7 +52,11 @@ export default function Izbornik() {
         <Navbar expand="lg" className="navbar-kuharica" variant='dark'>
             <Container fluid>
                 <Navbar.Brand onClick={() => navigate(RouteNames.HOME)}
-                    style={{ cursor: 'pointer' }}>
+                    style={{ cursor: 'pointer' }}
+                    className="d-flex align-items-center">
+                    {DATA_SOURCE === 'firebase' && (
+                        <GrServer title="Firebase" size={20} className="me-2" />
+                    )}
                     <img
                         src='/slike/chef-hat.png'
                         alt='Chef hat'
@@ -168,28 +174,28 @@ export default function Izbornik() {
                             </NavDropdown>
                         )}
                         {jePrijavljen && (
-                        <NavDropdown align="end" title={
-                            <>
-                                <BiBookAdd color="#e9b88b" size={20} className='me-2' />
-                                {' '}Dodaj
-                            </>
-                        } id="dodaj-dropdown">
-                            <NavDropdown.Item
-                                onClick={() => navigate(RouteNames.RECEPTI_NOVI)}
-                            > 🍲 Dodaj svoj Recept </NavDropdown.Item>
+                            <NavDropdown align="end" title={
+                                <>
+                                    <BiBookAdd color="#e9b88b" size={20} className='me-2' />
+                                    {' '}Dodaj
+                                </>
+                            } id="dodaj-dropdown">
+                                <NavDropdown.Item
+                                    onClick={() => navigate(RouteNames.RECEPTI_NOVI)}
+                                > 🍲 Dodaj svoj Recept </NavDropdown.Item>
 
-                            <NavDropdown.Item
-                                onClick={() => navigate(RouteNames.KATEGORIJE_NOVI)}>
-                                ✏️ Dodaj svoju kategoriju
-                            </NavDropdown.Item>
+                                <NavDropdown.Item
+                                    onClick={() => navigate(RouteNames.KATEGORIJE_NOVI)}>
+                                    ✏️ Dodaj svoju kategoriju
+                                </NavDropdown.Item>
 
-                            <NavDropdown.Divider />
-                            <NavDropdown.Item onClick={() => navigate("/sastojci/novi")}
-                            > 🥕 Dodaj sastojak</NavDropdown.Item>
+                                <NavDropdown.Divider />
+                                <NavDropdown.Item onClick={() => navigate("/sastojci/novi")}
+                                > 🥕 Dodaj sastojak</NavDropdown.Item>
 
-                            <NavDropdown.Item onClick={() => navigate(RouteNames.JEDINICE_MJERE_NOVI)}
-                            > ⚖️ Dodaj jedinicu mjere</NavDropdown.Item>
-                        </NavDropdown>
+                                <NavDropdown.Item onClick={() => navigate(RouteNames.JEDINICE_MJERE_NOVI)}
+                                > ⚖️ Dodaj jedinicu mjere</NavDropdown.Item>
+                            </NavDropdown>
                         )}
                         {/* Administracija - samo za administratora */}
                         {jeAdmin && (
