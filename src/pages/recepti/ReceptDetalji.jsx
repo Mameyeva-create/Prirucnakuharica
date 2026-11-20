@@ -2,7 +2,6 @@ import { useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
 import ReceptService from "../../services/recepti/ReceptService"
 import { Button, Form } from "react-bootstrap"
-import { slikeRecepata } from "../../services/recepti/slikeRecepata"
 import SastojakService from "../../services/sastojci/SastojakService"
 import ReceptPDFGenerator from "../../components/ReceptPDFGenerator"
 import JedinicaMjereService from "../../services/jedinicaMjere/JedinicaMjereService"
@@ -104,7 +103,7 @@ export default function ReceptDetalji() {
                 <div className="col-12 col-md-6">
                     <img
                         className="img-fluid rounded-4 shadow"
-                        src={recept.slika || recept.slikaPutanja || slikeRecepata[recept.naziv]}
+                        src={recept.slikaBase64}
                         alt={recept.naziv}
                         style={{
                             width: '100%',

@@ -207,7 +207,6 @@ export default function Pocetna() {
 
         <div className="galerija-traka" ref={galerijaRef}>
           {recepti
-            .filter(recept => recept.slikaBase64 || recept.slikaPutanja || recept.slika)
             .map(recept => (
               <div className="galerija-stavka" key={recept.id}>
                 <Card
@@ -217,7 +216,7 @@ export default function Pocetna() {
                 >
                   <Card.Img
                     variant="top"
-                    src={recept.slikaBase64 || recept.slikaPutanja || recept.slika}
+                    src={recept.slikaBase64}
                     alt={recept.naziv}
                     className="galerija-slika"
                   />

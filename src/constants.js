@@ -32,7 +32,7 @@ export const RouteNames = {
 
 }
 // memorija, LocalStorage, firebase
-export const DATA_SOURCE = 'memorija'
+export const DATA_SOURCE = 'LocalStorage'
 
 // Predavač je e.
 // Polaznici su eN. gdje je N broj s origo servera (npr e1.)

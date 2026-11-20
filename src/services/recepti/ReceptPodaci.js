@@ -13,7 +13,6 @@ export const recepti = [
         naziv: 'Tjestenina Carbonara',
         kategorija: 2,
         vrijeme: 20,
-        slikaPutanja: '/slike/carbonara.jpg',
         slikaBase64: slikaTjesteninaCarbonara,
         opis: 'Jednostavna i iskusna tjestenina s jajima,sirom i pancetom.',
         sastojci: [
@@ -34,7 +33,6 @@ export const recepti = [
         naziv: 'Palačinke',
         kategorija: 1,
         vrijeme: 15,
-        slikaPutanja: '/slike/palacinke.jpg',
         slikaBase64: slikaPalacinke,
         opis: 'Brze i jednostavne palačinke koje možete poslužiti sa slatkim nadjevom.',
         sastojci: [
@@ -55,7 +53,6 @@ export const recepti = [
         naziv: 'Piletina s povrćem',
         kategorija: 2,
         vrijeme: 35,
-        slikaPutanja: '/slike/piletina.jpg',
         slikaBase64: slikaPiletinaSPovrcem,
         opis: 'Ukusan i jednostavan obrok s piletinom i svježim povrćem.',
         sastojci: [
@@ -78,7 +75,6 @@ export const recepti = [
         naziv: 'Pizza Margherita',
         kategorija: 3,
         vrijeme: 30,
-        slikaPutanja: '/slike/pizza.jpg',
         slikaBase64: slikaPizzaMargherita,
         opis: 'Klasična talijanska pizza s rajčicom, mozzarellom i svježim bosiljkom.',
         sastojci: [
@@ -100,7 +96,6 @@ export const recepti = [
         naziv: 'Cezar salata',
         kategorija: 2,
         vrijeme: 20,
-        slikaPutanja: '/slike/cezar-salata.jpg',
         slikaBase64: slikaCezarSalata,
         opis: 'Svježa salata s piletinom, hrskavim krutonima, parmezanom i Cezar umakom.',
         sastojci: [
@@ -122,7 +117,6 @@ export const recepti = [
         naziv: 'Čokoladni kolač',
         kategorija: 4,
         vrijeme: 45,
-        slikaPutanja: '/slike/cokoladni-kolac.jpg',
         slikaBase64: slikaCokoladniKolac,
         opis: 'Sočan i mekan čokoladni kolač bogatog okusa, idealan za sve ljubitelje čokolade.',
         sastojci: [
@@ -143,7 +137,6 @@ export const recepti = [
         naziv: 'Povrtna juha',
         kategorija: 2,
         vrijeme: 25,
-        slikaPutanja: '/slike/povrtna-juha.jpg',
         slikaBase64: slikaPovrtnaJuha,
         opis: 'Lagana i zdrava juha od svježeg povrća, savršena za svaki dan.',
         sastojci: [

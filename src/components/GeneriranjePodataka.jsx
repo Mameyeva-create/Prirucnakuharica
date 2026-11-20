@@ -47,11 +47,11 @@ export default function GeneriranjePodataka() {
 
         try {
             // Slike u base64 su velike (limit localStorage je oko 5 MB), pa se ne kopiraju
-            const receptiBezSlika = recepti.map(({ slikaBase64, ...ostalo }) => ostalo)
+            //const receptiBezSlika = recepti.map(({ slikaBase64, ...ostalo }) => ostalo)
 
             localStorage.setItem(PrefixStorage.JEDINICE_MJERE, JSON.stringify(jediniceMjere))
             localStorage.setItem(PrefixStorage.KATEGORIJE, JSON.stringify(kategorije))
-            localStorage.setItem(PrefixStorage.RECEPTI, JSON.stringify(receptiBezSlika))
+            localStorage.setItem(PrefixStorage.RECEPTI, JSON.stringify(recepti))
             localStorage.setItem(PrefixStorage.OPERATERI, JSON.stringify(operateri))
             localStorage.setItem(PrefixStorage.SASTOJCI, JSON.stringify(sastojci))
 

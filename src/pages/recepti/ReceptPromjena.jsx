@@ -119,7 +119,8 @@ export default function ReceptPromjena() {
             alert(rezultat.greska)
             return
         }
-        const recept = { ...rezultat.data, slika, slikaPutanja, generirano }
+        const recept = { ...rezultat.data, generirano }
+        recept.slikaBase64 = slika
         try {
             await ReceptService.promijeni(id, recept)
             navigate(RouteNames.RECEPTI)
