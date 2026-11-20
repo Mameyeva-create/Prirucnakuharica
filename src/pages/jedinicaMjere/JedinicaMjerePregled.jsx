@@ -105,7 +105,7 @@ export default function JedinicaMjerePregled() {
                                             onClick={(e) => {
                                                 navigate(`/jediniceMjere/${jedinicaMjere.id}`)
                                             }}>
-                                            Promjeni
+                                            Promijeni
                                         </Button>
                                         {/* &nbsp;&nbsp; */}
                                         <Button variant="danger" onClick={(e) => {

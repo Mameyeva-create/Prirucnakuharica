@@ -1,4 +1,4 @@
-import { success } from "zod"
+
 import { operateri } from "./OperaterPodaci"
 import bcrypt from 'bcryptjs'
 
@@ -38,7 +38,7 @@ async function dodaj(operater) {
     // Provjera postoji li već isti email
     const email = operater.email.trim().toLowerCase()
     const postojiEmail = operateri.some(
-        op => op.email.toLowerCase()
+        op => op.email.toLowerCase() === email
     )
     if (postojiEmail) {
         return {
@@ -55,16 +55,15 @@ async function dodaj(operater) {
         ...operater,
         id: String(najveciId + 1),
         email: email,
-        uloga: 'korisnik',
+        uloga: operater.uloga || 'korisnik',
         lozinka: bcrypt.hashSync(operater.lozinka, 10)
-        // operater.id = String(najveciId + 1)
     }
     operateri.push(noviOperater)
     return { success: true, data: { id: noviOperater.id, email: noviOperater.email, uloga: noviOperater.uloga } }
 }
 
 // 3/4 Update od CRUD
-async function promjeni(id, operater) {
+async function promijeni(id, operater) {
     const index = nadiIndex(id)
     if (index === -1) {
         return { success: false, message: "Operater nije pronađen" }
@@ -82,7 +81,7 @@ async function promjeni(id, operater) {
 }
 
 // Posebna funkcija za promjenu lozinke
-async function promjeniLozinku(id, novaLozinka) {
+async function promijeniLozinku(id, novaLozinka) {
     const index = nadiIndex(id)
     if (index === -1) {
         return { success: false, message: "Operater nije pronađen" }
@@ -111,7 +110,7 @@ async function obrisi(id) {
 // Funkcija za prijavu
 async function prijava(email, lozinka) {
     const trazeniEmail = email.trim().toLowerCase()
-    const operater = operateri.find(o => o.email.toLocaleLowerCase() === trazeniEmail)
+    const operater = operateri.find(o => o.email.toLowerCase() === trazeniEmail)
     if (!operater) {
         return { success: false, message: "Email i lozinka ne odgovaraju" } // iako bi ovdje mogli napisati i da email ne postoji ali to onda napadačima omogućuje da zna tko je a tko nije registriran
     }
@@ -138,8 +137,8 @@ export default {
     get,
     dodaj,
     getById,
-    promjeni,
-    promjeniLozinku,
+    promijeni,
+    promijeniLozinku,
     obrisi,
     prijava
 }

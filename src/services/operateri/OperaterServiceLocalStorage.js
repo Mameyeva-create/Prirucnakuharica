@@ -87,8 +87,8 @@ async function dodaj(operater) {
     return { success: true, data: { id: noviOperater.id, email: noviOperater.email, uloga: noviOperater.uloga } }
 }
 
-// 3/4 Update - promjeni postojeći
-async function promjeni(id, operater) {
+// 3/4 Update - promijeni postojeći
+async function promijeni(id, operater) {
     const operateri = dohvatiSveIzStorage()
     const index = operateri.findIndex(o => o.id === id)
 
@@ -108,7 +108,7 @@ async function promjeni(id, operater) {
 }
 
 // Posebna funkcija za promjenu lozinke
-async function promjeniLozinku(id, novaLozinka) {
+async function promijeniLozinku(id, novaLozinka) {
     const operateri = dohvatiSveIzStorage()
     const index = operateri.findIndex(o => o.id === id)
 
@@ -169,8 +169,8 @@ export default {
     get,
     dodaj,
     getById,
-    promjeni,
-    promjeniLozinku,
+    promijeni,
+    promijeniLozinku,
     obrisi,
     prijava
 }

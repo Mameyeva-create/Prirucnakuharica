@@ -124,7 +124,7 @@ export default function ReceptPromjena() {
             await ReceptService.promijeni(id, recept)
             navigate(RouteNames.RECEPTI)
         } catch (greska) {
-            console.error('Greška pri promjeni recepta:', greska)
+            console.error('Greška pri promijeni recepta:', greska)
             alert('Recept nije promijenjen. Provjeri konzolu')
         }
     }

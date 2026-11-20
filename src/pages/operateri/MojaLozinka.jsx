@@ -37,7 +37,7 @@ export default function MojaLozinka() {
             return
         }
 
-        const promjena = await OperaterService.promjeniLozinku(
+        const promjena = await OperaterService.promijeniLozinku(
             prijavljeniOperater.id,
             rezultat.data.novaLozinka
         )
@@ -45,7 +45,7 @@ export default function MojaLozinka() {
             alert('Lozinka uspješno promijenjena!')
             navigate(RouteNames.HOME)
         } else {
-            alert(promjena.message || 'Greška pri promjeni lozinke')
+            alert(promjena.message || 'Greška pri promijeni lozinke')
         }
     }
 

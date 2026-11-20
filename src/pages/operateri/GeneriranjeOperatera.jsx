@@ -52,8 +52,11 @@ async function generiraj(broj) {
                 uloga: 'korisnik',
                 generirano: true,
             })
-            if (!rezultat.success) {
-                throw new Error(`Greška kod spremanja: ${email}`)
+           if (!rezultat.success) {
+    throw new Error(
+        `Greška kod spremanja: ${email}. ` +
+        (rezultat.message || JSON.stringify(rezultat))
+    )
             }
             dodano++
         }

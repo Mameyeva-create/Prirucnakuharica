@@ -57,7 +57,7 @@ export const recepti = [
         vrijeme: 35,
         slikaPutanja: '/slike/piletina.jpg',
         slikaBase64: slikaPiletinaSPovrcem,
-        opis: 'Ukusan i jednostavan obrok s pileetinom i svježim povrćem.',
+        opis: 'Ukusan i jednostavan obrok s piletinom i svježim povrćem.',
         sastojci: [
             { sastojak: 11, kolicina: 500, jedMjere: 1 },
             { sastojak: 12, kolicina: 2, jedMjere: 7 },

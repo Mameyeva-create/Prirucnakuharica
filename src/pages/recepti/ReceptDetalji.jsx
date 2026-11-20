@@ -20,7 +20,7 @@ export default function ReceptDetalji() {
     const [jediniceMjere, setJediniceMjere] = useState([])
     const [sveKategorije, setSveKategorije] = useState([])
 
-    async function promjeniOmiljen() {
+    async function promijeniOmiljen() {
         const azuriraniRecept = {
             ...recept, omiljen: !recept.omiljen
         }
@@ -28,7 +28,7 @@ export default function ReceptDetalji() {
             await ReceptService.promijeni(recept.id, azuriraniRecept)
             setRecept(azuriraniRecept)
         } catch (error) {
-            console.error('Greška pri promjeni omiljenog recepta', error)
+            console.error('Greška pri promijeni omiljenog recepta', error)
         }
     }
 
@@ -119,7 +119,7 @@ export default function ReceptDetalji() {
                         <h2 className="mb-0">{recept.naziv}</h2>
                         {jePrijavljen && (
                             <Button variant="link"
-                                onClick={promjeniOmiljen}
+                                onClick={promijeniOmiljen}
                                 className="p-0 border-0"
                                 style={{
                                     fontSize: '32px',

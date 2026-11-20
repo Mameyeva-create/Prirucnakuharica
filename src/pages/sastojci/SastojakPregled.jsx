@@ -107,7 +107,7 @@ export default function SastojakPregled() {
                                             onClick={(e) => {
                                                 navigate(`/sastojci/${sastojak.id}`)
                                             }}>
-                                            Promjeni
+                                            Promijeni
                                         </Button>
                                         {/* &nbsp;&nbsp; */}
                                         <Button variant="danger" onClick={(e) => {

@@ -1,53 +1,27 @@
 
-import { collection, doc, getDocs, getDoc, runTransaction, deleteDoc, setDoc, updateDoc } from "firebase/firestore"
+import { collection, doc, getDocs, getDoc, deleteDoc, setDoc, updateDoc } from "firebase/firestore"
 import { ref, uploadString, getDownloadURL, deleteObject } from "firebase/storage"
 import { db, storage } from "../Firebase"
 import { PrefixStorage } from "../../constants"
 
 const KOLEKCIJA = PrefixStorage.RECEPTI
-const BROJAC = "brojaci"
 
-// --------------------------------------------------
-// Pomoćne funkcije
-// --------------------------------------------------
+// ===================== Pomoćne funkcije ==========================================
 
 // Dohvaća recept prema ID-u
 async function dohvatiRecept(id) {
-    const receptRef = doc(db, KOLEKCIJA, String(Number(id)))
+    const receptRef = doc(db, KOLEKCIJA, String(id))
     const snapshot = await getDoc(receptRef)
 
     if (!snapshot.exists()) {
         return null
     }
-
     return {
         ...snapshot.data(),
-        id: snapshot.data().id ?? Number(snapshot.id)
+        id: snapshot.id
     }
 }
-
-// Dodjeljuje sljedeći numerički ID
-async function dodijeliNoviId() {
-    const brojacRef = doc(db, BROJAC, KOLEKCIJA)
-
-    return await runTransaction(db, async (transaction) => {
-        const snapshot = await transaction.get(brojacRef)
-
-        const trenutniId = snapshot.exists()
-            ? Number(snapshot.data().vrijednost) || 0
-            : 0
-
-        const noviId = trenutniId + 1
-
-        transaction.set(brojacRef, {
-            vrijednost: noviId
-        })
-
-        return noviId
-    })
-}
-
-// Učitava fotografiju u Firebase Storage
+// ===================== Učitava fotografiju u Firebase Storage =====================
 async function ucitajSliku(slika, id) {
     if (!slika || !slika.startsWith("data:image/")) {
         return {
@@ -55,17 +29,14 @@ async function ucitajSliku(slika, id) {
             slikaPutanja: ""
         }
     }
-
     const nazivDatoteke = `${Date.now()}-${Math.random()
         .toString(36).substring(2, 9)}.jpg`
-
     const putanja = `recepti/${id}/${nazivDatoteke}`
     const slikaRef = ref(storage, putanja)
 
     await uploadString(slikaRef, slika, "data_url", {
         contentType: "image/jpeg"
     })
-
     const url = await getDownloadURL(slikaRef)
 
     return {
@@ -73,8 +44,7 @@ async function ucitajSliku(slika, id) {
         slikaPutanja: putanja
     }
 }
-
-// Briše fotografiju iz Firebase Storage
+// ===================== Briše fotografiju iz Firebase Storage =====================
 async function obrisiSliku(putanja) {
     if (!putanja) return
 
@@ -88,40 +58,27 @@ async function obrisiSliku(putanja) {
         }
     }
 }
-
-// --------------------------------------------------
-// Dohvaća sve recepte
-// --------------------------------------------------
-
+// ===================== Dohvaća sve recepte =========================================
 async function get() {
     const snapshot = await getDocs(collection(db, KOLEKCIJA))
-
     const recepti = snapshot.docs.map(d => ({
         ...d.data(),
-        id: d.data().id ?? Number(d.id)
+        id: d.id
     }))
-
-    recepti.sort((a, b) => Number(a.id) - Number(b.id))
+    recepti.sort((a, b) => a.naziv?.localeCompare(b.naziv, "hr"))
 
     return { data: recepti }
 }
-
-// --------------------------------------------------
-// Dohvaća jedan recept prema ID-u
-// --------------------------------------------------
-
+// ===================== Dohvaća jedan recept prema ID-u ==============================
 async function getById(id) {
     const recept = await dohvatiRecept(id)
 
     return { data: recept }
 }
-
-// --------------------------------------------------
-// Dodaje novi recept
-// --------------------------------------------------
-
+// ===================== Dodaje novi recept ===========================================
 async function dodaj(recept) {
-    const noviId = await dodijeliNoviId()
+    const receptRef = doc(collection(db, KOLEKCIJA))
+    const noviId = receptRef.id
 
     let novaSlika = {
         slika: recept.slika || "",
@@ -136,9 +93,6 @@ async function dodaj(recept) {
             ...novaSlika,
             id: noviId
         }
-
-        const receptRef = doc(db, KOLEKCIJA, String(noviId))
-
         await setDoc(receptRef, noviRecept)
 
         return { data: noviRecept }
@@ -149,11 +103,7 @@ async function dodaj(recept) {
         throw error
     }
 }
-
-// --------------------------------------------------
-// Mijenja postojeći recept
-// --------------------------------------------------
-
+// ===================== Mijenja postojeći recept ===================================
 async function promijeni(id, recept) {
     const postojeciRecept = await dohvatiRecept(id)
 
@@ -161,7 +111,7 @@ async function promijeni(id, recept) {
         throw new Error("Recept nije pronađen.")
     }
 
-    const receptRef = doc(db, KOLEKCIJA, String(Number(id)))
+    const receptRef = doc(db, KOLEKCIJA, String(id))
 
     const staraPutanja = postojeciRecept.slikaPutanja || ""
 
@@ -172,7 +122,7 @@ async function promijeni(id, recept) {
 
     // Ako je odabrana nova Base64 fotografija, učitavamo je
     if (recept.slika?.startsWith("data:image/")) {
-        novaSlika = await ucitajSliku(recept.slika, Number(id))
+        novaSlika = await ucitajSliku(recept.slika, String(id))
     } else if (recept.slika) {
         // Fotografija nije promijenjena
         novaSlika = {
@@ -185,7 +135,7 @@ async function promijeni(id, recept) {
         ...postojeciRecept,
         ...recept,
         ...novaSlika,
-        id: Number(id)
+        id: String(id)
     }
 
     try {
@@ -199,30 +149,22 @@ async function promijeni(id, recept) {
         ) {
             await obrisiSliku(novaSlika.slikaPutanja)
         }
-
         throw error
     }
-
     // Staru fotografiju brišemo tek nakon uspješnog spremanja
     if (staraPutanja && staraPutanja !== novaSlika.slikaPutanja) {
         await obrisiSliku(staraPutanja)
     }
-
     return { data: promijenjeniRecept }
 }
-
-// --------------------------------------------------
-// Briše jedan recept prema ID-u
-// --------------------------------------------------
-
+// ===================== Briše jedan recept prema ID-u ==============================
 async function obrisi(id) {
     const recept = await dohvatiRecept(id)
 
     if (!recept) {
         return
     }
-
-    const receptRef = doc(db, KOLEKCIJA, String(Number(id)))
+    const receptRef = doc(db, KOLEKCIJA, String(id))
 
     await deleteDoc(receptRef)
 

@@ -1,15 +1,12 @@
-import { collection, doc, getDocs, getDoc, setDoc, updateDoc, deleteDoc } from "firebase/firestore"
-import {
-    createUserWithEmailAndPassword, signInWithEmailAndPassword, updatePassword, deleteUser,
-    reauthenticateWithCredential, EmailAuthProvider
-} from "firebase/auth"
-import { db, auth } from "../Firebase"   
-import { PrefixStorage } from "../../constants"     
+import { collection, doc, getDocs, getDoc, setDoc, addDoc, updateDoc, deleteDoc } from "firebase/firestore"
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updatePassword } from "firebase/auth"
+import { db, auth } from "../Firebase"
+import { PrefixStorage } from "../../constants"
+
 
 const KOLEKCIJA = PrefixStorage.OPERATERI
 
 // ===================== READ =====================
-
 async function get() {
     try {
         const snapshot = await getDocs(collection(db, KOLEKCIJA))
@@ -40,10 +37,10 @@ async function getById(id) {
 }
 
 // ===================== CREATE =====================
-
 async function dodaj(operater) {
     try {
-        const { email, lozinka, uloga = "korisnik" } = operater
+        const { email, lozinka, uloga = "korisnik", ime = "", prezime = "",
+            generirano = false } = operater
 
         // 1. Создаём пользователя в Firebase Auth
         const userCredential = await createUserWithEmailAndPassword(auth, email, lozinka)
@@ -53,10 +50,16 @@ async function dodaj(operater) {
         await setDoc(doc(db, KOLEKCIJA, uid), {
             email,
             uloga,
+            ime,
+            prezime,
+            generirano,
             createdAt: new Date().toISOString()
         })
 
-        return { success: true, id: uid }
+        return {
+            success: true,
+            data: { id: uid, email, uloga }
+        }
     } catch (e) {
         console.error("Greška kod dodavanja operatera:", e)
         return { success: false, message: e.message }
@@ -64,8 +67,7 @@ async function dodaj(operater) {
 }
 
 // ===================== UPDATE =====================
-
-async function promjeni(id, operater) {
+async function promijeni(id, operater) {
     try {
         // Можно менять только то, что хранится в Firestore (email + uloga)
         const updateData = {}
@@ -81,8 +83,7 @@ async function promjeni(id, operater) {
 }
 
 // ===================== CHANGE PASSWORD =====================
-
-async function promjeniLozinku(id, novaLozinka) {
+async function promijeniLozinku(id, novaLozinka) {
     try {
         const user = auth.currentUser
 
@@ -104,7 +105,6 @@ async function promjeniLozinku(id, novaLozinka) {
 }
 
 // ===================== DELETE =====================
-
 async function obrisi(id) {
     try {
         // Удаляем документ из Firestore
@@ -120,7 +120,6 @@ async function obrisi(id) {
 }
 
 // ===================== LOGIN =====================
-
 async function prijava(email, lozinka) {
     try {
         // 1. Вход через Firebase Auth
@@ -156,23 +155,23 @@ async function prijava(email, lozinka) {
         return { success: false, message }
     }
 }
-
-
-
 async function dodajBezHash(operater) {
     try {
         const noviOperater = {
             email: operater.email,
             uloga: operater.uloga,
-            lozinka: operater.lozinka
-        };
-        const skupOperatera = collection(getFirebaseDB(), PrefixStorage.OPERATERI);
-        const docRef = await addDoc(skupOperatera, noviOperater);
+            lozinka: operater.lozinka,
+            ime: operater.ime ?? "",
+            prezime: operater.prezime ?? "",
+            generirano: operater.generirano ?? false
+        }
+        const docRef = await addDoc(collection(db, KOLEKCIJA), noviOperater)
         return {
             success: true,
-            data: { sifra: docRef.id, email: operater.email }
-        };
+            data: { id: docRef.id, email: operater.email }
+        }
     } catch (e) {
+        console.error("Greška kod dodavanja operatera:", e)
         return { success: false, message: e.message };
     }
 }
@@ -182,8 +181,8 @@ export default {
     get,
     getById,
     dodaj,
-    promjeni,
-    promjeniLozinku,
+    promijeni,
+    promijeniLozinku,
     obrisi,
     prijava,
     dodajBezHash

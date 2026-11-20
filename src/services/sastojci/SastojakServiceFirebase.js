@@ -1,10 +1,9 @@
 
-import { collection, doc, getDocs, getDoc, runTransaction, deleteDoc } from "firebase/firestore"
+import { collection, doc, getDocs, getDoc, runTransaction, deleteDoc, setDoc } from "firebase/firestore"
 import getFirebaseDB from "../Firebase"
 import { PrefixStorage } from "../../constants"
 
-const KOLEKCIJA = PrefixStorage.SASTOJCI 
-const BROJAC = "brojaci"
+const KOLEKCIJA = PrefixStorage.SASTOJCI
 
 // ===================== SORT =====================
 
@@ -24,7 +23,7 @@ async function get() {
 
         const sastojci = snapshot.docs.map(d => ({
             ...d.data(),
-            id: d.data().id ?? Number(d.id)
+            id: d.id
         }))
 
         return {
@@ -47,12 +46,7 @@ async function get() {
 
 async function getById(id) {
     try {
-        const docRef = doc(
-            getFirebaseDB(),
-            KOLEKCIJA,
-            String(parseInt(id, 10))
-        )
-
+        const docRef = doc(getFirebaseDB(), KOLEKCIJA, String(id))
         const docSnap = await getDoc(docRef)
 
         if (!docSnap.exists()) {
@@ -64,7 +58,10 @@ async function getById(id) {
 
         return {
             success: true,
-            data: docSnap.data()
+            data: {
+                ...docSnap.data(),
+                id: docSnap.id
+            }
         }
 
     } catch (e) {
@@ -83,39 +80,13 @@ async function getById(id) {
 async function dodaj(sastojak) {
     try {
         const db = getFirebaseDB()
-
-        const rezultat = await runTransaction(db, async (transaction) => {
-
-            const brojacRef = doc(db, BROJAC, KOLEKCIJA)
-            const brojacSnap = await transaction.get(brojacRef)
-
-            const noviId = (brojacSnap.exists()
-                ? brojacSnap.data().vrijednost
-                : 0) + 1
-
-            const noviSastojak = {
-                ...sastojak,
-                id: noviId
-            }
-
-            const sastojakRef = doc(
-                db,
-                KOLEKCIJA,
-                String(noviId)
-            )
-
-            transaction.set(brojacRef, {
-                vrijednost: noviId
-            })
-
-            transaction.set(sastojakRef, noviSastojak)
-
-            return noviSastojak
-        })
+        const sastojakRef = doc(collection(db, KOLEKCIJA))
+        const noviSastojak = { ...sastojak, id: sastojakRef.id }
+        await setDoc(sastojakRef, noviSastojak)
 
         return {
             success: true,
-            data: rezultat
+            data: noviSastojak
         }
 
     } catch (e) {
@@ -132,13 +103,8 @@ async function dodaj(sastojak) {
 async function promijeni(id, sastojak) {
     try {
         const db = getFirebaseDB()
-
-        const docRef = doc(
-            db,
-            KOLEKCIJA,
-            String(parseInt(id, 10))
-        )
-
+        const docRef = doc(db, KOLEKCIJA, String(id))
+        
         await runTransaction(db, async (transaction) => {
             const snapshot = await transaction.get(docRef)
 
@@ -153,10 +119,9 @@ async function promijeni(id, sastojak) {
             success: true,
             data: {
                 ...sastojak,
-                id: parseInt(id, 10)
+                id: String(id)
             }
         }
-
     } catch (e) {
         console.error("Greška kod promjene sastojka:", e)
 
@@ -172,9 +137,7 @@ async function promijeni(id, sastojak) {
 async function obrisi(id) {
     try {
         const db = getFirebaseDB()
-        const docRef = doc(db, KOLEKCIJA,
-            String(parseInt(id, 10)))
-
+        const docRef = doc(db, KOLEKCIJA, String(id))
         const docSnap = await getDoc(docRef)
 
         if (!docSnap.exists()) {

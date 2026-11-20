@@ -27,8 +27,8 @@ const PrazanServis = {
     get: async () => ({ success: false, data: [] }),
     getById: async (id) => ({ success: false, data: null }),
     dodaj: async (operater) => { console.error("Servis nije učitan"); return { success: false } },
-    promjeni: async (id, operater) => { console.error("Servis nije učitan"); return { success: false } },
-    promjeniLozinku: async (id, novaLozinka) => { console.error("Servis nije učitan"); return { success: false } },
+    promijeni: async (id, operater) => { console.error("Servis nije učitan"); return { success: false } },
+    promijeniLozinku: async (id, novaLozinka) => { console.error("Servis nije učitan"); return { success: false } },
     obrisi: async (id) => { console.error("Servis nije učitan"); return { success: false } },
     prijava: async (email, lozinka) => { console.error("Servis nije učitan"); return { success: false, message: "Servis nije učitan" } }
 }
@@ -41,8 +41,8 @@ export default {
     get: () => AktivniServis.get(),
     getById: (id) => AktivniServis.getById(id),
     dodaj: (operater) => AktivniServis.dodaj(operater),
-    promjeni: (id, operater) => AktivniServis.promjeni(id, operater),
-    promjeniLozinku: (id, novaLozinka) => AktivniServis.promjeniLozinku(id, novaLozinka),
+    promijeni: (id, operater) => AktivniServis.promijeni(id, operater),
+    promijeniLozinku: (id, novaLozinka) => AktivniServis.promijeniLozinku(id, novaLozinka),
     obrisi: (id) => AktivniServis.obrisi(id),
     prijava: (email, lozinka) => AktivniServis.prijava(email, lozinka)
 }

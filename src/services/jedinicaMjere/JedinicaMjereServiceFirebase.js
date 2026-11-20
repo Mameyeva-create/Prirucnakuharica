@@ -1,10 +1,9 @@
 
-import {collection, doc, getDocs, getDoc, runTransaction, updateDoc, deleteDoc} from "firebase/firestore"
+import { collection, doc, getDocs, getDoc, runTransaction, setDoc, deleteDoc } from "firebase/firestore"
 import getFirebaseDB from "../Firebase"
 import { PrefixStorage } from "../../constants"
 
 const KOLEKCIJA = PrefixStorage.JEDINICE_MJERE
-const BROJAC = "brojaci"
 
 // ===================== SORT =====================
 
@@ -15,7 +14,6 @@ function sortirajJedinice(jedinice) {
 }
 
 // ===================== READ =====================
-
 async function get() {
     try {
         const snapshot = await getDocs(
@@ -24,7 +22,7 @@ async function get() {
 
         const jediniceMjere = snapshot.docs.map(d => ({
             ...d.data(),
-            id: d.data().id ?? Number(d.id)
+            id: d.id
         }))
 
         return {
@@ -44,15 +42,9 @@ async function get() {
 }
 
 // ===================== READ BY ID =====================
-
 async function getById(id) {
     try {
-        const docRef = doc(
-            getFirebaseDB(),
-            KOLEKCIJA,
-            String(parseInt(id, 10))
-        )
-
+        const docRef = doc(getFirebaseDB(), KOLEKCIJA, String(id))
         const docSnap = await getDoc(docRef)
 
         if (!docSnap.exists()) {
@@ -61,7 +53,6 @@ async function getById(id) {
                 data: null
             }
         }
-
         return {
             success: true,
             data: {
@@ -82,45 +73,20 @@ async function getById(id) {
 }
 
 // ===================== CREATE =====================
-
 async function dodaj(jedinicaMjere) {
     try {
         const db = getFirebaseDB()
-
-        const rezultat = await runTransaction(db, async (transaction) => {
-
-            const brojacRef = doc(db, BROJAC, KOLEKCIJA)
-            const brojacSnap = await transaction.get(brojacRef)
-
-            const noviId = (brojacSnap.exists()
-                ? brojacSnap.data().vrijednost
-                : 0) + 1
-
-            const novaJedinicaMjere = {
-                ...jedinicaMjere,
-                id: noviId
-            }
-
-            const jedinicaRef = doc(
-                db,
-                KOLEKCIJA,
-                String(noviId)
-            )
-
-            transaction.set(brojacRef, {
-                vrijednost: noviId
-            })
-
-            transaction.set(jedinicaRef, novaJedinicaMjere)
-
-            return novaJedinicaMjere
-        })
+        const jedinicaRef = doc(collection(db, KOLEKCIJA))
+        const novaJedinicaMjere = {
+            ...jedinicaMjere,
+            id: jedinicaRef.id
+        }
+        await setDoc(jedinicaRef, novaJedinicaMjere)
 
         return {
             success: true,
-            data: rezultat
+            data: novaJedinicaMjere
         }
-
     } catch (e) {
         console.error("Greška kod dodavanja jedinice mjere:", e)
 
@@ -132,32 +98,24 @@ async function dodaj(jedinicaMjere) {
 }
 
 // ===================== UPDATE =====================
-
 async function promijeni(id, jedinicaMjere) {
     try {
         const db = getFirebaseDB()
-
-        const docRef = doc(
-            db,
-            KOLEKCIJA,
-            String(parseInt(id, 10))
-        )
-
+        const docRef = doc(db, KOLEKCIJA, String(id))
+        
         await runTransaction(db, async (transaction) => {
             const snapshot = await transaction.get(docRef)
 
             if (!snapshot.exists()) {
                 throw new Error("Jedinica mjere ne postoji")
             }
-
             transaction.update(docRef, jedinicaMjere)
         })
-
         return {
             success: true,
             data: {
                 ...jedinicaMjere,
-                id: parseInt(id, 10)
+                id: parseInt(id)
             }
         }
 
@@ -172,26 +130,17 @@ async function promijeni(id, jedinicaMjere) {
 }
 
 // ===================== DELETE =====================
-
 async function obrisi(id) {
     try {
         const db = getFirebaseDB()
-
-        const docRef = doc(
-            db,
-            KOLEKCIJA,
-            String(parseInt(id, 10))
-        )
-
+        const docRef = doc(db, KOLEKCIJA, String(id))
         const docSnap = await getDoc(docRef)
-
         if (!docSnap.exists()) {
             return {
                 success: false,
                 message: "Jedinica mjere ne postoji"
             }
         }
-
         await deleteDoc(docRef)
 
         return {

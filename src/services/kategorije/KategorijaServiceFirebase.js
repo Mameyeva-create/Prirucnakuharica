@@ -1,14 +1,33 @@
 
-import { collection, doc, getDocs, getDoc, runTransaction, deleteDoc } from "firebase/firestore"
+import { collection, doc, getDocs, getDoc, runTransaction, writeBatch, deleteDoc, setDoc } from "firebase/firestore"
 import getFirebaseDB from "../Firebase"
 import { PrefixStorage } from "../../constants"
 import { kategorije as pocetneKategorije } from "./KategorijaPodaci"
 
 const KOLEKCIJA = PrefixStorage.KATEGORIJE
-const BROJAC = "brojaci"
+
+// ===================== SORT =====================
+// Vraća redoslijed kategorije. Za stare zapise bez polja
+// koristi se numerički ID (čuva stari poredak), inače Infinity.
+function dohvatiRedoslijed(k) {
+    if (typeof k.redoslijed === "number") return k.redoslijed
+
+    const n = Number(k.id)
+    return Number.isFinite(n) ? n : Infinity
+}
+
+function sortirajKategorije(kategorije) {
+    return [...kategorije].sort((a, b) => {
+        const ra = dohvatiRedoslijed(a)
+        const rb = dohvatiRedoslijed(b)
+
+        if (ra !== rb) return ra - rb
+
+        return a.naziv?.localeCompare(b.naziv, "hr")
+    })
+}
 
 // ===================== READ =====================
-
 async function get() {
     try {
         const db = getFirebaseDB()
@@ -18,68 +37,30 @@ async function get() {
         )
 
         // Prvi запуск: dodavanje početnih kategorija
-        if (snapshot.empty) {
-            await runTransaction(db, async (transaction) => {
+        // if (snapshot.empty) {
+        //     const batch = writeBatch(db)
 
-                const brojacRef = doc(db, BROJAC, KOLEKCIJA)
-                const brojacSnap = await transaction.get(brojacRef)
+        //     pocetneKategorije.forEach((k, index) => {
+        //         const kategorijaRef = doc(db, KOLEKCIJA, String(k.id))
 
-                const reference = pocetneKategorije.map(k =>
-                    doc(db, KOLEKCIJA, String(k.id))
-                )
+        //         batch.set(kategorijaRef, { ...k, id: String(k.id), redoslijed: k.redoslijed ?? index + 1 })
+        //     })
+        //     await batch.commit()
 
-                const postojeciDokumenti = []
+        //     // Ponovno dohvaćanje nakon inicijalizacije
+        //     snapshot = await getDocs(
+        //         collection(db, KOLEKCIJA)
+        //     )
+        // }
 
-                // Sva čitanja prije pisanja
-                for (const ref of reference) {
-                    postojeciDokumenti.push(
-                        await transaction.get(ref)
-                    )
-                }
-
-                const postojeceKategorije = postojeciDokumenti
-                    .filter(d => d.exists())
-
-                // Ako je kolekcija još uvijek prazna, dodaj početne podatke
-                if (postojeceKategorije.length === 0) {
-                    pocetneKategorije.forEach((k, index) => {
-                        transaction.set(reference[index], {
-                            ...k,
-                            id: Number(k.id)
-                        })
-                    })
-
-                    const najveciId = Math.max(
-                        ...pocetneKategorije.map(k => Number(k.id))
-                    )
-
-                    transaction.set(brojacRef, {
-                        vrijednost: Math.max(
-                            brojacSnap.exists()
-                                ? brojacSnap.data().vrijednost
-                                : 0,
-                            najveciId
-                        )
-                    })
-                }
-            })
-
-            // Ponovno dohvaćanje nakon inicijalizacije
-            snapshot = await getDocs(
-                collection(db, KOLEKCIJA)
-            )
-        }
-
-        const kategorije = snapshot.docs
-            .map(d => ({
-                ...d.data(),
-                id: d.data().id ?? Number(d.id)
-            }))
-            .sort((a, b) => a.id - b.id)
+        const kategorije = snapshot.docs.map(d => ({
+            ...d.data(),
+            id: d.id
+        }))
 
         return {
             success: true,
-            data: kategorije
+            data: sortirajKategorije(kategorije)
         }
 
     } catch (e) {
@@ -97,12 +78,7 @@ async function get() {
 
 async function getById(id) {
     try {
-        const docRef = doc(
-            getFirebaseDB(),
-            KOLEKCIJA,
-            String(parseInt(id, 10))
-        )
-
+        const docRef = doc(getFirebaseDB(), KOLEKCIJA, String(id))
         const docSnap = await getDoc(docRef)
 
         if (!docSnap.exists()) {
@@ -116,7 +92,7 @@ async function getById(id) {
             success: true,
             data: {
                 ...docSnap.data(),
-                id: docSnap.data().id ?? Number(docSnap.id)
+                id: docSnap.id
             }
         }
 
@@ -132,60 +108,26 @@ async function getById(id) {
 }
 
 // ===================== CREATE =====================
-
 async function dodaj(kategorija) {
     try {
         const db = getFirebaseDB()
-
-        const rezultat = await runTransaction(db, async (transaction) => {
-
-            const brojacRef = doc(db, BROJAC, KOLEKCIJA)
-            const brojacSnap = await transaction.get(brojacRef)
-
-            const kategorijeSnapshot = await transaction.get(
-                collection(db, KOLEKCIJA)
-            )
-
-            const najveciPostojeciId = kategorijeSnapshot.docs.reduce(
-                (max, d) => Math.max(
-                    max,
-                    Number(d.data().id ?? d.id) || 0
-                ),
-                0
-            )
-
-            const zadnjiId = Math.max(
-                brojacSnap.exists()
-                    ? brojacSnap.data().vrijednost
-                    : 0,
-                najveciPostojeciId
-            )
-
-            const noviId = zadnjiId + 1
-
-            const novaKategorija = {
-                ...kategorija,
-                id: noviId
-            }
-
-            const kategorijaRef = doc(
-                db,
-                KOLEKCIJA,
-                String(noviId)
-            )
-
-            transaction.set(brojacRef, {
-                vrijednost: noviId
-            })
-
-            transaction.set(kategorijaRef, novaKategorija)
-
-            return novaKategorija
-        })
+        const snapshot = await getDocs(collection(db, KOLEKCIJA)
+        )
+        const najveciRedoslijed = snapshot.docs.reduce((max, d) => {
+            const r = dohvatiRedoslijed({ ...d.data(), id: d.id })
+            return Math.max(max, Number.isFinite(r) ? r : 0)
+        }, 0)
+        const kategorijaRef = doc(collection(db, KOLEKCIJA))
+        const novaKategorija = {
+            ...kategorija,
+            id: kategorijaRef.id,
+            redoslijed: kategorija.redoslijed ?? najveciRedoslijed + 1
+        }
+        await setDoc(kategorijaRef, novaKategorija)
 
         return {
             success: true,
-            data: rezultat
+            data: novaKategorija
         }
 
     } catch (e) {
@@ -203,12 +145,7 @@ async function dodaj(kategorija) {
 async function promijeni(id, kategorija) {
     try {
         const db = getFirebaseDB()
-
-        const docRef = doc(
-            db,
-            KOLEKCIJA,
-            String(parseInt(id, 10))
-        )
+        const docRef = doc(db, KOLEKCIJA, String(id))
 
         const rezultat = await runTransaction(db, async (transaction) => {
             const snapshot = await transaction.get(docRef)
@@ -220,19 +157,15 @@ async function promijeni(id, kategorija) {
             const azuriranaKategorija = {
                 ...snapshot.data(),
                 ...kategorija,
-                id: parseInt(id, 10)
+                id: String(id)
             }
-
             transaction.update(docRef, kategorija)
-
             return azuriranaKategorija
         })
-
         return {
             success: true,
             data: rezultat
         }
-
     } catch (e) {
         console.error("Greška kod promjene kategorije:", e)
 
@@ -244,17 +177,10 @@ async function promijeni(id, kategorija) {
 }
 
 // ===================== DELETE =====================
-
 async function obrisi(id) {
     try {
         const db = getFirebaseDB()
-
-        const docRef = doc(
-            db,
-            KOLEKCIJA,
-            String(parseInt(id, 10))
-        )
-
+        const docRef = doc(db, KOLEKCIJA, String(id))
         const docSnap = await getDoc(docRef)
 
         if (!docSnap.exists()) {
@@ -263,9 +189,7 @@ async function obrisi(id) {
                 message: "Kategorija ne postoji"
             }
         }
-
         await deleteDoc(docRef)
-
         return {
             success: true,
             message: "Kategorija uspješno obrisana"

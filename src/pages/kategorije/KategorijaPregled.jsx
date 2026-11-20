@@ -69,7 +69,7 @@ export default function KategorijaPregled() {
                                             onClick={(e) => {
                                                 navigate(`/kategorije/${kategorija.id}`)
                                             }}>
-                                            Promjeni
+                                            Promijeni
                                         </Button>
                                         {/* &nbsp;&nbsp; */}
                                         <Button variant="danger" onClick={(e) => {
