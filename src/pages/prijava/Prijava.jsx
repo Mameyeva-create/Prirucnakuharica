@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from 'react'
-import { useNavigate, Link } from 'react-router-dom'
+import { useNavigate, Link, useLocation } from 'react-router-dom'
 import { Container, Row, Col, Card, Form, Button, Alert } from 'react-bootstrap'
 import { useAuth } from '../../context/AuthContext'
 import { RouteNames } from '../../constants'
@@ -14,6 +14,8 @@ function Prijava() {
 
     const { prijava, jePrijavljen } = useAuth()
     const navigate = useNavigate()
+    const location = useLocation()
+    const uspjeh = location.state?.poruka
 
     const [email, setEmail] = useState('')
     const [lozinka, setLozinka] = useState('')
@@ -76,6 +78,11 @@ function Prijava() {
                                     </Col>
                                 ))}
                             </Row>
+                            {uspjeh && !poruka && (
+                                <Alert variant="success">
+                                    {uspjeh}
+                                </Alert>
+                            )}
                             {poruka && (
                                 <Alert variant="danger">
                                     {poruka}

@@ -49,25 +49,25 @@ export function AuthProvider({ children }) {
 
         return rezultat
     }
-   // Registracija novog korisnika (uvijek uloga 'korisnik')
-async function registracija({ email, lozinka }) {
-    const postojeci = await OperaterService.get()
-    if (!postojeci.success) {
-        return { success: false, message: 'Servis nije dostupan' }
+    // Registracija novog korisnika (uvijek uloga 'korisnik')
+    async function registracija({ email, lozinka }) {
+        const postojeci = await OperaterService.get()
+        if (!postojeci.success) {
+            return { success: false, message: 'Servis nije dostupan' }
+        }
+        const zauzet = postojeci.data.some(
+            o => o.email.toLowerCase() === email.trim().toLowerCase()
+        )
+        if (zauzet) {
+            return { success: false, message: 'Korisnik s tim emailom već postoji!' }
+        }
+        return await OperaterService.dodaj({
+            email: email.trim(),
+            lozinka,
+            uloga: 'korisnik',
+            generirano: false
+        })
     }
-    const zauzet = postojeci.data.some(
-        o => o.email.toLowerCase() === email.trim().toLowerCase()
-    )
-    if (zauzet) {
-        return { success: false, message: 'Korisnik s tim emailom već postoji!' }
-    }
-    return await OperaterService.dodaj({
-        email: email.trim(),
-        lozinka,
-        uloga: 'korisnik',
-        generirano: false
-    })
-}
 
     // Odjava korisnika
     function odjava() {
@@ -82,7 +82,7 @@ async function registracija({ email, lozinka }) {
                 jePrijavljen,
                 jeAdmin,
                 prijava,
-                 odjava,
+                odjava,
                 registracija
             }}
         >

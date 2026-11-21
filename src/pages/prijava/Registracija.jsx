@@ -8,22 +8,39 @@ import { useAuth } from "../../context/AuthContext"
 export default function Registracija() {
 
     const navigate = useNavigate()
-    const { registracija } = useAuth()
+    const { registracija, prijava } = useAuth()
     const [errors, setErrors] = useState({})
     const [serverError, setServerError] = useState('')
+    const [ucitavanje, setUcitavanje] = useState(false)
 
     async function registriraj(operater) {
+        setUcitavanje(true)
+
         try {
             const rezultat = await registracija(operater)
-            if (rezultat.success) {
-                navigate(RouteNames.PRIJAVA)
-            } else {
-                setServerError(rezultat.message || 'Registracija nije uspjela'
-                )
+
+            if (!rezultat.success) {
+                setServerError(rezultat.message || 'Registracija nije uspjela')
+                return
             }
+
+            // Automatska prijava nakon uspješne registracije
+            const prijavaRezultat = await prijava(operater.email, operater.lozinka)
+
+            if (prijavaRezultat.success) {
+                navigate(RouteNames.HOME)
+            } else {
+                // Registracija je uspjela, ali prijava nije: šaljemo na prijavu
+                navigate(RouteNames.PRIJAVA, {
+                    state: { poruka: 'Registracija je uspješna. Prijavite se.' }
+                })
+            }
+
         } catch (error) {
             console.error("Greška pri registraciji:", error)
-            setServerError("Došlo je do greške pri registraciji")
+            setServerError(error.message || "Došlo je do greške pri registraciji")
+        } finally {
+            setUcitavanje(false)
         }
     }
 
@@ -98,6 +115,7 @@ export default function Registracija() {
                                             isInvalid={!!errors.email}
                                             onFocus={() => ocistiGresku('email')}
                                             autoComplete="email"
+                                            disabled={ucitavanje}
                                         />
                                         <Form.Control.Feedback type="invalid">
                                             {errors.email}
@@ -117,6 +135,7 @@ export default function Registracija() {
                                             isInvalid={!!errors.lozinka}
                                             onFocus={() => ocistiGresku('lozinka')}
                                             autoComplete="new-password"
+                                            disabled={ucitavanje}
                                         />
                                         <Form.Control.Feedback type="invalid">
                                             {errors.lozinka}
@@ -133,6 +152,7 @@ export default function Registracija() {
                                             isInvalid={!!errors.potvrdaLozinke}
                                             onFocus={() => ocistiGresku('potvrdaLozinke')}
                                             autoComplete="new-password"
+                                            disabled={ucitavanje}
                                         />
                                         <Form.Control.Feedback type="invalid">
                                             {errors.potvrdaLozinke}
@@ -148,8 +168,9 @@ export default function Registracija() {
                                     type="submit"
                                     variant="success"
                                     className="px-4"
+                                    disabled={ucitavanje}
                                 >
-                                    Registriraj se
+                                    {ucitavanje ? 'Registracija...' : 'Registriraj se'}
                                 </Button>
                             </div>
                         </Card.Body>

@@ -1,5 +1,5 @@
 import { PrefixStorage } from "../../constants"
-import { kategorije as pocetneKategorije } from "./KategorijaPodaci"
+
 
 // ===================== SORT =====================
 
