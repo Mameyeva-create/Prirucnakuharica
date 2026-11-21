@@ -21,47 +21,54 @@ function spremiUStorage(podaci) {
 }
 
 async function get() {
-    const jedinicaMjere = dohvatiSveIzStorage()
-    return { data: sortirajJedinice(jedinicaMjere) }
+    return { success: true, data: sortirajJedinice(dohvatiSveIzStorage()) }
 }
 
 async function getById(id) {
-    const jediniceMjera = dohvatiSveIzStorage()
-
-    const jedinicaMjere = jediniceMjera.find(i => i.id === parseInt(id, 10))
-
-    return { data: jedinicaMjere }
+    const jedinica = dohvatiSveIzStorage().find(i => String(i.id) === String(id))
+    return jedinica
+        ? { success: true, data: jedinica }
+        : { success: false, data: null }
 }
-
 async function dodaj(jedinicaMjere) {
     const jediniceMjera = dohvatiSveIzStorage()
 
-    const noviJedinicaMjere = {
-        ...jedinicaMjere,
-        id: jediniceMjera.length === 0
-            ? 1
-            : Math.max(...jediniceMjera?.map(i => i.id)) + 1
-    }
+    const noviId = jediniceMjera.length === 0
+        ? 1
+        : Math.max(...jediniceMjera.map(i => Number(i.id) || 0)) + 1
 
-    jediniceMjera.push(noviJedinicaMjere)
+    const novaJedinicaMjere = { ...jedinicaMjere, id: noviId }
+
+    jediniceMjera.push(novaJedinicaMjere)
     spremiUStorage(jediniceMjera)
 
+    return { success: true, data: novaJedinicaMjere }
 }
 
 async function promijeni(id, jedinicaMjere) {
-    const jedinicaMjera = dohvatiSveIzStorage()
-    const index = jedinicaMjera.findIndex(i => i.id === parseInt(id, 10))
+    const sve = dohvatiSveIzStorage()
+    const index = sve.findIndex(i => String(i.id) === String(id))
+
     if (index === -1) {
-        return
+        return { success: false, message: 'Jedinica mjere ne postoji' }
     }
-    jedinicaMjera[index] = { ...jedinicaMjera[index], ...jedinicaMjere }
-    spremiUStorage(sortirajJedinice(jedinicaMjera))
+
+    sve[index] = { ...sve[index], ...jedinicaMjere, id: sve[index].id }
+    spremiUStorage(sve)
+
+    return { success: true, data: sve[index] }
 }
 
 async function obrisi(id) {
-    let jedinicaMjere = dohvatiSveIzStorage()
-    jedinicaMjere = jedinicaMjere.filter(i => i.id !== parseInt(id, 10))
-    spremiUStorage(jedinicaMjere)
+    const sve = dohvatiSveIzStorage()
+    const ostalo = sve.filter(i => String(i.id) !== String(id))
+
+    if (ostalo.length === sve.length) {
+        return { success: false, message: 'Jedinica mjere ne postoji' }
+    }
+
+    spremiUStorage(ostalo)
+    return { success: true, message: 'Jedinica mjere uspješno obrisana' }
 }
 
 export default {

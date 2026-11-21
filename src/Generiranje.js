@@ -25,12 +25,11 @@ export async function dohvatiKoristene() {
     const sastojci = new Set()
     const jedinice = new Set()
 
-    for (const r of recepti) {
-        const kat = Number(r.kategorija)
-        if (r.kategorija != null && Number.isFinite(kat)) kategorije.add(kat)
+   for (const r of recepti) {
+        if (r.kategorija != null && r.kategorija !== '') kategorije.add(String(r.kategorija))
         for (const s of r.sastojci || []) {
-            if (s.sastojak != null) sastojci.add(Number(s.sastojak))
-            if (s.jedMjere != null) jedinice.add(Number(s.jedMjere))
+            if (s.sastojak != null) sastojci.add(String(s.sastojak))
+            if (s.jedMjere != null) jedinice.add(String(s.jedMjere))
         }
     }
     return { kategorije, sastojci, jedinice }
@@ -41,7 +40,7 @@ export async function dohvatiKoristene() {
 export async function obrisiGenerirane(
     servis,
     koristeni = new Set(),
-    kljuc = x => Number(x.id),
+    kljuc = x => String(x.id),
     uvjet = () => true
 ) {
     const sve = (await servis.get()).data || []

@@ -19,17 +19,14 @@ export default function ReceptDetalji() {
     const [jediniceMjere, setJediniceMjere] = useState([])
     const [sveKategorije, setSveKategorije] = useState([])
 
-    async function promijeniOmiljen() {
-        const azuriraniRecept = {
-            ...recept, omiljen: !recept.omiljen
-        }
-        try {
-            await ReceptService.promijeni(recept.id, azuriraniRecept)
-            setRecept(azuriraniRecept)
-        } catch (error) {
-            console.error('Greška pri promijeni omiljenog recepta', error)
-        }
+   async function promijeniOmiljen() {
+    try {
+        const odgovor = await ReceptService.promijeni(recept.id, { omiljen: !recept.omiljen })
+        setRecept({ ...recept, omiljen: !recept.omiljen })
+    } catch (error) {
+        console.error('Greška pri promijeni omiljenog recepta', error)
     }
+}
 
     useEffect(() => {
         async function ucitajPodatke() {
@@ -61,7 +58,7 @@ export default function ReceptDetalji() {
     }, [id])
 
     function nazivKategorije(kategorijaId) {
-        const kat = sveKategorije.find(k => Number(k.id) === Number(kategorijaId))
+        const kat = sveKategorije.find(k => String(k.id) === String(kategorijaId))
         return kat?.naziv || 'Nepoznata kategorija'
     }
     function handleGenerirajPDF() {
@@ -81,19 +78,14 @@ export default function ReceptDetalji() {
         const novaKolicina = Number.isFinite(kolicina) ? kolicina * porcije / 2 : 0
         const prikazKolicine = Number(novaKolicina.toFixed(2)).toLocaleString("hr-HR")
         const podatakSastojka = sviSastojci.find(
-            item => Number(item.id) === Number(sastojak.sastojak))
+            item => String(item.id) === String(sastojak.sastojak))
         const jedinica = jediniceMjere.find(
-            jm => Number(jm.id) === Number(sastojak.jedMjere))
+            jm => String(jm.id) === String(sastojak.jedMjere))
         const nazivSastojka = podatakSastojka?.naziv || 'Nepoznato'
         const nazivJedinice = jedinica?.naziv || 'Nepoznato'
         return `${prikazKolicine} ${nazivJedinice} ${nazivSastojka}`
     }
 
-    if (!recept || !recept.id) {
-        return (
-            <p className="container mt-4">Recept nije pronađen</p>
-        )
-    }
     const sastojci = Array.isArray(recept.sastojci)
         ? recept.sastojci : []
 

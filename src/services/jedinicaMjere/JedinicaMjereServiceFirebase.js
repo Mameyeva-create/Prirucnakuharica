@@ -57,7 +57,7 @@ async function getById(id) {
             success: true,
             data: {
                 ...docSnap.data(),
-                id: docSnap.data().id ?? Number(docSnap.id)
+                id: docSnap.id
             }
         }
 
@@ -102,7 +102,7 @@ async function promijeni(id, jedinicaMjere) {
     try {
         const db = getFirebaseDB()
         const docRef = doc(db, KOLEKCIJA, String(id))
-        
+
         await runTransaction(db, async (transaction) => {
             const snapshot = await transaction.get(docRef)
 
@@ -115,7 +115,7 @@ async function promijeni(id, jedinicaMjere) {
             success: true,
             data: {
                 ...jedinicaMjere,
-                id: parseInt(id)
+                id: String(id)
             }
         }
 

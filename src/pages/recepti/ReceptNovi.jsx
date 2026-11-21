@@ -116,7 +116,7 @@ export default function ReceptNovi() {
             alert(rezultat.greska)
             return
         }
-        const recept = { ...rezultat.data, slika: slika || null, generirano: false }
+        const recept = { ...rezultat.data, slikaBase64: slika || '', generirano: false }
         // console.log(JSON.stringify(recept))
         try {
             await ReceptService.dodaj(recept)

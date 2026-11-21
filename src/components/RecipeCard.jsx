@@ -3,7 +3,7 @@ export default function RecipeCard({ recept, nazivKategorije, onView }) {
     return (
         <div className="card h-100 shadow-sm">
             <img
-                src={recept.slika || recept.slikaPutanja}
+                src={recept.slikaBase64}
                 className="card-img-top"
                 alt={recept.naziv}
                 style={{ height: '180px', objectFit: 'cover' }}

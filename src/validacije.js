@@ -7,8 +7,11 @@ export function validiraj(schema, podaci) {
     if (rezultat.success) return { ok: true, data: rezultat.data }
     return { ok: false, greska: rezultat.error.issues[0].message }
 }
+// ID može biti broj (memorija) ili string (Firebase); uvijek se sprema kao string
 const idPolje = (poruka) =>
-    z.coerce.number({ error: poruka }).int(poruka).positive(poruka)
+    z.union([z.string(), z.number()], { error: poruka })
+        .transform(v => String(v).trim())
+        .refine(v => v !== '' && v !== '0', poruka)
 
 export const kategorijaSchema = z.object({
     naziv: z.string().trim().min(2, 'Naziv kategorije mora imati najmanje 2 znaka')

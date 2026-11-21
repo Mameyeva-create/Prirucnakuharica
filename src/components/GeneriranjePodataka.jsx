@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { Alert, Button, Card, Col, Row } from 'react-bootstrap'
 import { DATA_SOURCE, PrefixStorage } from '../constants'
 import GeneriranjeJedinicaMjere from '../pages/jedinicaMjere/GeneriranjeJedinicaMjere'
@@ -31,24 +31,48 @@ function provjeri(rezultat, opis) {
     }
     return rezultat
 }
+// Vraća novi (Firebase) ID za stari ID iz memorije
+function nadiNoviId(mapiranje, stariId) {
+    return mapiranje.find(m => m.idm == stariId)?.idf ?? null
+}
 export default function GeneriranjePodataka() {
     const [poruka, setPoruka] = useState(null)
     const [radi, setRadi] = useState(false)
+    const otkazi = useRef(false)
 
     const jeMemorija = DATA_SOURCE.trim() === 'memorija'
     const jeFirebase = DATA_SOURCE.trim() === 'firebase'
+
+    function provjeriPrekid() {
+        if (otkazi.current) {
+            throw new Error('Prekinuto od strane korisnika.')
+        }
+    }
+    // Prenosi popis u Firebase i vraća mapiranje starih ID-ova na nove
+    async function prenesi(popis, servis, opis) {
+        const mapiranje = []
+
+        for (const e of popis) {
+            provjeriPrekid()
+
+            const { id, ...ostatak } = e
+            const fb = provjeri(
+                await servis.dodaj(ostatak),
+                `${opis} ${ostatak.naziv}`
+            )
+            mapiranje.push({ idm: id, idf: fb.data.id })
+        }
+        return mapiranje
+    }
 
     // ===================== MEMORIJA -> LOCALSTORAGE =====================
     function handleMemorijaULocalStorage() {
         if (!window.confirm('Presipati sve podatke iz memorije u localStorage? Postojeći podaci bit će zamijenjeni.')) {
             return
         }
-        setPoruka(null);
+        setPoruka(null)
 
         try {
-            // Slike u base64 su velike (limit localStorage je oko 5 MB), pa se ne kopiraju
-            //const receptiBezSlika = recepti.map(({ slikaBase64, ...ostalo }) => ostalo)
-
             localStorage.setItem(PrefixStorage.JEDINICE_MJERE, JSON.stringify(jediniceMjere))
             localStorage.setItem(PrefixStorage.KATEGORIJE, JSON.stringify(kategorije))
             localStorage.setItem(PrefixStorage.RECEPTI, JSON.stringify(recepti))
@@ -57,91 +81,77 @@ export default function GeneriranjePodataka() {
 
             setPoruka({ tip: 'success', tekst: 'Uspješno presipano u localStorage!' })
         } catch (error) {
+            // Najčešće je prekoračen limit localStorage (oko 5 MB zbog slika)
             setPoruka({ tip: 'danger', tekst: 'Greška pri presipavanju: ' + error.message })
         }
     }
+    function ocistiLocalStorage() {
+        if (!window.confirm('Obrisati podatke iz localStorage?')) return
+
+        setPoruka(null)
+
+        const kljucevi = [
+            PrefixStorage.JEDINICE_MJERE,
+            PrefixStorage.KATEGORIJE,
+            PrefixStorage.SASTOJCI,
+            PrefixStorage.RECEPTI,
+            PrefixStorage.OPERATERI,
+        ]
+        kljucevi.forEach(k => localStorage.removeItem(k))
+
+        setPoruka({ tip: 'success', tekst: 'localStorage očišćen.' })
+    }
     // ===================== MEMORIJA -> FIREBASE =====================
-    const handleMemorijaUFirebase = async () => {
+    async function handleMemorijaUFirebase() {
         if (!window.confirm('Jeste li sigurni da želite pretočiti iz memorije u firebase?')) {
             return
         }
-        setPoruka(null);
+        otkazi.current = false
+        setPoruka(null)
         setRadi(true)
         try {
-            // 1. Operateri (ID-ovi nam ne trebaju, ali provjeravamo svaki rezultat)
+            // 1. Operateri 
             for (const e of operateri) {
+                provjeriPrekid()
                 const { id, ...ostatak } = e
-                const rezultat = await OperaterServiceFirebase.dodajBezHash(ostatak)
-                provjeri(rezultat, `Operater ${ostatak.email}`)
-            }
-
-            // 2. Kategorije (trebaju nam novi ID-ovi za recepte)
-            const mapiranjeIdKategorija = []
-            for (const e of kategorije) {
-                const { id, ...ostatak } = e
-                const fb = provjeri(
-                    await KategorijaServiceFirebase.dodaj(ostatak),
-                    `Kategorija ${ostatak.naziv}`
+                provjeri(
+                    await OperaterServiceFirebase.dodajBezHash(ostatak),
+                    `Operater ${ostatak.email}`
                 )
-                mapiranjeIdKategorija.push({ idm: id, idf: fb.data.id })
             }
 
-            // 3. Jedinice mjere
-            const mapiranjeIdJedinicaMjere = []
-            for (const e of jediniceMjere) {
-                const { id, ...ostatak } = e
-                const fb = provjeri(
-                    await JedinicaMjereServiceFirebase.dodaj(ostatak),
-                    `Jedinica mjere ${ostatak.naziv}`
-                )
-                mapiranjeIdJedinicaMjere.push({ idm: id, idf: fb.data.id })
-            }
+            // 2. Kategorije, jedinice mjere i sastojci (trebaju nam novi ID-ovi za recepte)
+            const mapKategorija = await prenesi(kategorije, KategorijaServiceFirebase, 'Kategorija')
+            const mapJedinica = await prenesi(jediniceMjere, JedinicaMjereServiceFirebase, 'Jedinica mjere')
+            const mapSastojak = await prenesi(sastojci, SastojakServiceFirebase, 'Sastojak')
 
-            // 4. Sastojci
-            const mapiranjeIdSastojaka = []
-            for (const e of sastojci) {
-                const { id, ...ostatak } = e
-                const fb = provjeri(
-                    await SastojakServiceFirebase.dodaj(ostatak),
-                    `Sastojak ${ostatak.naziv}`
-                )
-                mapiranjeIdSastojaka.push({ idm: id, idf: fb.data.id })
-            }
-
-            // 5. Recepti (povezivanje starih ID-ova kategorije, sastojaka i jedinica mjere s novima)
+            // 3. Recepti (povezivanje starih ID-ova s novima)
             for (const e of recepti) {
-                const { id, slikaBase64, slikaPutanja, ...ostatak } = e;
-                // slikaPutanja iz memorije je lokalna putanja, a ne putanja u Firebase Storageu.
-                // Servis ju sam postavlja prilikom učitavanja slike.
-                ostatak.slika = slikaBase64 || ''
-                ostatak.slikaPutanja = ''
+                provjeriPrekid()
 
-                // Novi ID kategorije
-                const mKategorija = mapiranjeIdKategorija.find(m => m.idm == ostatak.kategorija)
-                if (!mKategorija) {
-                    console.warn(`Recept "${ostatak.naziv}": kategorija ${ostatak.kategorija} nije pronađena`)
+                const { id, ...ostatak } = e
+
+                ostatak.kategorija = nadiNoviId(mapKategorija, ostatak.kategorija)
+                if (ostatak.kategorija === null) {
+                    console.warn(`Recept "${ostatak.naziv}": kategorija nije pronađena`)
                 }
-                ostatak.kategorija = mKategorija ? mKategorija.idf : null
 
-                // Novi ID-ovi sastojaka i jedinica mjere
                 ostatak.sastojci = (ostatak.sastojci || [])
-                    .map(s => {
-                        const mSastojak = mapiranjeIdSastojaka.find(m => m.idm == s.sastojak)
-                        const mJedMjere = mapiranjeIdJedinicaMjere.find(m => m.idm == s.jedMjere)
-
-                        if (!mSastojak || !mJedMjere) {
-                            console.warn(
-                                `Recept "${ostatak.naziv}": preskočen sastojak ${s.sastojak} / jedinica ${s.jedMjere}`
-                            )
+                    .map(s => ({
+                        sastojak: nadiNoviId(mapSastojak, s.sastojak),
+                        kolicina: s.kolicina,
+                        jedMjere: nadiNoviId(mapJedinica, s.jedMjere)
+                    }))
+                    .filter(s => {
+                        const ispravan = s.sastojak !== null && s.jedMjere !== null
+                        if (!ispravan) {
+                            console.warn(`Recept "${ostatak.naziv}": preskočen neispravan sastojak`)
                         }
-                        return {
-                            sastojak: mSastojak ? mSastojak.idf : null,
-                            kolicina: s.kolicina,
-                            jedMjere: mJedMjere ? mJedMjere.idf : null
-                        }
-                    }).filter(s => s.sastojak !== null && s.jedMjere !== null); // Makni neispravne unose ako nisu pronađeni
+                        return ispravan
+                    })
 
-                await ReceptServiceFirebase.dodaj(ostatak);
+                // Servis recepata baca iznimku u slučaju greške
+                await ReceptServiceFirebase.dodaj(ostatak)
             }
 
             setPoruka({ tip: 'success', tekst: 'Uspješno presipano u Firebase!' })
@@ -160,6 +170,7 @@ export default function GeneriranjePodataka() {
     return (
         <div className="container-fluid px-3 px-md-4 py-4">
             <h2 className="text-center mb-4">Generiranje podataka</h2>
+
             <Row className="g-4 align-items-stretch">
                 {KARTICE.map((Kartica, i) => (
                     <Col xs={12} md={6} key={i}>
@@ -171,6 +182,7 @@ export default function GeneriranjePodataka() {
                     </Col>
                 ))}
             </Row>
+
             {jeMemorija && (
                 <>
                     <hr className="my-4" />
@@ -178,6 +190,7 @@ export default function GeneriranjePodataka() {
                     <p className="text-muted">
                         Koristite ove opcije za kopiranje podataka iz memorije u drugi izvor.
                     </p>
+
                     <Row className="mt-3">
                         <Col md={6}>
                             <Button
@@ -197,6 +210,27 @@ export default function GeneriranjePodataka() {
                                 className="w-100 mb-2"
                             >
                                 {radi ? 'Radim...' : 'Iz memorije u firebase'}
+                            </Button>
+                            {radi && (
+                                <Button
+                                    variant="secondary"
+                                    onClick={() => { otkazi.current = true }}
+                                    className="w-100 mb-2"
+                                >
+                                    Prekini
+                                </Button>
+                            )}
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col md={12}>
+                            <Button
+                                variant="outline-secondary"
+                                onClick={ocistiLocalStorage}
+                                disabled={radi}
+                                className="w-100 mb-2"
+                            >
+                                Očisti localStorage
                             </Button>
                         </Col>
                     </Row>

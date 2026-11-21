@@ -13,18 +13,20 @@ function dohvatiSveIzStorage() {
         return []
     }
 }
+
 // Sprema recepte u LocalStorage
 function spremiUStorage(podaci) {
     localStorage.setItem(PrefixStorage.RECEPTI, JSON.stringify(podaci))
 }
+
 // Dohvaća sve recepte
 async function get() {
     return { data: dohvatiSveIzStorage() }
 }
+
 // Dohvaća jedan recept prema ID-u
 async function getById(id) {
-    const recepti = dohvatiSveIzStorage()
-    const recept = recepti.find(r => r.id === Number(id))
+    const recept = dohvatiSveIzStorage().find(r => String(r.id) === String(id))
     return { data: recept || null }
 }
 
@@ -35,31 +37,31 @@ async function dodaj(recept) {
     const noviId = recepti.length === 0 ? 1
         : Math.max(...recepti.map(r => Number(r.id) || 0)) + 1
 
-    const noviRecept = {
-        ...recept, id: noviId, slikaPutanja: recept.slikaPutanja || ""
-    }
+    const noviRecept = { ...recept, id: noviId }
 
     recepti.push(noviRecept)
     spremiUStorage(recepti)
     return { data: noviRecept }
 }
+
 // Mijenja postojeći recept
 async function promijeni(id, recept) {
     const recepti = dohvatiSveIzStorage()
-    const index = recepti.findIndex(r => r.id === Number(id))
+    const index = recepti.findIndex(r => String(r.id) === String(id))
 
     if (index === -1) {
-        throw new Error('Recept nije pronađen.');
+        throw new Error('Recept nije pronađen.')
     }
     recepti[index] = { ...recepti[index], ...recept, id: recepti[index].id }
 
     spremiUStorage(recepti)
     return { data: recepti[index] }
 }
+
 // Briše jedan recept prema ID-u
 async function obrisi(id) {
     const recepti = dohvatiSveIzStorage()
-    const noviRecepti = recepti.filter(r => r.id !== Number(id))
+    const noviRecepti = recepti.filter(r => String(r.id) !== String(id))
     spremiUStorage(noviRecepti)
 }
 

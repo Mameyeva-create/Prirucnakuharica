@@ -28,7 +28,8 @@ async function getById(id) {
             ime: operater.ime,
             prezime: operater.prezime,
             email: operater.email,
-            uloga: operater.uloga
+            uloga: operater.uloga,
+            generirano: operater.generirano
         }
     }
 }

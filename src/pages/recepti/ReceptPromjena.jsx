@@ -31,10 +31,10 @@ export default function ReceptPromjena() {
     const [pretragaSastojka, setPretragaSastojka] = useState('')
     const [prikaziAutocomplete, setPrikaziAutocomplete] = useState(false)
     const [odabraniIndex, setOdabraniIndex] = useState(-1)
-    const [trenutnaJedinicaMjere, setTrenutnaJedinicaMjere] = useState(0)
+    const [trenutnaJedinicaMjere, setTrenutnaJedinicaMjere] = useState('')
     const [trenutnaKolicina, setTrenutnaKolicina] = useState('')
     const [slika, setSlika] = useState('')
-    const [slikaPutanja, setSlikaPutanja] = useState('')
+
 
     useEffect(() => {
         dohvatiPodatke()
@@ -64,8 +64,7 @@ export default function ReceptPromjena() {
             setPriprema(r.priprema || '')
             setOmiljen(r.omiljen || false)
             setVegansko(r.vegansko || false)
-            setSlika(r.slika || '')
-            setSlikaPutanja(r.slikaPutanja || '')
+            setSlika(r.slikaBase64 || '')
             setOdabraniSastojci(Array.isArray(r.sastojci) ? r.sastojci : [])
             setGenerirano(r.generirano)
 
@@ -87,18 +86,16 @@ export default function ReceptPromjena() {
         }
         // 4. sastojak ne smije već biti u receptu
         const postoji = odabraniSastojci.some(
-            s => Number(s.sastojak) === rezultat.data.sastojak
-        )
+            s => String(s.sastojak) === rezultat.data.sastojak)
         if (postoji) {
             alert('Ovaj sastojak već je dodan u recept')
             return
         }
-
         setOdabraniSastojci([...odabraniSastojci, rezultat.data])
         setOdabraniIndex(-1)
         setPrikaziAutocomplete(false)
         setPretragaSastojka('')
-        setTrenutnaJedinicaMjere(0)
+        setTrenutnaJedinicaMjere('')
         setTrenutnaKolicina('')
         setTrenutniSastojak({})
     }
@@ -133,7 +130,7 @@ export default function ReceptPromjena() {
     function filtrirajSastojke() {
         if (!pretragaSastojka) return []
         return sviSastojci.filter(p =>
-            !odabraniSastojci.some(op => Number(op.sastojak) === Number(p.id)) &&
+            !odabraniSastojci.some(op => String(op.sastojak) === String(p.id)) &&
             (p.naziv.toLowerCase().includes(pretragaSastojka.toLowerCase()))
         )
     }
@@ -169,13 +166,14 @@ export default function ReceptPromjena() {
     }
 
     function ukloniSastojak(idSastojka) {
-        setOdabraniSastojci(odabraniSastojci.filter(st => Number(st.sastojak) !== Number(idSastojka)))
+        setOdabraniSastojci(odabraniSastojci.filter(st => String(st.sastojak) !== String(idSastojka)))
     }
     function promijeniKolicinu(idSastojka, novaKolicina) {
         setOdabraniSastojci(
-            odabraniSastojci.map(st => Number(st.sastojak) === Number(idSastojka)
-                ? { ...st, kolicina: Number(novaKolicina) }
-                : st
+            odabraniSastojci.map(st =>
+                String(st.sastojak) === String(idSastojka)
+                    ? { ...st, kolicina: Number(novaKolicina) }
+                    : st
             )
         )
     }
@@ -183,17 +181,15 @@ export default function ReceptPromjena() {
     function promijeniJedinicu(idSastojka, novaJedinica) {
         setOdabraniSastojci(
             odabraniSastojci.map(st =>
-                Number(st.sastojak) === Number(idSastojka)
-                    ? { ...st, jedMjere: Number(novaJedinica) }
+                String(st.sastojak) === String(idSastojka)
+                    ? { ...st, jedMjere: novaJedinica }
                     : st
             )
         )
     }
+
     function nazivJM(sifraJM) {
-        //   console.log(jediniceMjere)
-        // console.log(sifraJM)
-        const jm = jediniceMjere.find(
-            jm => Number(jm.id) === Number(sifraJM))
+        const jm = jediniceMjere.find(jm => String(jm.id) === String(sifraJM))
         return jm?.naziv || 'Nepoznato'
     }
 
@@ -258,11 +254,8 @@ export default function ReceptPromjena() {
                                     </Form.Group>
 
                                     <SlikaCropper
-                                        slika={slika || slikaPutanja}
-                                        onPromjena={(novaSlika) => {
-                                            setSlika(novaSlika)
-                                            setSlikaPutanja('')   // nova slika (ili uklanjanje) zamjenjuje staru putanju
-                                        }}
+                                        slika={slika}
+                                        onPromjena={setSlika}
                                     />
                                     <Row className="g-2 mt-auto pt-3">
                                         <Col xs={12}>
@@ -349,7 +342,7 @@ export default function ReceptPromjena() {
                                             <Form.Label>Jedinica</Form.Label>
                                             <Form.Select name="jm"
                                                 value={trenutnaJedinicaMjere}
-                                                onChange={(e) => { setTrenutnaJedinicaMjere(parseInt(e.target.value)) }}>
+                                                onChange={(e) => { setTrenutnaJedinicaMjere(e.target.value) }}>
                                                 <option value="">Odaberite jedinicu mjere</option>
                                                 {jediniceMjere && jediniceMjere.map((jm) => (
                                                     <option key={jm.id} value={jm.id}>
@@ -383,8 +376,8 @@ export default function ReceptPromjena() {
                                                     </thead>
                                                     <tbody>
                                                         {odabraniSastojci.map(ts => {
-                                                            const sastojak = sviSastojci.find(s => Number(s.id) ===
-                                                                Number(ts.sastojak))
+                                                            const sastojak = sviSastojci.find(s => String(s.id) ===
+                                                                String(ts.sastojak))
                                                             return (
                                                                 <tr key={ts.sastojak}>
                                                                     <td>{sastojak?.naziv || 'Nepoznato'}</td>

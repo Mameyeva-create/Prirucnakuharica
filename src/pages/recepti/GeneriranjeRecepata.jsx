@@ -8,14 +8,18 @@ import {
     normalizirajNaziv, jedinstvenNaziv,
     dohvatiKoristene, obrisiGenerirane,
 } from '../../Generiranje'
-
+import {
+    slikaTjesteninaCarbonara, slikaPalacinke, slikaPiletinaSPovrcem,
+    slikaPizzaMargherita, slikaCezarSalata, slikaCokoladniKolac, slikaPovrtnaJuha,
+} from '../../services/recepti/slikeRecepata'
+import { kategorije as kategorijePodaci } from '../../services/kategorije/KategorijaPodaci'
 
 const predlosci = [
     {
         naziv: "Tjestenina Carbonara",
         kategorija: 2,
         vrijeme: 20,
-        slikaPutanja: "/slike/carbonara.jpg",
+        slikaBase64: slikaTjesteninaCarbonara,
         opis: "Jednostavna tjestenina s jajima, sirom i pancetom.",
         sastojci: [
             ["Tjestenina", 200, "g"],
@@ -37,7 +41,7 @@ const predlosci = [
         naziv: "Palačinke",
         kategorija: 1,
         vrijeme: 15,
-        slikaPutanja: "/slike/palacinke.jpg",
+        slikaBase64: slikaPalacinke,
         opis: "Brze palačinke koje možete poslužiti sa slatkim nadjevom.",
         sastojci: [
             ["Brašno", 200, "g"],
@@ -59,7 +63,7 @@ const predlosci = [
         naziv: "Piletina s povrćem",
         kategorija: 2,
         vrijeme: 35,
-        slikaPutanja: "/slike/piletina.jpg",
+        slikaBase64: slikaPiletinaSPovrcem,
         opis: "Ukusan obrok s piletinom i svježim povrćem.",
         sastojci: [
             ["Pileća prsa", 400, "g"],
@@ -83,7 +87,7 @@ const predlosci = [
         naziv: "Pizza Margherita",
         kategorija: 3,
         vrijeme: 30,
-        slikaPutanja: "/slike/pizza.jpg",
+        slikaBase64: slikaPizzaMargherita,
         opis: "Klasična pizza s rajčicom, mozzarellom i bosiljkom.",
         sastojci: [
             ["Tijesto za pizzu", 300, "g"],
@@ -104,7 +108,7 @@ const predlosci = [
         naziv: "Cezar salata",
         kategorija: 2,
         vrijeme: 20,
-        slikaPutanja: "/slike/cezar-salata.jpg",
+        slikaBase64: slikaCezarSalata,
         opis: "Svježa salata s piletinom, krutonima i Cezar umakom.",
         sastojci: [
             ["Pileća prsa", 300, "g"],
@@ -125,7 +129,7 @@ const predlosci = [
         naziv: "Čokoladni kolač",
         kategorija: 4,
         vrijeme: 45,
-        slikaPutanja: "/slike/cokoladni-kolac.jpg",
+        slikaBase64: slikaCokoladniKolac,
         opis: "Sočan čokoladni kolač bogatog okusa.",
         sastojci: [
             ["Čokolada za kuhanje", 200, "g"],
@@ -147,7 +151,7 @@ const predlosci = [
         naziv: "Povrtna juha",
         kategorija: 2,
         vrijeme: 25,
-        slikaPutanja: "/slike/povrtna-juha.jpg",
+        slikaBase64: slikaPovrtnaJuha,
         opis: "Lagana juha od svježeg povrća.",
         sastojci: [
             ["Mrkva", 2, "kom"],
@@ -181,11 +185,17 @@ async function osiguraj(servis, naziv, popis) {
     if (!stavka) throw new Error(`"${naziv}" nije uspješno dodan.`)
     return stavka
 }
-// Находим категорию по ID (для predložaka)
-function nadiKategorijuPoId(id, popis) {
-    const stavka = popis.find(x => Number(x.id) === Number(id))
+// Pronalazi kategoriju iz popisa: broj iz predloška → naziv u KategorijaPodaci → stavka u popisu
+function nadiKategoriju(brojIzPredloska, popis) {
+    const izPodataka = kategorijePodaci.find(k => String(k.id) === String(brojIzPredloska))
+    if (!izPodataka) {
+        throw new Error(`Kategorija ${brojIzPredloska} ne postoji u početnim podacima.`)
+    }
+
+    const trazeni = normalizirajNaziv(izPodataka.naziv)
+    const stavka = popis.find(x => normalizirajNaziv(x.naziv) === trazeni)
     if (!stavka) {
-        throw new Error(`Kategorija s ID ${id} nije pronađena.`)
+        throw new Error(`Kategorija "${izPodataka.naziv}" nije pronađena. Prvo generirajte kategorije.`)
     }
     return stavka
 }
@@ -206,24 +216,24 @@ async function generiraj(broj) {
     try {
         for (let i = 0; i < broj; i++) {
             const p = predlosci[i % predlosci.length]
-            const kategorija = nadiKategorijuPoId(p.kategorija, kategorije)
+            const kategorija = nadiKategoriju(p.kategorija, kategorije)
 
             const sastojci = []
             for (const [nazivS, kol, nazivJ] of p.sastojci) {
                 const sastojak = await osiguraj(SastojakService, nazivS, sastojciPopis)
                 const jedinica = await osiguraj(JedinicaMjereService, nazivJ, jedinice)
                 sastojci.push({
-                    sastojak: Number(sastojak.id),
+                    sastojak: sastojak.id,
                     kolicina: Math.max(1, Math.round(kol * (0.9 + Math.random() * 0.2))),
-                    jedMjere: Number(jedinica.id),
+                    jedMjere: jedinica.id,
                 })
             }
 
             await ReceptService.dodaj({
                 naziv: jedinstvenNaziv(p.naziv, zauzeti),
-                kategorija: Number(kategorija.id),
+                kategorija: kategorija.id,
                 vrijeme: p.vrijeme,
-                slikaPutanja: p.slikaPutanja,
+                slikaBase64: p.slikaBase64,
                 opis: p.opis,
                 sastojci,
                 priprema: p.priprema,

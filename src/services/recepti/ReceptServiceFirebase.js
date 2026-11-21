@@ -1,109 +1,103 @@
 
-import { collection, doc, getDocs, getDoc, deleteDoc, setDoc, updateDoc } from "firebase/firestore"
-import { ref, uploadString, getDownloadURL, deleteObject } from "firebase/storage"
-import { db, storage } from "../Firebase"
+import { collection, doc, getDocs, getDoc, deleteDoc, setDoc } from "firebase/firestore"
+import { db } from "../Firebase"
 import { PrefixStorage } from "../../constants"
 
 const KOLEKCIJA = PrefixStorage.RECEPTI
+
+// Firestore dokument može imati najviše 1 MB, ostavljamo rezervu za ostala polja
+const MAX_VELICINA_SLIKE = 700 * 1024
 
 // ===================== Pomoćne funkcije ==========================================
 
 // Dohvaća recept prema ID-u
 async function dohvatiRecept(id) {
-    const receptRef = doc(db, KOLEKCIJA, String(id))
-    const snapshot = await getDoc(receptRef)
+    const snapshot = await getDoc(doc(db, KOLEKCIJA, String(id)))
 
     if (!snapshot.exists()) {
         return null
     }
-    return {
-        ...snapshot.data(),
-        id: snapshot.id
-    }
+    return { ...snapshot.data(), id: snapshot.id }
 }
-// ===================== Učitava fotografiju u Firebase Storage =====================
-async function ucitajSliku(slika, id) {
-    if (!slika || !slika.startsWith("data:image/")) {
-        return {
-            slika: slika || "",
-            slikaPutanja: ""
-        }
-    }
-    const nazivDatoteke = `${Date.now()}-${Math.random()
-        .toString(36).substring(2, 9)}.jpg`
-    const putanja = `recepti/${id}/${nazivDatoteke}`
-    const slikaRef = ref(storage, putanja)
+// Uklanja zastarjela polja slike (ostaje samo slikaBase64)
+function ocisti(recept) {
+    const { slika, slikaPutanja, ...ostatak } = recept
+    return ostatak
+}
 
-    await uploadString(slikaRef, slika, "data_url", {
-        contentType: "image/jpeg"
+// Smanjuje sliku (data URL) na zadanu najveću stranicu i JPEG kvalitetu
+function smanjiSliku(dataUrl, maxStranica, kvaliteta) {
+    return new Promise((resolve, reject) => {
+        const img = new Image()
+
+        img.onload = () => {
+            const omjer = Math.min(1, maxStranica / Math.max(img.width, img.height))
+            const canvas = document.createElement("canvas")
+            canvas.width = Math.round(img.width * omjer)
+            canvas.height = Math.round(img.height * omjer)
+            canvas.getContext("2d").drawImage(img, 0, 0, canvas.width, canvas.height)
+            resolve(canvas.toDataURL("image/jpeg", kvaliteta))
+        }
+        img.onerror = () => reject(new Error("Slika se ne može učitati."))
+        img.src = dataUrl
     })
-    const url = await getDownloadURL(slikaRef)
-
-    return {
-        slika: url,
-        slikaPutanja: putanja
-    }
 }
-// ===================== Briše fotografiju iz Firebase Storage =====================
-async function obrisiSliku(putanja) {
-    if (!putanja) return
 
-    try {
-        const slikaRef = ref(storage, putanja)
-        await deleteObject(slikaRef)
-    } catch (error) {
-        // Fotografija možda već ne postoji
-        if (error.code !== "storage/object-not-found") {
-            console.error("Greška pri brisanju fotografije:", error)
-        }
+// Priprema sliku za Firestore (smanjuje dok ne stane u limit)
+async function pripremiSliku(slika) {
+    // Prazno ili vanjski URL: ne diramo
+    if (!slika || !slika.startsWith("data:image/")) {
+        return slika || ""
     }
+
+    let stranica = 800
+    let kvaliteta = 0.7
+    let rezultat = await smanjiSliku(slika, stranica, kvaliteta)
+
+    while (rezultat.length > MAX_VELICINA_SLIKE && stranica > 200) {
+        stranica -= 150
+        kvaliteta = Math.max(0.4, kvaliteta - 0.1)
+        rezultat = await smanjiSliku(slika, stranica, kvaliteta)
+    }
+
+    if (rezultat.length > MAX_VELICINA_SLIKE) {
+        throw new Error("Slika je prevelika za spremanje.")
+    }
+    return rezultat
 }
-// ===================== Dohvaća sve recepte =========================================
+
+// ===================== READ =====================
+
 async function get() {
     const snapshot = await getDocs(collection(db, KOLEKCIJA))
-    const recepti = snapshot.docs.map(d => ({
-        ...d.data(),
-        id: d.id
-    }))
+    const recepti = snapshot.docs.map(d => ({ ...d.data(), id: d.id }))
     recepti.sort((a, b) => a.naziv?.localeCompare(b.naziv, "hr"))
 
     return { data: recepti }
 }
-// ===================== Dohvaća jedan recept prema ID-u ==============================
-async function getById(id) {
-    const recept = await dohvatiRecept(id)
 
-    return { data: recept }
+async function getById(id) {
+    return { data: await dohvatiRecept(id) }
 }
-// ===================== Dodaje novi recept ===========================================
+
+// ===================== CREATE =====================
+
 async function dodaj(recept) {
     const receptRef = doc(collection(db, KOLEKCIJA))
-    const noviId = receptRef.id
 
-    let novaSlika = {
-        slika: recept.slika || "",
-        slikaPutanja: recept.slikaPutanja || ""
+    const noviRecept = {
+        ...ocisti(recept),
+        slikaBase64: await pripremiSliku(recept.slikaBase64),
+        id: receptRef.id
     }
 
-    try {
-        novaSlika = await ucitajSliku(recept.slika, noviId)
+    await setDoc(receptRef, noviRecept)
 
-        const noviRecept = {
-            ...recept,
-            ...novaSlika,
-            id: noviId
-        }
-        await setDoc(receptRef, noviRecept)
-
-        return { data: noviRecept }
-
-    } catch (error) {
-        // Ako spremanje ne uspije, uklanjamo novoučitanu fotografiju
-        await obrisiSliku(novaSlika.slikaPutanja)
-        throw error
-    }
+    return { data: noviRecept }
 }
-// ===================== Mijenja postojeći recept ===================================
+
+// ===================== UPDATE =====================
+
 async function promijeni(id, recept) {
     const postojeciRecept = await dohvatiRecept(id)
 
@@ -111,65 +105,30 @@ async function promijeni(id, recept) {
         throw new Error("Recept nije pronađen.")
     }
 
-    const receptRef = doc(db, KOLEKCIJA, String(id))
-
-    const staraPutanja = postojeciRecept.slikaPutanja || ""
-
-    let novaSlika = {
-        slika: recept.slika || "",
-        slikaPutanja: recept.slikaPutanja || ""
-    }
-
-    // Ako je odabrana nova Base64 fotografija, učitavamo je
-    if (recept.slika?.startsWith("data:image/")) {
-        novaSlika = await ucitajSliku(recept.slika, String(id))
-    } else if (recept.slika) {
-        // Fotografija nije promijenjena
-        novaSlika = {
-            slika: recept.slika,
-            slikaPutanja: recept.slikaPutanja || staraPutanja
-        }
-    }
-
     const promijenjeniRecept = {
-        ...postojeciRecept,
-        ...recept,
-        ...novaSlika,
+        ...ocisti(postojeciRecept),
+        ...ocisti(recept),
+        slikaBase64: recept.slikaBase64 !== undefined
+            ? await pripremiSliku(recept.slikaBase64)
+            : postojeciRecept.slikaBase64 || "",
         id: String(id)
     }
 
-    try {
-        await updateDoc(receptRef, promijenjeniRecept)
+    // setDoc prepisuje cijeli dokument, pa stara polja slika/slikaPutanja nestaju
+    await setDoc(doc(db, KOLEKCIJA, String(id)), promijenjeniRecept)
 
-    } catch (error) {
-        // Ako spremanje ne uspije, čuvamo staru fotografiju
-        if (
-            novaSlika.slikaPutanja &&
-            novaSlika.slikaPutanja !== staraPutanja
-        ) {
-            await obrisiSliku(novaSlika.slikaPutanja)
-        }
-        throw error
-    }
-    // Staru fotografiju brišemo tek nakon uspješnog spremanja
-    if (staraPutanja && staraPutanja !== novaSlika.slikaPutanja) {
-        await obrisiSliku(staraPutanja)
-    }
     return { data: promijenjeniRecept }
 }
-// ===================== Briše jedan recept prema ID-u ==============================
+
+// ===================== DELETE =====================
+
 async function obrisi(id) {
     const recept = await dohvatiRecept(id)
 
     if (!recept) {
         return
     }
-    const receptRef = doc(db, KOLEKCIJA, String(id))
-
-    await deleteDoc(receptRef)
-
-    // Nakon brisanja recepta uklanjamo i fotografiju
-    await obrisiSliku(recept.slikaPutanja)
+    await deleteDoc(doc(db, KOLEKCIJA, String(id)))
 }
 
 export default {

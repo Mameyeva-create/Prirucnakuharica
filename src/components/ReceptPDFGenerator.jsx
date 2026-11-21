@@ -57,7 +57,7 @@ export default function ReceptPDFGenerator({ recept, sviSastojci, jediniceMjere,
         doc.setTextColor(...textColor);
         doc.text(`Recept: ${recept?.naziv || '-'}`, 15, 42)
 
-        const kategorija = kategorije?.find(k => Number(k.id) === Number(recept?.kategorija))
+        const kategorija = kategorije?.find(k => String(k.id) === String(recept?.kategorija))
         // PODACI O RECEPTU
         autoTable(doc, {
             startY: 50,
@@ -109,10 +109,10 @@ export default function ReceptPDFGenerator({ recept, sviSastojci, jediniceMjere,
         const sastojci = recept?.sastojci || []
         const tableData = sastojci.map((s, index) => {
             const podatakSastojka = sviSastojci?.find(
-                item => Number(item.id) === Number(s.sastojak)
+                item => String(item.id) === String(s.sastojak)
             )
             const jedinica = jediniceMjere?.find(
-                jm => Number(jm.id) === Number(s.jedMjere)
+                jm => String(jm.id) === String(s.jedMjere)
             )
             return [index + 1, podatakSastojka?.naziv || 'Nepoznato',
             s.kolicina ?? '-', 
