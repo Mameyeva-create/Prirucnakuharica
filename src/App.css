@@ -487,11 +487,13 @@ footer hr {
         margin: 5px 12px;
     }
 }
+
 @media (max-width: 991.98px) {
     .galerija-stavka {
         flex: 0 0 calc((100% - 48px) / 4);
     }
 }
+
 /* ---- до 768px: мобильные ---- */
 @media (max-width: 768px) {
     .navbar-kuharica {
