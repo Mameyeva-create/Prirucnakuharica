@@ -31,7 +31,7 @@ async function promijeni(id, recept) {
     return { data: recepti[index] }
 }
 function nadiIndex(id) {
-    return recepti.findIndex(i => i.id === String(id))
+    return recepti.findIndex(i => String(i.id) === String(id))
 }
 
 async function obrisi(id) {
