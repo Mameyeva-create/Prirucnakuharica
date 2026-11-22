@@ -24,7 +24,7 @@ export default function Omiljeni() {
         setKategorije(odgovorKategorije.data || [])
     }
     function nazivKategorije(kategorijaId) {
-        const kat = kategorije.find(k => Number(k.id) === Number(kategorijaId))
+        const kat = kategorije.find(k => String(k.id) === String(kategorijaId))
         return kat?.naziv || 'Nepoznata kategorija'
     }
     function otvoriRecept(id) {

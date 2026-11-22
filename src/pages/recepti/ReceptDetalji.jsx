@@ -19,14 +19,14 @@ export default function ReceptDetalji() {
     const [jediniceMjere, setJediniceMjere] = useState([])
     const [sveKategorije, setSveKategorije] = useState([])
 
-   async function promijeniOmiljen() {
-    try {
-        const odgovor = await ReceptService.promijeni(recept.id, { omiljen: !recept.omiljen })
-        setRecept({ ...recept, omiljen: !recept.omiljen })
-    } catch (error) {
-        console.error('Greška pri promijeni omiljenog recepta', error)
+    async function promijeniOmiljen() {
+        try {
+            await ReceptService.promijeni(recept.id, { omiljen: !recept.omiljen })
+            setRecept({ ...recept, omiljen: !recept.omiljen })
+        } catch (error) {
+            console.error('Greška pri promijeni omiljenog recepta', error)
+        }
     }
-}
 
     useEffect(() => {
         async function ucitajPodatke() {

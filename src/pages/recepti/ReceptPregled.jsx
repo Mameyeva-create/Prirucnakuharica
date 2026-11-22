@@ -91,7 +91,7 @@ export default function ReceptPregled() {
     }
 
     async function obrisi(id) {
-        if (!confirm('Sigurno obrisati?')) {
+        if (!window.confirm('Sigurno obrisati?')) {
             return
         }
         await ReceptService.obrisi(id)
@@ -111,7 +111,7 @@ export default function ReceptPregled() {
     function brojPodudaranja(recept) {
         const sastojciTekst = Array.isArray(recept.sastojci)
             ? recept.sastojci.map(stavka => {
-                const podatakSastojka = sviSastojci.find(s => Number(s.id) === Number(stavka.sastojak))
+                const podatakSastojka = sviSastojci.find(s => String(s.id) === String(stavka.sastojak))
                 return podatakSastojka?.naziv || ''
             }).join(' ') : ''
 
@@ -133,7 +133,7 @@ export default function ReceptPregled() {
         .filter((recept) => {
             if (prikaziGenerirane && recept.generirano !== true) return false
             if (samoVegansko && recept.vegansko !== true) return false
-            if (kategorija && Number(recept.kategorija) !== Number(kategorija)) return false
+            if (kategorija && String(recept.kategorija) !== String(kategorija)) return false
             return true
         })
         .map(recept => ({
@@ -153,7 +153,7 @@ export default function ReceptPregled() {
     )
 
     function nazivKategorija(kategorijaId) {
-        const kat = kategorije.find(k => Number(k.id) === Number(kategorijaId))
+        const kat = kategorije.find(k => String(k.id) === String(kategorijaId))
         return kat?.naziv || 'Nepoznata kategorija'
     }
 
@@ -264,7 +264,7 @@ export default function ReceptPregled() {
             </div>
             {/* KARTICE — mobilna verzija */}
             <div className="d-md-none">
-                {prikazaniRecepti.map((recept) => (
+                {receptiZaStranicu.map((recept) => (
                     <Card key={recept.id} className="mb-3 shadow-sm omiljeni-kartica"
                         onClick={() => navigate(`/recepti/${recept.id}/detalji`)}
                         role="link" tabIndex={0}

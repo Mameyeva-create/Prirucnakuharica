@@ -5,7 +5,7 @@ async function get() {
 }
 
 async function getById(id) {
-    const recept = recepti.find(i => i.id === Number(id))
+    const recept = recepti[nadiIndex(id)]
     return { data: recept ?? null }
 }
 
@@ -26,12 +26,12 @@ async function promijeni(id, recept) {
     if (index === -1) {
         throw new Error("Recept nije pronađen, ID: " + id);
     }
-    recepti[index] = { ...recepti[index], ...recept, id: Number(id) }
+    recepti[index] = { ...recepti[index], ...recept, id: recepti[index].id }
 
     return { data: recepti[index] }
 }
 function nadiIndex(id) {
-    return recepti.findIndex(i => i.id === Number(id))
+    return recepti.findIndex(i => i.id === String(id))
 }
 
 async function obrisi(id) {

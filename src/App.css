@@ -110,42 +110,7 @@ body,
     margin-right: 8px;
 }
 
-/* От 992px: пункты не переносятся внутри строки */
-@media (min-width: 992px) {
 
-    .navbar-kuharica .navbar-nav .nav-link,
-    .navbar-kuharica .navbar-nav .dropdown-toggle {
-        display: flex;
-        align-items: center;
-        white-space: nowrap;
-    }
-
-    /* Длинный email не растягивает меню */
-    .navbar-kuharica #profil-dropdown {
-        max-width: 220px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-}
-
-/* 992–1199px: название сверху, меню под ним */
-@media (min-width: 992px) and (max-width: 1199.98px) {
-    .navbar-kuharica .navbar-collapse {
-        flex-basis: 100%;
-    }
-
-    .navbar-kuharica .navbar-nav {
-        width: 100%;
-        flex-wrap: wrap;
-        justify-content: flex-start;
-    }
-
-    .navbar-kuharica .navbar-nav .nav-link,
-    .navbar-kuharica .navbar-nav .dropdown-toggle {
-        padding-left: 0.6rem;
-        padding-right: 0.6rem;
-    }
-}
 
 /* =========================
    FOOTER
@@ -456,9 +421,25 @@ footer hr {
 /* ========================================
    АДАПТАЦИЯ (от больших экранов к малым)
    ======================================== */
+@media (min-width: 1200px) {
 
-/* ---- до 991.98px: планшеты, меню-гамбургер ---- */
-@media (max-width: 991.98px) {
+    .navbar-kuharica .navbar-nav .nav-link,
+    .navbar-kuharica .navbar-nav .dropdown-toggle {
+        display: flex;
+        align-items: center;
+        white-space: nowrap;
+    }
+
+    /* Длинный email не растягивает меню */
+    .navbar-kuharica #profil-dropdown {
+        max-width: 220px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+}
+
+/* ---- до 1199.98px: меню-гамбургер ---- */
+@media (max-width: 1199.98px) {
     .navbar-kuharica {
         padding: 12px 15px;
     }
@@ -505,12 +486,12 @@ footer hr {
         border-top: 1px solid rgba(255, 250, 242, 0.25);
         margin: 5px 12px;
     }
-
+}
+@media (max-width: 991.98px) {
     .galerija-stavka {
         flex: 0 0 calc((100% - 48px) / 4);
     }
 }
-
 /* ---- до 768px: мобильные ---- */
 @media (max-width: 768px) {
     .navbar-kuharica {

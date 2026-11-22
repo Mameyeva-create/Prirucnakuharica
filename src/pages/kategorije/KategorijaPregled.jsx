@@ -31,7 +31,7 @@ export default function KategorijaPregled() {
             alert('Kategorija se koristi u receptima i ne može se obrisati!')
             return
         }
-        if (!confirm('Sigurno obrisati?')) {
+        if (!window.confirm('Sigurno obrisati?')) {
             return
         }
         await KategorijaService.obrisi(id)

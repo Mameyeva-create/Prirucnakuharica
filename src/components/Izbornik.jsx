@@ -49,7 +49,7 @@ export default function Izbornik() {
     }
 
     return (
-        <Navbar expand="lg" className="navbar-kuharica" variant='dark'>
+        <Navbar expand="xl" className="navbar-kuharica" variant='dark'>
             <Container fluid>
                 <Navbar.Brand onClick={() => navigate(RouteNames.HOME)}
                     style={{ cursor: 'pointer' }}

@@ -23,7 +23,7 @@ export default function ReceptNovi() {
     const [pretragaSastojka, setPretragaSastojka] = useState('')
     const [prikaziAutocomplete, setPrikaziAutocomplete] = useState(false)
     const [odabraniIndex, setOdabraniIndex] = useState(-1)
-    const [trenutnaJedinicaMjere, setTrenutnaJedinicaMjere] = useState(0)
+    const [trenutnaJedinicaMjere, setTrenutnaJedinicaMjere] = useState('')
     const [trenutnaKolicina, setTrenutnaKolicina] = useState('')
     const [slika, setSlika] = useState('')
 
@@ -59,11 +59,6 @@ export default function ReceptNovi() {
     }
 
     function dodajStavku() {
-        // console.log("sastojak",trenutniSastojak.id)
-        // console.log("jm",trenutnaJedinicaMjere)
-        // console.log("količina", trenutnaKolicina)
-        // console.log('DEBUG', { sastojak: trenutniSastojak.id, kolicina: trenutnaKolicina, jedMjere: trenutnaJedinicaMjere })
-
         const rezultat = validiraj(stavkaSastojkaSchema, {
             sastojak: trenutniSastojak.id,
             kolicina: trenutnaKolicina,
@@ -74,7 +69,7 @@ export default function ReceptNovi() {
             return
         }
         const postoji = odabraniSastojci.some(
-            s => Number(s.sastojak) === rezultat.data.sastojak
+            s => String(s.sastojak) === rezultat.data.sastojak
         )
         if (postoji) {
             alert('Ovaj sastojak već je dodan u recept')
@@ -87,7 +82,7 @@ export default function ReceptNovi() {
         setOdabraniIndex(-1)
         setPrikaziAutocomplete(false)
         setPretragaSastojka('')
-        setTrenutnaJedinicaMjere(0)
+        setTrenutnaJedinicaMjere('')
         setTrenutnaKolicina('')
         setTrenutniSastojak({})
     }
@@ -130,7 +125,7 @@ export default function ReceptNovi() {
     function filtrirajSastojke() {
         if (!pretragaSastojka) return []
         return sviSastojci.filter(p =>
-            !odabraniSastojci.some(op => Number(op.sastojak) === Number(p.id)) &&
+            !odabraniSastojci.some(op => String(op.sastojak) === String(p.id)) &&
             (p.naziv.toLowerCase().includes(pretragaSastojka.toLowerCase()))
         )
     }
@@ -176,7 +171,7 @@ export default function ReceptNovi() {
         //   console.log(jediniceMjere)
         // console.log(sifraJM)
         const jm = jediniceMjere.find(
-            jm => Number(jm.id) === Number(sifraJM))
+            jm => String(jm.id) === String(sifraJM))
         return jm?.naziv || 'Nepoznato'
     }
 
@@ -345,7 +340,7 @@ export default function ReceptNovi() {
                                                     <tbody>
                                                         {odabraniSastojci.map(ts => {
                                                             const sastojak = sviSastojci.find(
-                                                                s => Number(s.id) === Number(ts.sastojak))
+                                                                s => String(s.id) === String(ts.sastojak))
                                                             return (
                                                                 <tr key={ts.id}>
                                                                     <td>{sastojak?.naziv || 'Nepoznato'}</td>
