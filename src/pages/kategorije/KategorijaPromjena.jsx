@@ -1,16 +1,16 @@
-import { useState, useEffect } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
-import KategorijaService from "../../services/kategorije/KategorijaService";
-import { RouteNames } from "../../constants";
-import { Button, Col, Form, Row } from "react-bootstrap";
-import { kategorijaSchema, validiraj } from "../../validacije";
-
+import { useEffect, useState } from "react"
+import { Link, useNavigate, useParams } from "react-router-dom"
+import { Alert, Button, Card, Col, Container, Form, Row } from "react-bootstrap"
+import KategorijaService from "../../services/kategorije/KategorijaService"
+import { RouteNames } from "../../constants"
+import { kategorijaSchema, validiraj } from "../../validacije"
 
 export default function KategorijaPromjena() {
 
     const navigate = useNavigate()
     const params = useParams()
     const [kategorija, setKategorija] = useState({})
+    const [greska, setGreska] = useState("")
 
     useEffect(() => {
         ucitajKategorija()
@@ -32,60 +32,67 @@ export default function KategorijaPromjena() {
         }
     }
 
-    async function promijeni(kategorija) {
+    async function promijeni(podaci) {
         try {
-            const odgovor = await KategorijaService.promijeni(params.id, kategorija)
+            const odgovor = await KategorijaService.promijeni(params.id, podaci)
             if (odgovor?.success === false) {
-                alert(odgovor.message || 'Kategorija nije promijenjena')
+                setGreska(odgovor.message || 'Kategorija nije promijenjena')
                 return
             }
             navigate(RouteNames.KATEGORIJE)
         } catch (greska) {
             console.error('Greška pri promjeni kategorije:', greska)
-            alert('Kategorija nije promijenjena')
+            setGreska('Kategorija nije promijenjena')
         }
     }
 
     function odradiSubmit(e) {
         e.preventDefault()
-        const podaci = new FormData(e.target)
+        setGreska("")
 
+        const podaci = new FormData(e.target)
         const rezultat = validiraj(kategorijaSchema, { naziv: podaci.get('naziv') ?? '' })
         if (!rezultat.ok) {
-            alert(rezultat.greska)
+            setGreska(rezultat.greska)
             return
         }
         promijeni({ ...rezultat.data, generirano: kategorija.generirano })
     }
 
     return (
-        <>
-            <h3>
-                Promijeni kategorija
-            </h3>
-            <Form onSubmit={odradiSubmit}>
+        <Form onSubmit={odradiSubmit}>
+            <Container>
+                <Card className="shadow-sm">
+                    <Card.Header><h3>Promjena kategorije 🍃</h3></Card.Header>
+                    <Card.Body className="pt-4">
+                        {greska && <Alert variant="danger">{greska}</Alert>}
 
-                <Form.Group controlId="naziv">
-                    <Form.Label>Naziv kategorija</Form.Label>
-                    <Form.Control type="text"
-                        name="naziv" required
-                        key={kategorija?.id}
-                        defaultValue={kategorija?.naziv || ""} />
-                </Form.Group>
+                        <Form.Group controlId="naziv" className="mb-3">
+                            <Form.Label>Naziv kategorije</Form.Label>
+                            <Form.Control
+                                type="text"
+                                name="naziv"
+                                required
+                                key={kategorija?.id}
+                                defaultValue={kategorija?.naziv || ""}
+                            />
+                        </Form.Group>
 
-                <Row className="mt-4">
-                    <Col>
-                        <Link to={RouteNames.KATEGORIJE} className="btn btn-danger">
-                            Odustani
-                        </Link>
-                    </Col>
-                    <Col>
-                        <Button type="submit" variant="success">
-                            Promijeni kategorija
-                        </Button>
-                    </Col>
-                </Row>
-            </Form>
-        </>
+                        <Row className="mt-4 align-items-center">
+                            <Col xs={6}>
+                                <Link to={RouteNames.KATEGORIJE} className="btn btn-danger">
+                                    Odustani
+                                </Link>
+                            </Col>
+                            <Col xs={6} className="text-end">
+                                <Button type="submit" variant="success">
+                                    Promijeni kategoriju
+                                </Button>
+                            </Col>
+                        </Row>
+                    </Card.Body>
+                </Card>
+            </Container>
+        </Form>
     )
 }

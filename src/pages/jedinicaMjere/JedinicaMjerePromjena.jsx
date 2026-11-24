@@ -1,11 +1,9 @@
-import { useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
-import JedinicaMjereService from "../../services/jedinicaMjere/JedinicaMjereService";
-import { RouteNames } from "../../constants";
-import { Alert, Button, Col, Form, Row } from "react-bootstrap";
-import { useEffect } from "react";
-import { jedinicaMjereSchema, validiraj } from "../../validacije";
-
+import { useEffect, useState } from "react"
+import { Link, useNavigate, useParams } from "react-router-dom"
+import { Alert, Button, Card, Col, Container, Form, Row } from "react-bootstrap"
+import JedinicaMjereService from "../../services/jedinicaMjere/JedinicaMjereService"
+import { RouteNames } from "../../constants"
+import { jedinicaMjereSchema, validiraj } from "../../validacije"
 
 export default function JedinicaMjerePromjena() {
 
@@ -19,31 +17,29 @@ export default function JedinicaMjerePromjena() {
     }, [])
 
     async function ucitajJedinicaMjere() {
-        // debugger
-        await JedinicaMjereService.getById(params.id).then((odgovor) => {
-            setJedinicaMjere(odgovor.data || {})
-        })
+        const odgovor = await JedinicaMjereService.getById(params.id)
+        setJedinicaMjere(odgovor.data || {})
     }
 
-    async function promijeni(jedinicaMjere) {
+    async function promijeni(podaci) {
         const odgovor = await JedinicaMjereService.get()
-        const jediniceMjere = odgovor.data
-        const ocisceniNaziv = jedinicaMjere.naziv.trim()
+        const jediniceMjere = odgovor.data || []
+        const ocisceniNaziv = podaci.naziv.trim()
+
         const postoji = jediniceMjere.some(j =>
             String(j.id) !== String(params.id) &&
-            j.naziv.trim().toLocaleLowerCase('hr') ===
-            ocisceniNaziv.toLocaleLowerCase('hr')
+            j.naziv.trim().toLocaleLowerCase('hr') === ocisceniNaziv.toLocaleLowerCase('hr')
         )
         if (postoji) {
             setGreska('Jedinica mjere s tim nazivom već postoji!')
             return
         }
+
         await JedinicaMjereService.promijeni(params.id, {
             naziv: ocisceniNaziv,
-            generirano: jedinicaMjere.generirano
+            generirano: podaci.generirano
         })
         navigate(RouteNames.JEDINICE_MJERE)
-
     }
 
     function odradiSubmit(e) {
@@ -60,37 +56,39 @@ export default function JedinicaMjerePromjena() {
     }
 
     return (
-        <>
-            <h3>
-                Promijeni JM
-            </h3>
-            <Form onSubmit={odradiSubmit}>
-                {greska && (<Alert variant="danger">{greska}</Alert>)}
-                <Form.Group controlId="naziv">
-                    <Form.Label>Naziv JM</Form.Label>
-                    <Form.Control type="text"
-                        name="naziv" required
-                        key={jedinicaMjere?.id}
-                        defaultValue={jedinicaMjere?.naziv || ""} />
-                </Form.Group>
+        <Form onSubmit={odradiSubmit}>
+            <Container>
+                <Card className="shadow-sm">
+                    <Card.Header><h3>Promjena jedinice mjere 🍃</h3></Card.Header>
+                    <Card.Body className="pt-4">
+                        {greska && <Alert variant="danger">{greska}</Alert>}
 
+                        <Form.Group controlId="naziv" className="mb-3">
+                            <Form.Label>Naziv jedinice mjere</Form.Label>
+                            <Form.Control
+                                type="text"
+                                name="naziv"
+                                required
+                                key={jedinicaMjere?.id}
+                                defaultValue={jedinicaMjere?.naziv || ""}
+                            />
+                        </Form.Group>
 
-
-                <Row className="mt-4">
-                    <Col>
-                        <Link to={RouteNames.JEDINICE_MJERE} className="btn btn-danger">
-                            Odustani
-                        </Link>
-                    </Col>
-                    <Col>
-                        <Button type="submit" variant="success">
-                            Promijeni jedinicaMjere
-                        </Button>
-                    </Col>
-                </Row>
-
-            </Form>
-
-        </>
+                        <Row className="mt-4 align-items-center">
+                            <Col xs={6}>
+                                <Link to={RouteNames.JEDINICE_MJERE} className="btn btn-danger">
+                                    Odustani
+                                </Link>
+                            </Col>
+                            <Col xs={6} className="text-end">
+                                <Button type="submit" variant="success">
+                                    Promijeni jedinicu mjere
+                                </Button>
+                            </Col>
+                        </Row>
+                    </Card.Body>
+                </Card>
+            </Container>
+        </Form>
     )
 }
