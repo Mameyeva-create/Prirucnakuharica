@@ -59,7 +59,7 @@ export default function JedinicaMjerePromjena() {
         <Form onSubmit={odradiSubmit}>
             <Container>
                 <Card className="shadow-sm">
-                    <Card.Header><h3>Promjena jedinice mjere 🍃</h3></Card.Header>
+                    <Card.Header><h3>Promjena jedinice mjere ⚖️</h3></Card.Header>
                     <Card.Body className="pt-4">
                         {greska && <Alert variant="danger">{greska}</Alert>}
 
